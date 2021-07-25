@@ -1,3 +1,4 @@
 Groupomania_Specs_FR_DWJ_VF.pdf
-back_end/node_modules/
+server/node_modules/
 /back_end/.env
+/server/package-lock.json
