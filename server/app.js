@@ -15,9 +15,9 @@ const conn = mysql.createConnection({
 
 conn.connect((err) => {
   if (err) {
-    return console.error("Oups, ERROR: " + err.message);
+    return console.error("Oups, --ERROR: " + err.message);
   } else {
-    console.log("Connection to mysql has been started");
+    console.log("Database connection --TEST: OK!");
   }
 });
 
