@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const likeStatus = require("../middleware/likeStatus");
 const postCtrl = require("../controllers/post");
 
 router.get("/", postCtrl.getAllPost);
