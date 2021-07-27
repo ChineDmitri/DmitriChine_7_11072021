@@ -1,14 +1,6 @@
 const mysql = require("mysql");
 const conn = require("./config.js"); //config for connection in DataBase
 
-// const conn = mysql.createConnection({
-//   password: process.env.passDB,
-//   user: process.env.userDB,
-//   database: process.env.database,
-//   host: process.env.hostDB,
-//   port: process.env.portDB,
-//   multipleStatements: true,
-// });
 
 exports.queryAllPost = (num) => {
   return new Promise((resolve, reject) => {
@@ -16,7 +8,8 @@ exports.queryAllPost = (num) => {
     let start = n * num;
 
     conn.query(
-      `SELECT * FROM Post 
+      `SELECT p.*, u.pseudo FROM Post P 
+      LEFT JOIN User U ON p.user_id=u.id
       ORDER BY date_publication DESC 
       LIMIT ${conn.escape(n)} OFFSET ${conn.escape(start)}`,
       (err, results) => {
@@ -31,12 +24,14 @@ exports.queryAllPost = (num) => {
   });
 };
 
+
 exports.queryOnePost = (id) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
-      `SELECT * FROM Post 
-      WHERE post.id=${conn.escape(id)}`,
+      `SELECT p.*, u.pseudo FROM Post P 
+      LEFT JOIN User U ON p.user_id=u.id 
+      WHERE p.id=${conn.escape(id)}`,
       (err, results) => {
         if (err) {
           reject(err);
@@ -48,6 +43,7 @@ exports.queryOnePost = (id) => {
 
   });
 };
+
 
 // Query for create post (insertion in tables Post, Post_photo, Account_posts)
 exports.queryCreatePost = (post) => {
@@ -81,6 +77,8 @@ exports.queryCreatePost = (post) => {
   });
 };
 
+
+// Query for delete post et ses photo, statistic account et like/dislike
 exports.queryDeletePost = (body) => {
   return new Promise((resolve, reject) => {
 
@@ -102,6 +100,8 @@ exports.queryDeletePost = (body) => {
   });
 };
 
+
+// POUR LIKE et DISLIKE
 // Pour verifie exist pour post like - dilike
 exports.queryRecon = (body) => {
   return new Promise((resolve, reject) => {
@@ -111,14 +111,15 @@ exports.queryRecon = (body) => {
       
       WHERE post_id=${conn.escape(body.postId)} AND user_id=${conn.escape(body.userId)};`,
       (err, results) => {
-        
-          resolve(results);
-        
+
+        resolve(results);
+
       }
     );
 
   });
 };
+
 
 // Insertion like OR dislike
 exports.pushStatus = (body) => {
@@ -129,7 +130,15 @@ exports.pushStatus = (body) => {
       
       VALUES (${conn.escape(body.userId)},
       ${conn.escape(body.postId)},
-      ${conn.escape(body.status)});`,
+      ${conn.escape(body.status)});
+      
+      UPDATE Post 
+      SET likes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=1)
+      WHERE id=${conn.escape(body.postId)};
+      
+      UPDATE Post 
+      SET dislikes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=-1)
+      WHERE id=${conn.escape(body.postId)};`,
       (err, results) => {
         if (err) {
           reject(err);
@@ -142,17 +151,25 @@ exports.pushStatus = (body) => {
   });
 };
 
+
 // update like => unlike OR dislike => undislike
 exports.updateStatus = (body, status) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
-      `UPDATE account_posts_liked
+      `UPDATE Account_posts_liked
 
       SET status=${conn.escape(status)}
 
-      WHERE post_id=${conn.escape(body.postId)} AND user_id=${conn.escape(body.userId)}
-      `,
+      WHERE post_id=${conn.escape(body.postId)} AND user_id=${conn.escape(body.userId)};
+      
+      UPDATE Post 
+      SET likes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=1)
+      WHERE id=${conn.escape(body.postId)};
+      
+      UPDATE Post 
+      SET dislikes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=-1)
+      WHERE id=${conn.escape(body.postId)};`,
       (err, results) => {
         if (err) {
           reject(err);

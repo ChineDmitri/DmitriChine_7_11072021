@@ -1,10 +1,12 @@
 const qPost = require("../mysql/queryPost");
 
+
 exports.getAllPost = (req, res, next) => {
     qPost.queryAllPost(req.body.postCounter)
         .then((object) => res.status(200).json(object))
         .catch((err) => res.status(404).json(err));
 };
+
 
 exports.getOnePost = (req, res, next) => {
     qPost.queryOnePost(req.params.id)
@@ -12,11 +14,13 @@ exports.getOnePost = (req, res, next) => {
         .catch((err) => res.status(404).json(err));
 };
 
+
 exports.createPost = (req, res, next) => {
     qPost.queryCreatePost(req.body)
         .then(() => res.status(201).json({ message: "Post created!" }))
         .catch((err) => res.status(400).json(err));
 };
+
 
 exports.deletePost = (req, res, next) => {
     qPost.queryDeletePost(req.body)
@@ -24,11 +28,8 @@ exports.deletePost = (req, res, next) => {
         .catch((err) => res.status(400).json(err));
 };
 
+
 exports.votePost = (req, res, next) => {
-    // regarde qu'es ce-que nous avons...
-    // qPost.queryRecon(req.body)
-    //     .then((result) => { console.log(result[0]) })
-    //     .catch((err) => { console.log(err) })
 
     qPost.queryRecon(req.body)
         .then((result) => {
@@ -45,7 +46,7 @@ exports.votePost = (req, res, next) => {
             } else {
                 qPost.queryRecon(req.body)
                     .then((result) => {
-                        // si deja like on enleve like
+                        // si deja like/dislike on enleve like/dislike
                         if (result[0].status === req.body.status) {
                             return qPost.updateStatus(req.body, 0)
                                 .then(res.status(200).json({
@@ -89,6 +90,7 @@ exports.votePost = (req, res, next) => {
         .catch((err) => res.status(405).json(err));
 };
 
+
 exports.test = (req, res, next) => {
     qPost.queryRecon(req.body)
         .then((result) => {
@@ -99,6 +101,3 @@ exports.test = (req, res, next) => {
         })
         .catch((err) => res.status(409).json(err));
 }
-
-
-
