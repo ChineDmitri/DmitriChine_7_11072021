@@ -79,6 +79,38 @@ exports.queryCreatePost = (post) => {
   });
 };
 
+exports.queryModifyPost = (postId, post) => {
+  return new Promise((resolve, reject) => {
+
+    conn.query(`
+    UPDATE Post 
+    SET date_modification=NOW(),
+    title=${conn.escape(post.title)},
+    discription=${conn.escape(post.discription)}
+    WHERE id=${conn.escape(postId)};
+    
+    UPDATE Post_photo 
+    SET url=${conn.escape(post.url1)}
+    WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId1)};
+    
+    UPDATE Post_photo 
+    SET url=${conn.escape(post.url2)}
+    WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId2)};
+
+    UPDATE Post_photo 
+    SET url=${conn.escape(post.url3)}
+    WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId3)};`,
+      (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+
+  });
+};
 
 // Query for delete post et ses photo, statistic account et like/dislike
 exports.queryDeletePost = (body) => {
@@ -101,24 +133,6 @@ exports.queryDeletePost = (body) => {
 
   });
 };
-
-exports.queryModifyPost = (body) => {
-  return new Promise((resolve, reject) => {
-
-    conn.query(`
-    UPDATE`,
-      (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      }
-    );
-
-  });
-};
-
 
 // POUR LIKE et DISLIKE
 // Pour verifie exist pour post like - dilike

@@ -21,6 +21,21 @@ exports.createPost = (req, res, next) => {
         .catch((err) => res.status(400).json(err));
 };
 
+exports.modifyPost = (req, res, next) => {
+    qPost.queryOnePost(req.params.id)
+        .then((ArrPost) => {
+            let post = ArrPost[0];
+            if (req.body.userId !== post.user_id) {
+                throw 'Acces is denied';
+            }
+            qPost.queryModifyPost(req.params.id, req.body)
+                .then(() => res.status(200).json({ message: "Post modified!" }))
+                .catch((err) => res.status(404).json(err));
+        })
+        .catch((err) => res.status(403).json({ error: err | 'Forbidden!' }));
+
+}
+
 
 exports.deletePost = (req, res, next) => {
     qPost.queryDeletePost(req.body)
