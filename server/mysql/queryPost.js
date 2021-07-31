@@ -2,14 +2,15 @@ const mysql = require("mysql");
 const conn = require("./config.js"); //config for connection in DataBase
 
 
-exports.queryAllPost = (num) => {
+exports.queryAllPost = (body) => {
   return new Promise((resolve, reject) => {
     let n = 2; // How much
-    let start = n * num;
+    let start = n * body.postCounter;
 
     conn.query(
-      `SELECT p.*, u.pseudo FROM Post P 
-      LEFT JOIN User U ON p.user_id=u.id
+      `SELECT p.*, u.pseudo, apl.status FROM Post p
+      LEFT JOIN User u ON p.user_id=u.id 
+      LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(body.userId)}
       ORDER BY date_publication DESC 
       LIMIT ${conn.escape(n)} OFFSET ${conn.escape(start)}`,
       (err, results) => {
@@ -25,12 +26,13 @@ exports.queryAllPost = (num) => {
 };
 
 
-exports.queryOnePost = (id) => {
+exports.queryOnePost = (id, userId) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
-      `SELECT p.*, u.pseudo FROM Post P 
-      LEFT JOIN User U ON p.user_id=u.id 
+      `SELECT p.*, u.pseudo, apl.status FROM Post p
+      LEFT JOIN User u ON p.user_id=u.id 
+      LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(userId)}
       WHERE p.id=${conn.escape(id)}`,
       (err, results) => {
         if (err) {
@@ -100,6 +102,23 @@ exports.queryDeletePost = (body) => {
   });
 };
 
+exports.queryModifyPost = (body) => {
+  return new Promise((resolve, reject) => {
+
+    conn.query(`
+    UPDATE`,
+      (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+
+  });
+};
+
 
 // POUR LIKE et DISLIKE
 // Pour verifie exist pour post like - dilike
@@ -111,9 +130,11 @@ exports.queryRecon = (body) => {
       
       WHERE post_id=${conn.escape(body.postId)} AND user_id=${conn.escape(body.userId)};`,
       (err, results) => {
-
-        resolve(results);
-
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
       }
     );
 
