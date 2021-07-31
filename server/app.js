@@ -41,9 +41,12 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 // ICI DEBUT DES API
-// ROUTES 
+// require ROUTES 
 const postRoutes = require('./routes/post');
+const commentRoutes = require('./routes/commment');
 
+// use this ROUTES
 app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
 
 module.exports = app;

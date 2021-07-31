@@ -1,0 +1,1 @@
+const qComment = require("../mysql/queryComment");
