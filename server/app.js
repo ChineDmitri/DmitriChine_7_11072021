@@ -43,7 +43,7 @@ app.use(bodyParser.json());
 // ICI DEBUT DES API
 // require ROUTES 
 const postRoutes = require('./routes/post');
-const commentRoutes = require('./routes/commment');
+const commentRoutes = require('./routes/comment');
 
 // use this ROUTES
 app.use('/api/post', postRoutes);

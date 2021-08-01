@@ -2,6 +2,7 @@ const mysql = require("mysql");
 const conn = require("./config.js"); //config for connection in DataBase
 
 
+//Query for get all post by 2
 exports.queryAllPost = (body) => {
   return new Promise((resolve, reject) => {
     let n = 2; // How much
@@ -26,6 +27,7 @@ exports.queryAllPost = (body) => {
 };
 
 
+// Query for get one post
 exports.queryOnePost = (id, userId) => {
   return new Promise((resolve, reject) => {
 
@@ -35,7 +37,7 @@ exports.queryOnePost = (id, userId) => {
       LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(userId)}
       WHERE p.id=${conn.escape(id)}`,
       (err, results) => {
-        if (err) {
+        if (err || results[0] === undefined) {
           reject(err);
         } else {
           resolve(results);
@@ -79,27 +81,29 @@ exports.queryCreatePost = (post) => {
   });
 };
 
+
+// Query for modification post
 exports.queryModifyPost = (postId, post) => {
   return new Promise((resolve, reject) => {
 
-    conn.query(`
-    UPDATE Post 
-    SET date_modification=NOW(),
-    title=${conn.escape(post.title)},
-    discription=${conn.escape(post.discription)}
-    WHERE id=${conn.escape(postId)};
-    
-    UPDATE Post_photo 
-    SET url=${conn.escape(post.url1)}
-    WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId1)};
-    
-    UPDATE Post_photo 
-    SET url=${conn.escape(post.url2)}
-    WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId2)};
-
-    UPDATE Post_photo 
-    SET url=${conn.escape(post.url3)}
-    WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId3)};`,
+    conn.query(
+      `UPDATE Post 
+      SET date_modification=NOW(),
+      title=${conn.escape(post.title)},
+      discription=${conn.escape(post.discription)}
+      WHERE id=${conn.escape(postId)};
+      
+      UPDATE Post_photo 
+      SET url=${conn.escape(post.url1)}
+      WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId1)};
+      
+      UPDATE Post_photo 
+      SET url=${conn.escape(post.url2)}
+      WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId2)};
+      
+      UPDATE Post_photo 
+      SET url=${conn.escape(post.url3)}
+      WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId3)};`,
       (err, results) => {
         if (err) {
           reject(err);
@@ -112,16 +116,17 @@ exports.queryModifyPost = (postId, post) => {
   });
 };
 
+
 // Query for delete post et ses photo, statistic account et like/dislike
-exports.queryDeletePost = (body) => {
+exports.queryDeletePost = (postId) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
-      `DELETE FROM Post_photo WHERE post_id=${conn.escape(body.postId)};
-      DELETE FROM Account_posts WHERE post_id=${conn.escape(body.postId)};
-      DELETE FROM Account_posts_liked WHERE post_id=${conn.escape(body.postId)};
+      `DELETE FROM Post_photo WHERE post_id=${conn.escape(postId)};
+      DELETE FROM Account_posts WHERE post_id=${conn.escape(postId)};
+      DELETE FROM Account_posts_liked WHERE post_id=${conn.escape(postId)};
       
-      DELETE FROM Post WHERE id=${conn.escape(body.postId)};`,
+      DELETE FROM Post WHERE id=${conn.escape(postId)};`,
       (err, results) => {
         if (err) {
           reject(err);
@@ -133,6 +138,7 @@ exports.queryDeletePost = (body) => {
 
   });
 };
+
 
 // POUR LIKE et DISLIKE
 // Pour verifie exist pour post like - dilike
