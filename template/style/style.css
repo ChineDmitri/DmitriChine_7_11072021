@@ -1,0 +1,312 @@
+body {
+  margin: 0;
+  font-family: "PT Sans", sans-serif;
+}
+
+body a {
+  text-decoration: none;
+  color: #000000;
+}
+
+body a:hover {
+  color: #1d4380;
+}
+
+header {
+  overflow: hidden;
+  position: relative;
+}
+
+header #head {
+  background-image: url(../images/header_bg.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 25vh;
+}
+
+header #menu {
+  background-color: rgba(14, 33, 63, 0.5);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  position: absolute;
+  top: calc(100% - 8vh);
+  width: 100%;
+  height: 8vh;
+}
+
+header #menu nav {
+  background-image: url(../images/icon-left-font-monochrome-white.png);
+  background-size: 20vh;
+  background-position: 10% 50%;
+  background-repeat: no-repeat;
+  position: relative;
+  -ms-flex-preferred-size: 70%;
+      flex-basis: 70%;
+  margin: 0 auto 0 auto;
+}
+
+@media screen and (max-width: 426px) {
+  header #menu nav {
+    background-image: url(../images/ico_white_a.png);
+    background-size: 20vh;
+    background-position: -5% 50%;
+    margin: 0;
+    -ms-flex-preferred-size: 100%;
+        flex-basis: 100%;
+  }
+}
+
+@media screen and (min-width: 1441px) {
+  header #menu nav {
+    -ms-flex-preferred-size: 900px;
+        flex-basis: 900px;
+  }
+}
+
+header #menu nav ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+  padding: 0;
+  margin: 0 50px 0 0;
+  height: 100%;
+}
+
+@media screen and (max-width: 426px) {
+  header #menu nav ul {
+    margin: 0 20px 0 0;
+  }
+}
+
+header #menu nav ul li {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #ffffff;
+  font-weight: 600;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  list-style-type: none;
+  margin: 0 5px;
+  padding: 0 10px;
+  height: calc(100% + 6px);
+}
+
+header #menu nav ul li:hover {
+  -webkit-box-shadow: 0 0 10px 5px rgba(14, 33, 63, 0.5);
+          box-shadow: 0 0 10px 5px rgba(14, 33, 63, 0.5);
+  -webkit-transition-duration: 400ms;
+          transition-duration: 400ms;
+  -webkit-transform: translateY(-5px);
+          transform: translateY(-5px);
+  -webkit-transform-origin: bottom;
+          transform-origin: bottom;
+}
+
+main #content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 0 auto 0 auto;
+  width: 70%;
+  background-color: white;
+}
+
+@media screen and (max-width: 426px) {
+  main #content {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 1441px) {
+  main #content {
+    width: 900px;
+  }
+}
+
+main .post {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 15px auto 0 auto;
+  padding: 10px 10px;
+  width: 90%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 0 5px 2px #ffd7d7;
+          box-shadow: 0 0 5px 2px #ffd7d7;
+}
+
+main .post-title {
+  font-weight: 600;
+  width: 100%;
+}
+
+main .post-body {
+  margin: 0 0 10px;
+}
+
+main .post-body-text {
+  margin: 0 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 16px;
+  /* fallback */
+  max-height: calc(16 * $nLine);
+  /* fallback */
+  -webkit-line-clamp: 5;
+  /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+main .post-body-photo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  max-height: 200px;
+}
+
+main .post-body-photo-one {
+  width: 100%;
+  max-height: 200px;
+}
+
+main .post-body-photo-one img {
+  width: 99%;
+  max-height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+main .post-author {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+main .post-author a {
+  font-weight: 600;
+}
+
+main .post-status {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 100%;
+  height: 30px;
+  font-size: 1.2rem;
+}
+
+main .post-status button {
+  background-color: #ffffff;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 1.2rem;
+}
+
+main .post-status button:hover {
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+main .post-status button .liked {
+  color: green;
+}
+
+main .post-status button .disliked {
+  color: red;
+}
+
+main .post-status span {
+  margin: 0 10px;
+}
+
+main #showMore {
+  max-width: 50%;
+  margin: 15px auto 0 auto;
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  cursor: pointer;
+  font-size: 1.2rem;
+  -webkit-box-shadow: 0 0 5px 2px #ffd7d7;
+          box-shadow: 0 0 5px 2px #ffd7d7;
+  -webkit-transition-duration: 200ms;
+          transition-duration: 200ms;
+}
+
+main #showMore:hover {
+  -webkit-transition-duration: 200ms;
+          transition-duration: 200ms;
+  -webkit-transform: scale(1.025);
+          transform: scale(1.025);
+}
+
+footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: rgba(14, 33, 63, 0.8);
+  width: 100%;
+  padding: 10px 0;
+  margin: 25px 0 0;
+}
+
+footer ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 0 auto;
+  padding: 0;
+}
+
+footer ul li {
+  margin: 0 auto;
+  font-weight: 600;
+  list-style-type: none;
+}
+
+footer ul li a:hover {
+  color: #ffffff;
+}
+/*# sourceMappingURL=style.css.map */
