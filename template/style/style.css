@@ -12,6 +12,32 @@ body a:hover {
   color: #1d4380;
 }
 
+body .btn-ico {
+  background-color: #ffffff;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 1.2rem;
+}
+
+body .btn-ico:hover {
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+body .btn-ico .green {
+  color: green;
+}
+
+body .btn-ico .red {
+  color: red;
+}
+
+body .btn-ico .orange {
+  color: orange;
+}
+
 header {
   overflow: hidden;
   position: relative;
@@ -44,19 +70,20 @@ header #menu {
   height: 8vh;
 }
 
-header #menu nav {
+header #menu .large-screen,
+header #menu .tight-screen {
   background-image: url(../images/icon-left-font-monochrome-white.png);
   background-size: 20vh;
   background-position: 10% 50%;
   background-repeat: no-repeat;
   position: relative;
-  -ms-flex-preferred-size: 70%;
-      flex-basis: 70%;
+  width: 70%;
   margin: 0 auto 0 auto;
 }
 
 @media screen and (max-width: 426px) {
-  header #menu nav {
+  header #menu .large-screen,
+  header #menu .tight-screen {
     background-image: url(../images/ico_white_a.png);
     background-size: 20vh;
     background-position: -5% 50%;
@@ -67,13 +94,15 @@ header #menu nav {
 }
 
 @media screen and (min-width: 1441px) {
-  header #menu nav {
+  header #menu .large-screen,
+  header #menu .tight-screen {
     -ms-flex-preferred-size: 900px;
         flex-basis: 900px;
   }
 }
 
-header #menu nav ul {
+header #menu .large-screen ul,
+header #menu .tight-screen ul {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -82,17 +111,19 @@ header #menu nav ul {
       -ms-flex-direction: row-reverse;
           flex-direction: row-reverse;
   padding: 0;
-  margin: 0 50px 0 0;
+  margin: 0 40px 0 0;
   height: 100%;
 }
 
 @media screen and (max-width: 426px) {
-  header #menu nav ul {
+  header #menu .large-screen ul,
+  header #menu .tight-screen ul {
     margin: 0 20px 0 0;
   }
 }
 
-header #menu nav ul li {
+header #menu .large-screen ul li,
+header #menu .tight-screen ul li {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   -webkit-box-align: center;
@@ -109,7 +140,8 @@ header #menu nav ul li {
   height: calc(100% + 6px);
 }
 
-header #menu nav ul li:hover {
+header #menu .large-screen ul li:hover,
+header #menu .tight-screen ul li:hover {
   -webkit-box-shadow: 0 0 10px 5px rgba(14, 33, 63, 0.5);
           box-shadow: 0 0 10px 5px rgba(14, 33, 63, 0.5);
   -webkit-transition-duration: 400ms;
@@ -118,6 +150,23 @@ header #menu nav ul li:hover {
           transform: translateY(-5px);
   -webkit-transform-origin: bottom;
           transform-origin: bottom;
+}
+
+@media screen and (max-width: 568px) {
+  header #menu .large-screen {
+    display: none;
+  }
+}
+
+header #menu .tight-screen {
+  font-size: 1.1rem;
+  display: none;
+}
+
+@media screen and (max-width: 568px) {
+  header #menu .tight-screen {
+    display: block;
+  }
 }
 
 main #content {
@@ -163,8 +212,32 @@ main .post {
 }
 
 main .post-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   font-weight: 600;
   width: 100%;
+}
+
+main .post-title a {
+  width: 75%;
+}
+
+main .post-title span {
+  width: 25%;
+  text-align: end;
+}
+
+main .post-title hr {
+  border: 0;
+  clear: both;
+  display: block;
+  width: 100%;
+  background-color: black;
+  height: 1px;
+  margin: 4px;
 }
 
 main .post-body {
@@ -228,28 +301,6 @@ main .post-status {
   width: 100%;
   height: 30px;
   font-size: 1.2rem;
-}
-
-main .post-status button {
-  background-color: #ffffff;
-  outline: none;
-  border: 0;
-  cursor: pointer;
-  margin: 0 10px;
-  font-size: 1.2rem;
-}
-
-main .post-status button:hover {
-  -webkit-transform: scale(1.1);
-          transform: scale(1.1);
-}
-
-main .post-status button .liked {
-  color: green;
-}
-
-main .post-status button .disliked {
-  color: red;
 }
 
 main .post-status span {

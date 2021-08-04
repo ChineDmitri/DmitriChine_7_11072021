@@ -8,6 +8,26 @@ body {
       color: #1d4380;
     }
   }
+  .btn-ico {
+    &:hover {
+      transform: scale(1.1);
+    }
+    .green {
+      color: green;
+    }
+    .red {
+      color: red;
+    }
+    .orange {
+      color: orange;
+    }
+    background-color: #ffffff;
+    outline: none;
+    border: 0;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 1.2rem;
+  }
 }
 
 // header - begin
@@ -32,7 +52,8 @@ header {
     top: calc(100% - 8vh);
     width: 100%;
     height: 8vh;
-    nav {
+    .large-screen,
+    .tight-screen {
       @media screen and (max-width: 426px) {
         background-image: url(../images/ico_white_a.png);
         background-size: 20vh;
@@ -50,7 +71,7 @@ header {
       // border-top-left-radius: 20px;
       // border-top-right-radius: 20px;
       position: relative;
-      flex-basis: 70%;
+      width: 70%;
       margin: 0 auto 0 auto;
       ul {
         @media screen and (max-width: 426px) {
@@ -59,7 +80,7 @@ header {
         display: flex;
         flex-direction: row-reverse;
         padding: 0;
-        margin: 0 50px 0 0;
+        margin: 0 40px 0 0;
         height: 100%;
         li {
           border-top-right-radius: 10px;
@@ -79,6 +100,18 @@ header {
             transform-origin: bottom;
           }
         }
+      }
+    }
+    .large-screen {
+      @media screen and (max-width: 568px) {
+        display: none;
+      }
+    }
+    .tight-screen {
+      font-size: 1.1rem;
+      display: none;
+      @media screen and (max-width: 568px) {
+        display: block;
       }
     }
   }
@@ -111,9 +144,26 @@ main {
     border-radius: 10px;
     box-shadow: 0 0 5px 2px #ffd7d7;
     &-title {
+      display: flex;
+      flex-wrap: wrap;
       font-weight: 600;
       width: 100%;
-
+      a {
+        width: 75%;
+      }
+      span {
+        width: 25%;
+        text-align: end;
+      }
+      hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 100%;
+        background-color: black;
+        height: 1px;
+        margin: 4px;
+      }
     }
     &-body {
       margin: 0 0 10px;
@@ -144,7 +194,7 @@ main {
       }
     }
     &-author {
-      font-size: 0.9rem; 
+      font-size: 0.9rem;
       margin-bottom: 10px;
       a {
         font-weight: 600;
@@ -159,23 +209,6 @@ main {
       font-size: 1.2rem;
       .counterLike {
         // pour compteur
-      }
-      button {
-        &:hover {
-          transform: scale(1.1);
-        }
-        .liked {
-          color: green;
-        }
-        .disliked {
-          color: red;
-        }
-        background-color: #ffffff;
-        outline: none;
-        border: 0;
-        cursor: pointer;
-        margin: 0 10px;
-        font-size: 1.2rem;
       }
       span {
         margin: 0 10px;

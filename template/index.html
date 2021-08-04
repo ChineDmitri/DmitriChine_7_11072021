@@ -15,19 +15,35 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="main-ayout">
         <header>
             <div id="head">
 
             </div>
             <div id="menu">
-                <nav>
+                <nav class="large-screen">
                     <ul>
                         <li>
-                            <span>Mon profil</span>
+                            <a href="#">Mon profil</a>
                         </li>
                         <li>
-                            <span>Ecrire un post</span>
+                            <a href="#">Ecrire un post</a>
+                        </li>
+                        <li>
+                            <a href="#">Accueil</a>
+                        </li>
+                    </ul>
+                </nav>
+                <nav class="tight-screen">
+                    <ul>
+                        <li>
+                            <a href="#"><i class="fas fa-user-circle"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fas fa-paper-plane"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fas fa-home"></i></a>
                         </li>
                     </ul>
                 </nav>
@@ -38,10 +54,19 @@
         <main>
             <div id="content">
                 <div class="post">
-                    <span class="post-title">
-                        <a href="#">Veni, vidi, vici...</a>
-                        <hr>
-                    </span>
+                    <div class="post-title">
+                        <a href="#">Veni, vidi, vici... Veni, vidi, vici.ici... Veni</a>
+                        <span>
+                            <button class="btn-ico modif">
+                                <i class="fas fa-pencil-alt orange"></i>
+                            </button>
+                            <button class="btn-ico">
+                                <i class="fas fa-trash-alt red"></i>
+                            </button>
+                        </span>
+                        <hr/>
+                    </div> 
+                   
                     <div class="post-body">
                         <div class="post-body-text">
                             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio eos voluptatibus magnam.
@@ -70,17 +95,19 @@
                         26/05/2021 21h50)
                     </span>
                     <span class="post-status">
-                        <button><i class="far fa-thumbs-up liked"></i></button>
+                        <button class="btn-ico"><i class="far fa-thumbs-up green"></i></button>
                         <span class="counterLike">10</span>
-                        <button><i class="far fa-thumbs-down"></i></button>
-                        <button><i class="far fa-comment">25</i></button>
+                        <button class="btn-ico"><i class="far fa-thumbs-down"></i></button>
+                        <button class="btn-ico"><i class="far fa-comment">25</i></button>
                     </span>
                 </div>
 
                 <div class="post">
-                    <span class="post-title"> <a href="#">Exo title</a>
+                    <div class="post-title">
+                        <a href="#">Exo title</a>
+                        <span> DELETE</span>
                         <hr>
-                    </span>
+                    </div>
                     <div class="post-body">
                         <div class="post-body-text">
                             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio eos voluptatibus magnam.
@@ -100,10 +127,10 @@
                         </div>
                     </div>
                     <span class="post-status">
-                        <button><i class="far fa-thumbs-up"></i></button>
+                        <button class="btn-ico"><i class="far fa-thumbs-up"></i></button>
                         <span class="counterLike">10</span>
-                        <button><i class="far fa-thumbs-down disliked"></i></button>
-                        <button><i class="far fa-comment">25</i></button>
+                        <button class="btn-ico"><i class="far fa-thumbs-down red"></i></button>
+                        <button class="btn-ico"><i class="far fa-comment">25</i></button>
                         <span class="post-title-autor">Ecrit par: Dimoto</span>
                     </span>
                 </div>
