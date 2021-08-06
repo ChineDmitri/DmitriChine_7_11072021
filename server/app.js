@@ -42,10 +42,12 @@ app.use(bodyParser.json());
 
 // ICI DEBUT DES API
 // require ROUTES 
+const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 
 // use this ROUTES
+app.use('/api/auth', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 

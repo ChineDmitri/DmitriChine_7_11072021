@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const postCtrl = require("../controllers/post");
-const commentCtrl = require("../controllers/comment")
 
 router.get("/", postCtrl.getAllPost);
 router.get("/:id", postCtrl.getOnePost);
