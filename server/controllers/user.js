@@ -3,6 +3,7 @@ const qUser = require("../mysql/queryUser");
 // package
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 exports.signup = (req, res, next) => {
@@ -31,5 +32,33 @@ exports.signup = (req, res, next) => {
 
 
 exports.login = (req, res, next) => {
+
+    const hashEmail = crypto.createHmac('sha256', process.env.SHA256_KEY)
+        .update(req.body.email)
+        .digest('hex');
+
+
+    qUser.findUser(hashEmail)
+        .then((user) => {
+            if (user.length === 0) {
+                return res.status(401).json({ message: "Utilisateur n'est pas trouvé" });
+            }
+            bcrypt.compare(req.body.password, user[0].password)
+                .then((validation) => {
+                    if (!validation) {
+                        return res.status(401).json({ message: "Mot de pass incorrect" });
+                    }
+                    res.status(200).json({
+                        userId: user[0].id,
+                        token: jwt.sign(
+                            {userId: user.id},
+                            process.env.JWT_KEY,
+                            {expiresIn: '24h'}
+                        )
+                    })
+                })
+                .catch((err) => res.status(502).json({err}));
+        })
+        .catch((err) => res.status(501).json({err}))
 
 };
