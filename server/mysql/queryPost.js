@@ -62,13 +62,15 @@ exports.queryCreatePost = (post) => {
 
       SET @a:=LAST_INSERT_ID();
 
-      INSERT INTO Post_photo (url, post_id) 
-      VALUES (${conn.escape(post.url1)}, @a),
-      (${conn.escape(post.url2)}, @a),
-      (${conn.escape(post.url3)}, @a);
+      INSERT INTO Post_photo (url1, url2, url3, post_id) 
+      VALUES (${conn.escape(post.url1)},
+      ${conn.escape(post.url2)}, 
+      ${conn.escape(post.url3)},
+      @a);
 
       INSERT INTO Account_posts (user_id, post_id)
-      VALUES (${conn.escape(post.userId)}, @a);`,
+      VALUES (${conn.escape(post.userId)}, 
+      @a);`,
       (err, results) => {
         if (err) {
           reject(err);
