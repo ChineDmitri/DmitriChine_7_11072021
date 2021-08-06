@@ -96,16 +96,8 @@ exports.queryModifyPost = (postId, post) => {
       WHERE id=${conn.escape(postId)};
       
       UPDATE Post_photo 
-      SET url=${conn.escape(post.url1)}
-      WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId1)};
-      
-      UPDATE Post_photo 
-      SET url=${conn.escape(post.url2)}
-      WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId2)};
-      
-      UPDATE Post_photo 
-      SET url=${conn.escape(post.url3)}
-      WHERE post_id=${conn.escape(postId)} AND id=${conn.escape(post.urlId3)};`,
+      SET url1=${conn.escape(post.url1)}, url2=${conn.escape(post.url2)}, url3=${conn.escape(post.url3)}
+      WHERE post_id=${conn.escape(postId)};`,
       (err, results) => {
         if (err) {
           reject(err);
