@@ -41,12 +41,12 @@ exports.login = (req, res, next) => {
     qUser.findUser(hashEmail)
         .then((user) => {
             if (user.length === 0) {
-                return res.status(401).json({ message: "Utilisateur n'est pas trouvé" });
+                return res.status(401).json({ message: "Utilisateur n'est pas trouvé" }); // Нет юзера
             }
             bcrypt.compare(req.body.password, user[0].password)
                 .then((validation) => {
                     if (!validation) {
-                        return res.status(401).json({ message: "Mot de pass incorrect" });
+                        return res.status(401).json({ message: "Mot de pass incorrect" }); // Не верный пароль
                     }
                     res.status(200).json({
                         userId: user[0].id,

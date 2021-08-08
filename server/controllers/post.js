@@ -4,7 +4,12 @@ const qPost = require("../mysql/queryPost");
 // Obtenir tout les post
 exports.getAllPost = (req, res, next) => {
 
-    qPost.queryAllPost(req.body)
+    objet = new Object({
+        userId: req.body.userId,
+        postCounter: req.body.postCounter
+    })
+
+    qPost.queryAllPost(objet)
         .then((object) => res.status(200).json(object))
         .catch((err) => res.status(404).json(err));
 
