@@ -1,95 +1,64 @@
 <script>
 export default {
-  name: "app",
   data() {
     return {
-      regexEmail:
-        /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
-      regexPseudo: /[a-zA-Z0-9][a-zA-Z0-9]/,
       email: "",
-      pseudo: "",
-      firstPassValue: "",
-      secondPassValue: "",
-      placeholderDoublePass: "Repetez mot de passe",
-      placeholderRules: "Minimum 8 caractères",
-      message: "",
+      password: "",
     };
   },
-  computed: {},
-  watch: {},
+
   methods: {
-    signUp(event) {
-      if (
-        this.regexEmail.test(this.email) &&
-        this.regexPseudo.test(this.pseudo) &&
-        this.firstPassValue.length > 7 &&
-        this.secondPassValue.length > 7 &&
-        this.firstPassValue === this.secondPassValue
-      ) {
-        this.message = "GOOD";
-      } else {
-        this.message = "Veuillez remplire les champs correctement";
-      }
+    loginUser(event) {
+      let user = {
+        email: this.email,
+        password: this.password,
+      };
+
+      console.log(user);
+      
+      let options = {
+        methode: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify(user),
+      };
+
+      fetch("http://localhost:3000/api/auth/login", options)
+        .then((resultat) => console.log(resultat))
+        .catch((err) => console.log(err));
+
       event.preventDefault();
     },
   },
 };
 </script>
 
+
 <template>
   <div id="auth-form">
-    <h1><router-link to="/">Connexion</router-link> / Enregistré</h1>
+    <h1>Connexion / <router-link to="/signup">Enregistré </router-link></h1>
     <div>
       <form>
         <label for="email">
           Email:
           <input type="email" id="email" v-model="email" />
         </label>
-
-        <label for="pseudo">
-          Pseudo:
-          <input
-            type="text"
-            id="pseudo"
-            v-model="pseudo"
-            placeholder="example: Dimitri42"
-          />
-        </label>
-
         <label for="password">
-          Mot de pass:
+          Password:
           <input
             type="password"
             id="password"
-            placeholder="Minimum 8 caractères"
-            v-model="firstPassValue"
+            placeholder=""
+            v-model="password"
           />
         </label>
 
-        <label for="password">
-          <input
-            type="password"
-            id="passwordDouble"
-            :placeholder="
-              firstPassValue.length > 7
-                ? placeholderDoublePass
-                : placeholderRules
-            "
-            v-model="secondPassValue"
-          />
-        </label>
+        <span>
+          <a href="#"> </a>
+        </span>
 
-        <!-- es-que mot de pass sont identique  -->
-        <p
-          v-if="firstPassValue.length > 7 && firstPassValue != secondPassValue"
-        >
-          Mot de passe ne sont pas identique
-        </p>
-        <p>
-          {{ message }}
-        </p>
-
-        <input type="submit" @click="signUp" value="Entrée" />
+        <input type="submit" value="Entrer" v-on:click="loginUser" />
       </form>
     </div>
   </div>
@@ -115,8 +84,8 @@ $fontSize: 1rem;
   }
   background-color: #fff;
   border-radius: 15px;
-  margin: 15vh auto;
-  width: 50%;
+  margin: 5vh auto;
+  width: 40%;
   font-size: $fontSize;
   box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.3);
   h1 {

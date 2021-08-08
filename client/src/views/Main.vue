@@ -1,3 +1,15 @@
+<script>
+import PostNews from "../components/PostNews";
+
+export default {
+  name: "main",
+  components: {
+    PostNews,
+  },
+};
+</script>
+
+
 <template>
   <div id="main-layout">
     <header>
@@ -34,7 +46,7 @@
 
     <main>
       <div id="content">
-        <router-view />
+        <PostNews></PostNews>
         <!-- main content -->
       </div>
     </main>
@@ -161,7 +173,7 @@ main {
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px #ffd7d7;
+    box-shadow: 0 0 5px 2px rgba(14, 33, 63, 0.5);
     &-title {
       display: flex;
       flex-wrap: wrap;
@@ -236,7 +248,6 @@ main {
   }
 }
 // main - end
-
 
 // footer - start
 footer {
