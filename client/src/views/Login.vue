@@ -9,12 +9,12 @@ export default {
 
   methods: {
     loginUser(event) {
+      event.preventDefault();
+
       let user = {
         email: this.email,
         password: this.password,
       };
-
-      console.log(user);
 
       let options = {
         method: "post",
@@ -22,13 +22,18 @@ export default {
           "Content-Type": "application/json; charset=utf-8",
         },
         body: JSON.stringify(user),
+        credentials: "include",
       };
 
       fetch("http://localhost:3000/api/auth/login", options)
-        .then((resultat) => console.log(resultat))
-        .catch((err) => console.log(err));
-
-      event.preventDefault();
+        .then((resultat) => {
+          console.log(resultat);
+          console.log(resultat.body);
+        })
+        .catch((err) => {
+          console.log("quoi");
+          console.log(err);
+        });
     },
   },
 };

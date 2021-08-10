@@ -1,8 +1,10 @@
 const express = require("express");
 const mysql = require("mysql");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();
+
 
 const path = require("path");
 
@@ -27,7 +29,8 @@ conn.end();
 const app = express();
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", 'http://localhost:8080');
+  res.setHeader("Access-Control-Allow-Credentials", true);
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
@@ -39,6 +42,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// app.use(cors({
+//   origin: 'http://localhost:3000',
+//   credentials: true
+// }))
 app.use(bodyParser.json());
 app.use(cookieParser());
 
