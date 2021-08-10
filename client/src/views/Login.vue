@@ -15,9 +15,9 @@ export default {
       };
 
       console.log(user);
-      
+
       let options = {
-        methode: "POST",
+        method: "post",
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
