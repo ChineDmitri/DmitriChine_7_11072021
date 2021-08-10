@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();
 
 const path = require("path");
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // ICI DEBUT DES API
 // require ROUTES 

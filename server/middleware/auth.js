@@ -2,20 +2,26 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1];
+        // recuperation cookies
+        const token = req.cookies.access_token;
+        // decodage cookies
         const decodedToken = jwt.verify(token, process.env.JWT_KEY);
+        // ici nous avons donné decodé
         const userId = decodedToken.userId;
+        const profil = decodedToken.profil;
 
-        // console.log(decodedToken)
-        // console.log("user id from mw ", userId)
+        // recuperation donée d'un utilisateur
+        // data.userId & data.profil
+        const data = req.cookies.data;
 
-        if (req.body.userId && req.body.userId !== userId) {
+        if (data.userId
+            && data.profil
+            && data.userId !== userId
+            && data.profil !== profil) {
             throw 'User ID non valable';
         } else {
-
             // attribution userId
-            req.userId = userId
-
+            req.body.userId = userId
             next();
         }
 
