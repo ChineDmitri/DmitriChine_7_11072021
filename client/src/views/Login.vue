@@ -1,4 +1,6 @@
 <script>
+import { login } from "../api/auth.js";
+
 export default {
   data() {
     return {
@@ -16,22 +18,11 @@ export default {
         password: this.password,
       };
 
-      let options = {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify(user),
-        credentials: "include",
-      };
-
-      fetch("http://localhost:3000/api/auth/login", options)
-        .then((resultat) => {
-          console.log(resultat);
-          console.log(resultat.body);
+      login(user)
+        .then((data) => {
+          console.log(data);
         })
         .catch((err) => {
-          console.log("quoi");
           console.log(err);
         });
     },

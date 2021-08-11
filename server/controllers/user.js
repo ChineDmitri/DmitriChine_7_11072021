@@ -42,12 +42,18 @@ exports.login = (req, res, next) => {
     qUser.findUser(hashEmail)
         .then((user) => {
             if (user.length === 0) {
-                return res.status(401).json({ message: "Utilisateur n'est pas trouvé" }); // Нет юзера
+                return res.status(401).json({
+                    message: "Utilisateur n'est pas trouvé",
+                    auth: false
+                }); // no user
             }
             bcrypt.compare(req.body.password, user[0].password)
                 .then((validation) => {
                     if (!validation) {
-                        return res.status(401).json({ message: "Mot de pass incorrect" }); // MdP incorrect
+                        return res.status(401).json({
+                            message: "Mot de pass incorrect",
+                            auth: false
+                        }); // MdP incorrect
                     }
 
                     const token = jwt.sign(
@@ -80,7 +86,10 @@ exports.login = (req, res, next) => {
                         // secure: true
                     });
 
-                    res.status(200).end()
+                    res.status(200).json({
+                        message: "Auth -> OK",
+                        auth: true
+                    })
 
                     // res.status(200).json({
                     //     userId: user[0].id,
