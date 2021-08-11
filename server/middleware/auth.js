@@ -20,8 +20,10 @@ module.exports = (req, res, next) => {
             && data.profil !== profil) {
             throw 'User ID non valable';
         } else {
-            // attribution userId
-            req.body.userId = userId
+            // attribution userId et son profil(A M U)
+            req.body.userId = userId;
+            req.body.profil = profil;
+
             next();
         }
 
