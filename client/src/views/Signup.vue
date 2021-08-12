@@ -1,10 +1,12 @@
 <script>
+import { signup } from "../api/auth.js";
+
 export default {
   data() {
     return {
       regexEmail:
         /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
-      regexPseudo: /[a-zA-Z0-9][a-zA-Z0-9]/,
+      regexPseudo: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/,
       email: "",
       pseudo: "",
       firstPassValue: "",
@@ -12,24 +14,79 @@ export default {
       placeholderDoublePass: "Repetez mot de passe",
       placeholderRules: "Minimum 8 caractères",
       message: "",
+      vEmail: false,
+      vPseudo: false,
+      vPassword: false,
     };
   },
   computed: {},
   watch: {},
   methods: {
-    signUp(event) {
+    validInput(regex, value) {
+      if (regex.test(value)) {
+        console.log("true", event.target);
+        event.target.classList.remove("invlide");
+        event.target.classList.add("valide");
+        return true;
+      } else {
+        console.log("false", event.target);
+        event.target.classList.remove("valide");
+        event.target.classList.add("invalide");
+        return false;
+      }
+    },
+
+    validFirstPassword() {
+      if (this.firstPassValue.length > 7) {
+        event.target.classList.remove("invlide");
+        event.target.classList.add("valide");
+        return true;
+      } else {
+        event.target.classList.remove("valide");
+        event.target.classList.add("invalide");
+        return false;
+      }
+    },
+
+    validSecondPassword() {
       if (
-        this.regexEmail.test(this.email) &&
-        this.regexPseudo.test(this.pseudo) &&
-        this.firstPassValue.length > 7 &&
         this.secondPassValue.length > 7 &&
-        this.firstPassValue === this.secondPassValue
+        this.secondPassValue.length === this.firstPassValue.length
       ) {
-        this.message = "GOOD";
+        event.target.classList.remove("invlide");
+        event.target.classList.add("valide");
+        return true;
+      } else {
+        event.target.classList.remove("valide");
+        event.target.classList.add("invalide");
+        return false;
+      }
+    },
+
+    signUp(event) {
+      event.preventDefault();
+
+      let user = {
+        email: this.email,
+        pseudo: this.pseudo,
+        password: this.secondPassValue,
+      };
+
+      if (this.vEmail && this.vPseudo && this.vPassword) {
+        signup(user)
+          .then((data) => {
+            if (data.created) { // si utilisateur créé
+              this.$router.push("/");
+            } else {
+              this.message = data.message;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
         this.message = "Veuillez remplire les champs correctement";
       }
-      event.preventDefault();
     },
   },
 };
@@ -42,7 +99,14 @@ export default {
       <form>
         <label for="email">
           Email:
-          <input type="email" id="email" v-model="email" />
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            class=""
+            @input="vEmail = validInput(regexEmail, email)"
+            placeholder="ex: dimitri42@groupomania.fr"
+          />
         </label>
 
         <label for="pseudo">
@@ -51,7 +115,8 @@ export default {
             type="text"
             id="pseudo"
             v-model="pseudo"
-            placeholder="example: Dimitri42"
+            @input="vPseudo = validInput(regexPseudo, pseudo)"
+            placeholder="ex: Dimitri42 (max: 30 symbole)"
           />
         </label>
 
@@ -62,6 +127,7 @@ export default {
             id="password"
             placeholder="Minimum 8 caractères"
             v-model="firstPassValue"
+            @input="validFirstPassword"
           />
         </label>
 
@@ -75,6 +141,7 @@ export default {
                 : placeholderRules
             "
             v-model="secondPassValue"
+            @input="vPassword = validSecondPassword()"
           />
         </label>
 
@@ -139,7 +206,7 @@ $fontSize: 1rem;
       .invalide {
         border: 1px solid red;
       }
-      .valid {
+      .valide {
         border: 1px solid #0dc378;
       }
       input {

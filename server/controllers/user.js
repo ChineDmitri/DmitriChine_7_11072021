@@ -22,7 +22,10 @@ exports.signup = (req, res, next) => {
             });
 
             qUser.createUser(user)
-                .then(() => res.status(201).json({ message: "User created!" }))
+                .then(() => res.status(201).json({
+                    message: "User created!",
+                    created: true
+                }))
                 .catch((err) => res.status(400).json(err));
 
         })

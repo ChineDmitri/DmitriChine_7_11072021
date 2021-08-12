@@ -6,6 +6,7 @@ export default {
     return {
       email: "",
       password: "",
+      message: "",
     };
   },
 
@@ -20,7 +21,11 @@ export default {
 
       login(user)
         .then((data) => {
-          console.log(data);
+          if (data.auth) { //si authentication reussit
+            this.$router.push("/compte");
+          } else {
+            this.message = data.message;
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -50,9 +55,9 @@ export default {
           />
         </label>
 
-        <span>
-          <a href="#"> </a>
-        </span>
+        <p v-if="message !== ''">
+          {{ message }}
+        </p>
 
         <input type="submit" value="Entrer" v-on:click="loginUser" />
       </form>
