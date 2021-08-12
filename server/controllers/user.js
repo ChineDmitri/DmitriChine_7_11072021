@@ -22,7 +22,10 @@ exports.signup = (req, res, next) => {
             });
 
             qUser.createUser(user)
-                .then(() => res.status(201).json({ message: "User created!" }))
+                .then(() => res.status(201).json({
+                    message: "User created!",
+                    created: true
+                }))
                 .catch((err) => res.status(400).json(err));
 
         })
@@ -38,9 +41,10 @@ exports.login = (req, res, next) => {
         .update(req.body.email)
         .digest('hex');
 
-
     qUser.findUser(hashEmail)
         .then((user) => {
+
+
             if (user.length === 0) {
                 return res.status(401).json({
                     message: "Utilisateur n'est pas trouvé",
@@ -72,18 +76,16 @@ exports.login = (req, res, next) => {
                     // ici token chifré
                     res.cookie('access_token', token, {
                         maxAge: 3600 * 24, // 24 heurs
-                        // httpOnly: true // OWASP utilisation par http seulement
-                        // secure il faut decommenter en production!
-                        // secure: true
+                        // httpOnly: true, // OWASP utilisation par http seulement
+                        // secure: true // secure il faut decommenter en production!
 
                     });
 
                     // ici donnée de utilisateur
                     res.cookie('data', data, {
                         maxAge: 3600 * 24, // 24 heurs
-                        // httpOnly: true // OWASP utilisation par http seulement
-                        // secure il faut decommenter en production!
-                        // secure: true
+                        // httpOnly: true, // OWASP utilisation par http seulement
+                        // secure: true // secure il faut decommenter en production!
                     });
 
                     res.status(200).json({
@@ -91,17 +93,25 @@ exports.login = (req, res, next) => {
                         auth: true
                     })
 
-                    // res.status(200).json({
-                    //     userId: user[0].id,
-                    //     token: jwt.sign(
-                    //         {userId: user[0].id},
-                    //         process.env.JWT_KEY,
-                    //         {expiresIn: '24h'}
-                    //     )
-                    // })
                 })
                 .catch((err) => res.status(502).json({ err }));
         })
         .catch((err) => res.status(501).json({ err }))
 
 };
+
+
+// obtenir user 
+exports.getOneUser = (req, res, next) => {
+
+    if (req.params.id == undefined) {
+        qUser.queryGetOneUser(req.body.userId)
+            .then((account) => res.status(200).json(account[0]))
+            .catch((err) => res.status(404).json({ err }))
+    } else {
+        qUser.queryGetOneUser(req.params.id)
+            .then((account) => res.status(200).json(account[0]))
+            .catch((err) => res.status(404).json({ err }))
+    }
+
+}

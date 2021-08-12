@@ -46,3 +46,20 @@ exports.findUser = (email) => {
 
     });
 };
+
+exports.queryGetOneUser = (id) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `SELECT id, pseudo, date_inscription, profil_img_url FROM user WHERE id=${conn.escape(id)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
