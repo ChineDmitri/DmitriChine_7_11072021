@@ -9,9 +9,10 @@ exports.queryAllPost = (body) => {
     let start = n * body.postCounter;
 
     conn.query(
-      `SELECT p.*, u.pseudo, apl.status FROM Post p
+      `SELECT p.*, pp.url_img, u.pseudo, apl.status FROM Post p
       LEFT JOIN User u ON p.user_id=u.id 
       LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(body.userId)}
+      LEFT JOIN post_photo pp ON p.id=pp.post_id
       ORDER BY date_publication DESC 
       LIMIT ${conn.escape(n)} OFFSET ${conn.escape(start)}`,
       (err, results) => {
