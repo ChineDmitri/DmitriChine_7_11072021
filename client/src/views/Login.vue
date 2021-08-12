@@ -1,5 +1,5 @@
 <script>
-import { login } from "../api/auth.js";
+import { sendRequest } from "../api/index.js";
 
 export default {
   data() {
@@ -11,7 +11,7 @@ export default {
   },
 
   methods: {
-    loginUser(event) {
+    logIn(event) {
       event.preventDefault();
 
       let user = {
@@ -19,10 +19,10 @@ export default {
         password: this.password,
       };
 
-      login(user)
+     sendRequest('http://localhost:3000/api/auth/login', 'POST', user)
         .then((data) => {
           if (data.auth) { //si authentication reussit
-            this.$router.push("/compte");
+            this.$router.push("/moncompte/");
           } else {
             this.message = data.message;
           }
@@ -59,7 +59,7 @@ export default {
           {{ message }}
         </p>
 
-        <input type="submit" value="Entrer" v-on:click="loginUser" />
+        <input type="submit" value="Entrer" v-on:click="logIn" />
       </form>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <script>
-import { signup } from "../api/auth.js";
+import { sendRequest } from "../api/index.js";
 
 export default {
   data() {
@@ -73,7 +73,7 @@ export default {
       };
 
       if (this.vEmail && this.vPseudo && this.vPassword) {
-        signup(user)
+        sendRequest("http://localhost:3000/api/auth/signup", "POST", user)
           .then((data) => {
             if (data.created) { // si utilisateur créé
               this.$router.push("/");

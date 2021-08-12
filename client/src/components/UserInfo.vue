@@ -1,6 +1,7 @@
 <script>
 export default {
   name: "UserInfo",
+  props: ["pseudo", "dateInscriotion", "imgProfil", "monCompte"],
 };
 </script>
 
@@ -8,12 +9,14 @@ export default {
   <div id="account">
     <div id="header">
       <div id="header-photo">
-        <img src="../assets/custom_photo_user.png" alt="" />
+        <img :src="imgProfil" alt="" />
       </div>
       <div id="header-info">
-        <span id="header-info-pseudo">Dimoto</span>
-        <span id="header-info-dateInsc">Date d'inscription: 25/05/2021</span>
-        <div id="header-info-manipulation">
+        <span id="header-info-pseudo">{{ pseudo }}</span>
+        <span id="header-info-dateInsc"
+          >Date d'inscription: {{ dateInscriotion }}</span
+        >
+        <div v-if="monCompte" id="header-info-manipulation">
           <button class="btn-ico">
             <i class="fas fa-pencil-alt orange"></i>
           </button>

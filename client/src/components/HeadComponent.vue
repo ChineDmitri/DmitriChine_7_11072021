@@ -11,7 +11,7 @@ export default {
         <nav class="large-screen">
           <ul>
             <li>
-              <a href="/compte">Mon profil</a>
+              <a href="/moncompte">Mon profil</a>
             </li>
             <li>
               <a href="#">Ecrire un post</a>
@@ -24,13 +24,13 @@ export default {
         <nav class="tight-screen">
           <ul>
             <li>
-              <a href="#"><i class="fas fa-user-circle"></i></a>
+              <a href="/moncompte"><i class="fas fa-user-circle"></i></a>
             </li>
             <li>
               <a href="#"><i class="fas fa-paper-plane"></i></a>
             </li>
             <li>
-              <a href="#"><i class="fas fa-home"></i></a>
+              <a href="/main"><i class="fas fa-home"></i></a>
             </li>
           </ul>
         </nav>

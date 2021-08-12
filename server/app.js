@@ -1,10 +1,8 @@
 const express = require("express");
 const mysql = require("mysql");
-const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config();
-
 
 const path = require("path");
 
@@ -42,12 +40,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   credentials: true
-// }))
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // ICI DEBUT DES API
 // require ROUTES 

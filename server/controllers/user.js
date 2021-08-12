@@ -76,7 +76,7 @@ exports.login = (req, res, next) => {
                     // ici token chifré
                     res.cookie('access_token', token, {
                         maxAge: 3600 * 24, // 24 heurs
-                        // httpOnly: true, // OWASP utilisation par http seulement
+                        httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
 
                     });
@@ -84,7 +84,7 @@ exports.login = (req, res, next) => {
                     // ici donnée de utilisateur
                     res.cookie('data', data, {
                         maxAge: 3600 * 24, // 24 heurs
-                        // httpOnly: true, // OWASP utilisation par http seulement
+                        httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
                     });
 

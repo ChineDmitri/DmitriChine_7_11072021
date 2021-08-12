@@ -17,15 +17,12 @@ export default {
       pseudo: "",
       dateInscriotion: "",
       imgProfil: "",
-      monCompte: false,
+      monCompte: true,
     };
   },
   methods: {
     getInfoUser() {
-      sendRequestGET(
-        `http://localhost:3000/api/auth/${this.$route.params.id}`,
-        "GET"
-      )
+      sendRequestGET(`http://localhost:3000/api/auth/`, "GET")
         .then((data) => {
           if (data.error !== 0) {
             console.log(data);

@@ -20,9 +20,16 @@ const routes = [
     component: () => import('../views/Main.vue')
   },
   {
-    path: '/compte',
+    path: '/compte/:id',
     name: 'Compte',
+    props: true,
     component: () => import('../views/Account.vue')
+  },
+  {
+    path: '/moncompte/',
+    name: 'MonCompte',
+    props: true,
+    component: () => import('../views/MonAccount.vue')
   }
 ]
 
