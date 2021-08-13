@@ -84,7 +84,7 @@ exports.login = (req, res, next) => {
                     // ici donnée de utilisateur
                     res.cookie('data', data, {
                         maxAge: 3600 * 24, // 24 heurs
-                        httpOnly: true // OWASP utilisation par http seulement
+                        // httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
                     });
 
@@ -112,6 +112,45 @@ exports.getOneUser = (req, res, next) => {
         qUser.queryGetOneUser(req.params.id)
             .then((account) => res.status(200).json(account[0]))
             .catch((err) => res.status(404).json({ err }))
+    };
+
+};
+
+
+function deleteImg(objet) {
+    const fileName = objet.profil_img_url.split('/images/')[1];
+    fs.unlinkSync(`images/${fileName}`);
+};
+
+// modifcation info user 
+exports.modifyInfoUser = (req, res, next) => {
+    
+    const userObject = req.file ? // s'il existe on parse body Sauce SINON on reste simple
+        { // true 1
+            ...req.body,
+            userId: req.body.userId,
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        } : {
+            ...req.body,
+            userId: req.body.userId,
+        }; // false 0
+
+    if (req.file) { // si on modifier une image pour une sauce, il ne faut pas oublier supprime l'ancienne
+        qUser.queryGetOneUser(req.body.userId)
+            .then((user) => deleteImg(user))
+            .catch((error) => res.status(500).json({ error }));
     }
 
-}
+    // const obj = {
+    //     ...req.body,
+    //     userId: req.body.userId
+    // }
+
+    qUser.updateInfoUser(obj)
+        .then(() => res.status(200).json({
+            message: 'User info modified',
+            status: true
+        }))
+        .catch((error) => res.status(404).json({ error }));
+
+};

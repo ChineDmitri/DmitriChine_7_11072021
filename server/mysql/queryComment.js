@@ -3,6 +3,7 @@ const conn = require("./config.js"); //config for connection in DataBase
 
 exports.queryCreateComment = (comment, postId) => {
     return new Promise((resolve, reject) => {
+
         conn.query(
             `INSERT INTO Post_commentaire (commentaire, date_publication, user_id, post_id)
             VALUES (${conn.escape(comment.text)},
@@ -22,5 +23,6 @@ exports.queryCreateComment = (comment, postId) => {
                 }
             }
         );
+        
     });
 };
