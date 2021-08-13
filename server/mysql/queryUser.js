@@ -47,11 +47,33 @@ exports.findUser = (email) => {
     });
 };
 
+
+// query pour recherch par userId
 exports.queryGetOneUser = (id) => {
     return new Promise((resolve, reject) => {
 
         conn.query(
             `SELECT id, pseudo, date_inscription, profil_img_url FROM user WHERE id=${conn.escape(id)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
+exports.updateInfoUser = (user) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `UPDATE User
+            SET pseudo=${conn.escape(user.pseudo)}, profil_img_url=${conn.escape(user.imageUrl)}
+            WHERE id=${conn.escape(user.userId)}`,
             (err, result) => {
                 if (err) {
                     reject(err)
