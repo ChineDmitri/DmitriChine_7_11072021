@@ -4,6 +4,25 @@ const qUser = require("../mysql/queryUser");
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const { reject } = require("bcrypt/promises");
+
+// fonction pour supprimé photo de utilisateur dans le file system
+function deleteImg(user) {
+    return new Promise((resolve, reject) => {
+        const fileName = user.profil_img_url.split('/images/')[1];
+        fs.unlink(`images/${fileName}`, (err) => {
+            if (err) {
+                reject(err)
+            }
+            else {
+                resolve()
+            }
+
+        });
+    })
+}
+
 
 // enregisté un utilisateur
 exports.signup = (req, res, next) => {
@@ -75,7 +94,7 @@ exports.login = (req, res, next) => {
 
                     // ici token chifré
                     res.cookie('access_token', token, {
-                        maxAge: 3600 * 24, // 24 heurs
+                        maxAge: 60000 * 60 * 24, // 24 heurs
                         httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
 
@@ -83,8 +102,8 @@ exports.login = (req, res, next) => {
 
                     // ici donnée de utilisateur
                     res.cookie('data', data, {
-                        maxAge: 3600 * 24, // 24 heurs
-                        // httpOnly: true // OWASP utilisation par http seulement
+                        maxAge: 60000 * 60 * 24, // 24 heurs
+                        httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
                     });
 
@@ -117,39 +136,42 @@ exports.getOneUser = (req, res, next) => {
 };
 
 
-function deleteImg(objet) {
-    const fileName = objet.profil_img_url.split('/images/')[1];
-    fs.unlinkSync(`images/${fileName}`);
-};
-
 // modifcation info user 
 exports.modifyInfoUser = (req, res, next) => {
-    
+
     const userObject = req.file ? // s'il existe on parse body Sauce SINON on reste simple
         { // true 1
-            ...req.body,
+            pseudo: req.body.pseudo,
             userId: req.body.userId,
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         } : {
-            ...req.body,
+            pseudo: req.body.pseudo,
             userId: req.body.userId,
+            imageUrl: req.body.imageUrl
         }; // false 0
 
-    if (req.file) { // si on modifier une image pour une sauce, il ne faut pas oublier supprime l'ancienne
-        qUser.queryGetOneUser(req.body.userId)
-            .then((user) => deleteImg(user))
-            .catch((error) => res.status(500).json({ error }));
-    }
+    // si on modifier une image pour un user, il ne faut pas oublier supprime l'ancienne   
+    qUser.queryGetOneUser(req.body.userId)
+        .then((user) => {
+            try {
+                if (req.file) {
+                    console.log(user[0])
+                    deleteImg(user[0])
+                        .then(() => {})
+                        .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
+                }
+            } catch {
+                throw "User n'existe pas"
+            }
+        })
+        .catch((error) => res.status(500).json({ error }));
 
-    // const obj = {
-    //     ...req.body,
-    //     userId: req.body.userId
-    // }
-
-    qUser.updateInfoUser(obj)
+    // mise à jour des donnée d'un utilisateur
+    qUser.updateInfoUser(userObject)
         .then(() => res.status(200).json({
             message: 'User info modified',
-            status: true
+            status: true,
+            test: req.body.userId
         }))
         .catch((error) => res.status(404).json({ error }));
 

@@ -27,7 +27,6 @@ conn.end();
 const app = express();
 
 app.use((req, res, next) => {
-  // pour utilisation cookies n'est pas possible utilisé Control-Allow-Origin "*""
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
   res.setHeader("Access-Control-Allow-Credentials", true);
   res.setHeader(
@@ -41,8 +40,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
+
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

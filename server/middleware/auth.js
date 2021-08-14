@@ -24,6 +24,8 @@ module.exports = (req, res, next) => {
             req.body.userId = userId;
             req.body.profil = profil;
 
+            // console.log('from MW ', req.body.userId)
+
             next();
         }
 

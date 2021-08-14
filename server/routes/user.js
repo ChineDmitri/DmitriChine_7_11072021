@@ -11,7 +11,7 @@ router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
 router.get("/:id", auth, userCtrl.getOneUser);
 router.get("/", auth, userCtrl.getOneUser);
-router.put("/", auth, multer, userCtrl.modifyInfoUser);
+router.put("/", multer, auth, userCtrl.modifyInfoUser);
 
 
 module.exports = router;
