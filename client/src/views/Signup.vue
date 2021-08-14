@@ -4,46 +4,45 @@ import { sendRequest } from "../api/index.js";
 export default {
   data() {
     return {
-      regexEmail:
-        /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+      regexEmail: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){3}\.[a-z]{2,3}$/,
       regexPseudo: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/,
+      vEmail: false,
+      vPseudo: false,
+      vPassword: false,
       email: "",
       pseudo: "",
       firstPassValue: "",
       secondPassValue: "",
       placeholderDoublePass: "Repetez mot de passe",
       placeholderRules: "Minimum 8 caractères",
-      message: "",
-      vEmail: false,
-      vPseudo: false,
-      vPassword: false,
+      message: ""
     };
   },
   computed: {},
   watch: {},
   methods: {
-    validInput(regex, value) {
+    validInput(regex, value, event) {
       if (regex.test(value)) {
         console.log("true", event.target);
-        event.target.classList.remove("invlide");
-        event.target.classList.add("valide");
+        event.target.classList.remove("invalid");
+        event.target.classList.add("valid");
         return true;
       } else {
         console.log("false", event.target);
-        event.target.classList.remove("valide");
-        event.target.classList.add("invalide");
+        event.target.classList.remove("valid");
+        event.target.classList.add("invalid");
         return false;
       }
     },
 
     validFirstPassword() {
       if (this.firstPassValue.length > 7) {
-        event.target.classList.remove("invlide");
-        event.target.classList.add("valide");
+        event.target.classList.remove("invalid");
+        event.target.classList.add("valid");
         return true;
       } else {
-        event.target.classList.remove("valide");
-        event.target.classList.add("invalide");
+        event.target.classList.remove("valid");
+        event.target.classList.add("invalid");
         return false;
       }
     },
@@ -51,14 +50,14 @@ export default {
     validSecondPassword() {
       if (
         this.secondPassValue.length > 7 &&
-        this.secondPassValue.length === this.firstPassValue.length
+        this.secondPassValue === this.firstPassValue
       ) {
-        event.target.classList.remove("invlide");
-        event.target.classList.add("valide");
+        event.target.classList.remove("invalid");
+        event.target.classList.add("valid");
         return true;
       } else {
-        event.target.classList.remove("valide");
-        event.target.classList.add("invalide");
+        event.target.classList.remove("valid");
+        event.target.classList.add("invalid");
         return false;
       }
     },
@@ -69,26 +68,48 @@ export default {
       let user = {
         email: this.email,
         pseudo: this.pseudo,
-        password: this.secondPassValue,
+        password: this.secondPassValue
       };
 
-      if (this.vEmail && this.vPseudo && this.vPassword) {
+      if (
+        this.vEmail &&
+        this.vPseudo &&
+        this.vPassword &&
+        this.secondPassValue === this.firstPassValue
+      ) {
         sendRequest("http://localhost:3000/api/auth/signup", "POST", user)
-          .then((data) => {
-            if (data.created) { // si utilisateur créé
+          .then(data => {
+            if (data.created) {
+              // si utilisateur créé
               this.$router.push("/");
             } else {
               this.message = data.message;
+              switch (this.message) {
+                case "Pseudo deja exist":
+                  {
+                    document
+                      .getElementById("pseudo")
+                      .classList.remove("valid");
+                    document.getElementById("pseudo").classList.add("invalid");
+                  }
+                  break;
+                case "Email deja exist":
+                  {
+                    document.getElementById("email").classList.remove("valid");
+                    document.getElementById("email").classList.add("invalid");
+                  }
+                  break;
+              }
             }
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
           });
       } else {
         this.message = "Veuillez remplire les champs correctement";
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -102,9 +123,9 @@ export default {
           <input
             type="email"
             id="email"
-            v-model="email"
             class=""
-            @input="vEmail = validInput(regexEmail, email)"
+            v-model="email"
+            @input="vEmail = validInput(regexEmail, email, $event)"
             placeholder="ex: dimitri42@groupomania.fr"
           />
         </label>
@@ -114,8 +135,9 @@ export default {
           <input
             type="text"
             id="pseudo"
+            class=""
             v-model="pseudo"
-            @input="vPseudo = validInput(regexPseudo, pseudo)"
+            @input="vPseudo = validInput(regexPseudo, pseudo, $event)"
             placeholder="ex: Dimitri42 (max: 30 symbole)"
           />
         </label>
@@ -125,6 +147,7 @@ export default {
           <input
             type="password"
             id="password"
+            class=""
             placeholder="Minimum 8 caractères"
             v-model="firstPassValue"
             @input="validFirstPassword"
@@ -135,6 +158,7 @@ export default {
           <input
             type="password"
             id="passwordDouble"
+            class=""
             :placeholder="
               firstPassValue.length > 7
                 ? placeholderDoublePass
@@ -203,10 +227,10 @@ $fontSize: 1rem;
     form {
       width: 100%;
       height: 80%;
-      .invalide {
+      .invalid {
         border: 1px solid red;
       }
-      .valide {
+      .valid {
         border: 1px solid #0dc378;
       }
       input {

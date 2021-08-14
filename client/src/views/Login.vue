@@ -4,34 +4,51 @@ import { sendRequest } from "../api/index.js";
 export default {
   data() {
     return {
+      regexEmail: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){3}\.[a-z]{2,3}$/,
+      vEmail: false,
       email: "",
       password: "",
-      message: "",
+      message: ""
     };
   },
 
   methods: {
+    validInput(regex, value, event) {
+      if (regex.test(value)) {
+        console.log("true", event.target);
+        event.target.classList.remove("invalid");
+        event.target.classList.add("valid");
+        return true;
+      } else {
+        console.log("false", event.target);
+        event.target.classList.remove("valid");
+        event.target.classList.add("invalid");
+        return false;
+      }
+    },
+
     logIn(event) {
       event.preventDefault();
 
       let user = {
         email: this.email,
-        password: this.password,
+        password: this.password
       };
 
-     sendRequest('http://localhost:3000/api/auth/login', 'POST', user)
-        .then((data) => {
-          if (data.auth) { //si authentication reussit
+      sendRequest("http://localhost:3000/api/auth/login", "POST", user)
+        .then(data => {
+          if (data.auth) {
+            //si authentication reussit
             this.$router.push("/moncompte/");
           } else {
             this.message = data.message;
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -43,7 +60,13 @@ export default {
       <form>
         <label for="email">
           Email:
-          <input type="email" id="email" v-model="email" />
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            class=""
+            @input="vEmail = validInput(regexEmail, email, $event)"
+          />
         </label>
         <label for="password">
           Password:
@@ -107,7 +130,7 @@ $fontSize: 1rem;
     form {
       width: 100%;
       height: 80%;
-      .invalide {
+      .invalid {
         border: 1px solid red;
       }
       .valid {
