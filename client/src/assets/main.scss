@@ -9,6 +9,11 @@ body {
     }
   }
 
+  #app {
+    position: relative;
+    height: 100vh;
+  }
+
   .btn-ico {
     &:hover {
       transform: scale(1.1);

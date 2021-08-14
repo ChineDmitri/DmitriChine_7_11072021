@@ -1,26 +1,30 @@
 <script>
 // sendRequest(url, method, body (null for GET!))
 import { sendRequestFD } from "../api/index.js";
+import PopUnder from "../components/PopUnder";
 
 export default {
   name: "UserInfo",
-  props:
-    [
-      "modeUpdateInfoUser",
-      "pseudo",
-      "dateInscriotion",
-      "imgProfil",
-      "monCompte",
-      "modificationCompte",
-      "getInfoUser"
-    ],
+  components: {
+    PopUnder
+  },
+  props: [
+    "modeUpdateInfoUser",
+    "pseudo",
+    "dateInscriotion",
+    "imgProfil",
+    "monCompte",
+    "modificationCompte",
+    "getInfoUser"
+  ],
   data() {
     return {
       regexPseudo: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/,
       vPseudo: false,
       changePseudo: null,
       imageUrl: undefined,
-      labelPseudo: "Nouveau pseudo:"
+      showmodal: false,
+      messageErr: "Ce pseudo deja existe, veuillez choisir different que"
     };
   },
   methods: {
@@ -39,11 +43,12 @@ export default {
     },
 
     updateInfoUser() {
-      if (this.vPseudo) {
+      let newPseudo = document.getElementById("newPseudo")
+      if (this.vPseudo || newPseudo.value === this.pseudo) {
         const file = this.imageUrl ? this.imageUrl : this.imgProfil;
 
         const userData = new FormData();
-        userData.append("pseudo", this.changePseudo);
+        userData.append("pseudo", newPseudo.value);
         userData.append("imageUrl", file);
 
         // console.log(userData);
@@ -51,11 +56,13 @@ export default {
         sendRequestFD("http://localhost:3000/api/auth/", "PUT", userData)
           .then(res => {
             if (res.status) {
-              console.log(res);
+              // console.log(res);
               window.location.reload();
             } else {
               if (res.error.errno === 1062) {
-                this.labelPseudo = " Pseudo deja occupé";
+                document.getElementById("newPseudo").classList.add("invalid");
+                document.getElementById("newPseudo").classList.remove("valid");
+                this.showmodal = true;
               }
             }
           })
@@ -77,6 +84,10 @@ export default {
       fReader.onloadend = function(event) {
         img.src = event.target.result;
       };
+    },
+
+    modalBoolean() {
+      return (this.showmodal = !this.showmodal);
     }
   }
 };
@@ -84,6 +95,14 @@ export default {
 
 <template>
   <div id="account">
+    <transition name="fade">
+      <PopUnder
+        :showmodal="showmodal"
+        :modalBoolean="modalBoolean"
+        :messageErr="messageErr"
+        :changePseudo="changePseudo"
+      ></PopUnder>
+    </transition>
     <div id="header">
       <div id="header-photo">
         <img id="userPhoto" :src="imgProfil" alt="" />
@@ -93,13 +112,15 @@ export default {
           {{ pseudo }}
         </span>
         <label v-if="modificationCompte" for="newPseudo">
-          {{ labelPseudo }}
+          Nouveau pseudo:
           <input
             id="newPseudo"
-            v-model="changePseudo"
+            v-bind:value="pseudo"
             class=""
             type="text"
-            @input="vPseudo = validInput(this.regexPseudo, this.changePseudo, $event)"
+            @input="
+              vPseudo = validInput(this.regexPseudo, $event.target.value, $event)
+            "
           />
         </label>
         <label v-if="modificationCompte" for="inputFile">

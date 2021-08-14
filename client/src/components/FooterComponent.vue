@@ -13,27 +13,32 @@ export default {
   </footer>
 </template>
 
-<style lang="sass">
+<style lang="scss">
 // footer - start
-footer
-  display: flex
-  background-color: rgba(14, 33, 63, 0.8)
-  width: 100%
-  padding: 10px 0
-  margin: 25px 0 0
-  ul
-    display: flex
-    flex-direction: column
-    margin: 0 auto
-    padding: 0
-    li
-      margin: 0 auto
-      font-weight: 600
-      a
-        &:hover
-          color: #ffffff
-
-          list-style-type: none
-
+footer {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  background-color: rgba(14, 33, 63, 0.8);
+  width: 100%;
+  padding: 10px 0;
+  margin: 25px 0 0;
+  ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 0;
+    li {
+      margin: 0 auto;
+      font-weight: 600;
+      a {
+        &:hover {
+          color: #ffffff;
+        }
+      }
+      list-style-type: none;
+    }
+  }
+}
 // footer - end
 </style>
