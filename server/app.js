@@ -40,8 +40,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
+
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

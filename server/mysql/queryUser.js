@@ -67,6 +67,7 @@ exports.queryGetOneUser = (id) => {
 };
 
 
+// Mise à jour des donné
 exports.updateInfoUser = (user) => {
     return new Promise((resolve, reject) => {
 

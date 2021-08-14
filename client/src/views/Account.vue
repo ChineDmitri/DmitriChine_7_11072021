@@ -3,30 +3,30 @@ import UserInfo from "../components/UserInfo";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 
-import { sendRequestGET } from "../api/index.js";
+import { sendRequestWithFile } from "../api/index.js";
 
 export default {
   name: "main",
   components: {
     UserInfo,
     HeadComponent,
-    FooterComponent,
+    FooterComponent
   },
   data() {
     return {
       pseudo: "",
       dateInscriotion: "",
       imgProfil: "",
-      monCompte: false,
+      monCompte: false
     };
   },
   methods: {
     getInfoUser() {
-      sendRequestGET(
+      sendRequestWithFile(
         `http://localhost:3000/api/auth/${this.$route.params.id}`,
         "GET"
       )
-        .then((data) => {
+        .then(data => {
           if (data.error !== 0) {
             console.log(data);
             this.pseudo = data.pseudo;
@@ -36,12 +36,12 @@ export default {
             this.$router.push("/");
           }
         })
-        .catch((err) => console.log(err));
-    },
+        .catch(err => console.log(err));
+    }
   },
   beforeMount() {
     this.getInfoUser();
-  },
+  }
 };
 </script>
 

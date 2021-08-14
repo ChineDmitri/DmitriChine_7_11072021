@@ -3,7 +3,8 @@ import UserInfo from "../components/UserInfo";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 
-import { sendRequestGET } from "../api/index.js";
+// sendRequest(url, method, body (null for GET!))
+import { sendRequest } from "../api/index.js";
 
 export default {
   name: "main",
@@ -18,14 +19,15 @@ export default {
       dateInscriotion: "",
       imgProfil: "",
       monCompte: true,
+      modificationCompte: false,
     };
   },
   methods: {
     getInfoUser() {
-      sendRequestGET(`http://localhost:3000/api/auth/`, "GET")
+      sendRequest(`http://localhost:3000/api/auth/`, "GET")
         .then((data) => {
           if (data.error !== 0) {
-            console.log(data);
+            // console.log(data);
             this.pseudo = data.pseudo;
             this.dateInscriotion = data.date_inscription;
             this.imgProfil = data.profil_img_url;
@@ -34,6 +36,9 @@ export default {
           }
         })
         .catch((err) => console.log(err));
+    },
+    modeUpdateInfoUser() {
+      this.modificationCompte = true;
     },
   },
   beforeMount() {
@@ -49,10 +54,12 @@ export default {
     <main>
       <div id="content">
         <UserInfo
+          :modeUpdateInfoUser="modeUpdateInfoUser"
           :pseudo="pseudo"
           :dateInscriotion="dateInscriotion"
           :imgProfil="imgProfil"
           :monCompte="monCompte"
+          :modificationCompte="modificationCompte"
         ></UserInfo>
         <!-- main content -->
       </div>
@@ -198,6 +205,11 @@ main {
         }
       }
       &-info {
+        input {
+          font-size: 1rem;
+          margin: 5px auto;
+          width: 50%;
+        }
         @media screen and (max-width: 568px) {
           width: 100%;
         }
