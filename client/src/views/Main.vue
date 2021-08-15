@@ -2,12 +2,14 @@
 import PostNews from "../components/PostNews";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
+import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "Main",
   components: {
+    SpinnerComponent,
     PostNews,
     HeadComponent,
     FooterComponent
@@ -17,11 +19,14 @@ export default {
       memberId: undefined,
       counter: 0,
       postNews: [],
-      showMore: true
+      showMore: true,
+      ready: true
     };
   },
   methods: {
     getAllPost(num) {
+      this.ready = false;
+
       let body = {
         postCounter: num
       };
@@ -50,12 +55,15 @@ export default {
 
             res[1].forEach(el => this.postNews.push(el));
 
+            this.ready = true;
+
             // console.log(this.postNews);
           } else {
             this.$router.push("/");
           }
         })
         .catch(err => {
+          this.ready = true;
           console.log(err);
         });
     },
@@ -68,11 +76,12 @@ export default {
     },
 
     deletePost(i) {
-      console.log("splice YES", i, "ID", this.postNews[i].id)
-      // this.postNews.splice(i, 1);
+      console.log("splice YES", i, "ID", this.postNews[i].id);
+      this.postNews.splice(i, 1);
     }
   },
   beforeMount() {
+    this.ready = false;
     this.getAllPost(this.counter);
   }
 };
@@ -82,7 +91,6 @@ export default {
 <template>
   <div id="main-layout">
     <HeadComponent></HeadComponent>
-
     <main>
       <div id="content">
         <!-- main content -->
@@ -93,22 +101,16 @@ export default {
           :deletePost="deletePost"
         ></PostNews>
 
+        <SpinnerComponent :ready="ready"></SpinnerComponent>
+
         <button
-          v-if="showMore"
+          v-if="showMore && ready"
           @click="this.counter = showMorePost(this.counter)"
           class="btn-classic"
           value="0"
         >
           Afficher en plus
         </button>
-        <!-- <button
-          v-else
-          @click="this.counter = showMorePost(this.counter)"
-          class="btn-classic"
-          value="0"
-        >
-          FINISH
-        </button> -->
       </div>
     </main>
 
@@ -184,14 +186,14 @@ main {
         width: 100%;
         max-height: 200px;
         width: 100%;
+        max-height: 200px;
+        img {
+          width: 99%;
           max-height: 200px;
-          img {
-            width: 99%;
-            max-height: 200px;
-            object-fit: cover;
-          }
+          object-fit: cover;
+        }
         // &-one {
-          
+
         // }
       }
     }

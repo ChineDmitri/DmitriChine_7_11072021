@@ -13,6 +13,10 @@ export default {
     messageErr: {
       type: String,
       required: true
+    },
+    changePseudo: {
+      type: String,
+      required: true
     }
   }
 };

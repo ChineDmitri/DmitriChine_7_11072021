@@ -2,6 +2,7 @@
 import UserInfo from "../components/UserInfo";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
+import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 // sendRequest(url, method, body (null for GET!))
 import { sendRequest } from "../helpers/sendRequest.js";
@@ -11,7 +12,8 @@ export default {
   components: {
     UserInfo,
     HeadComponent,
-    FooterComponent
+    FooterComponent,
+    SpinnerComponent
   },
   data() {
     return {
@@ -19,15 +21,18 @@ export default {
       dateInscription: "",
       imgProfil: "",
       monCompte: true,
-      modificationCompte: false
+      modificationCompte: false,
+      ready: true
     };
   },
   methods: {
     getInfoUser() {
+      this.ready = false;
       sendRequest(`http://localhost:3000/api/auth/`, "GET")
         .then(data => {
           if (data.error !== 0) {
             // console.log(data);
+            this.ready = true;
             this.pseudo = data.pseudo;
             this.dateInscription = data.date_inscription;
             this.imgProfil = data.profil_img_url;
@@ -35,7 +40,10 @@ export default {
             this.$router.push("/");
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.ready = true;
+          console.log(err);
+        });
     },
     modeUpdateInfoUser() {
       this.modificationCompte = !this.modificationCompte;
@@ -55,6 +63,8 @@ export default {
 
     <main>
       <div id="content">
+        <SpinnerComponent :ready="ready"></SpinnerComponent>
+
         <UserInfo
           :modeUpdateInfoUser="modeUpdateInfoUser"
           :pseudo="pseudo"
@@ -62,7 +72,9 @@ export default {
           :imgProfil="imgProfil"
           :monCompte="monCompte"
           :modificationCompte="modificationCompte"
+          v-if="ready"
         ></UserInfo>
+
         <!-- main content -->
       </div>
     </main>

@@ -2,15 +2,17 @@
 // sendRequest(url, method, body (null for GET!))
 import { sendRequestFD } from "../helpers/sendRequest.js";
 import PopUnderInfo from "../components/PopUnderInfo";
+import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 export default {
   name: "UserInfo",
   components: {
-    PopUnderInfo
+    PopUnderInfo,
+    SpinnerComponent
   },
   props: {
     modeUpdateInfoUser: {
-      type: Function,
+      type: Function
     },
     pseudo: {
       type: String,
@@ -26,10 +28,10 @@ export default {
     },
     monCompte: {
       type: Boolean,
-      required: true,
+      required: true
     },
     modificationCompte: {
-      type: Boolean,
+      type: Boolean
     }
   },
   data() {
@@ -39,6 +41,7 @@ export default {
       changePseudo: undefined,
       imageUrl: undefined,
       showmodal: false,
+      ready: true,
       messageErr: "Ce pseudo deja existe, veuillez choisir different que"
     };
   },
@@ -58,10 +61,11 @@ export default {
     },
 
     updateInfoUser() {
-      let newPseudo = document.getElementById("newPseudo")
+      let newPseudo = document.getElementById("newPseudo");
       this.changePseudo = newPseudo.value;
 
       if (this.vPseudo || this.changePseudo === this.pseudo) {
+        this.ready = false;
         const file = this.imageUrl ? this.imageUrl : this.imgProfil;
 
         const userData = new FormData();
@@ -76,6 +80,7 @@ export default {
               // console.log(res);
               window.location.reload();
             } else {
+              this.ready = true;
               if (res.error.errno === 1062) {
                 document.getElementById("newPseudo").classList.add("invalid");
                 document.getElementById("newPseudo").classList.remove("valid");
@@ -84,6 +89,7 @@ export default {
             }
           })
           .catch(err => {
+            this.ready = true;
             console.log(err);
           });
       }
@@ -117,6 +123,7 @@ export default {
         :showmodal="showmodal"
         :modalBoolean="modalBoolean"
         :messageErr="messageErr"
+        :changePseudo="changePseudo"
       ></PopUnderInfo>
     </transition>
     <div id="header">
@@ -135,7 +142,11 @@ export default {
             class=""
             type="text"
             @input="
-              vPseudo = validInput(this.regexPseudo, $event.target.value, $event)
+              vPseudo = validInput(
+                this.regexPseudo,
+                $event.target.value,
+                $event
+              )
             "
           />
         </label>
@@ -150,7 +161,9 @@ export default {
           />
         </label>
 
-        <div id="btn-confirmation">
+        <SpinnerComponent :ready="ready"></SpinnerComponent>
+
+        <div v-if="ready" id="btn-confirmation">
           <button
             @click="updateInfoUser"
             v-if="modificationCompte"
