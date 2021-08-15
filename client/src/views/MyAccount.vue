@@ -7,7 +7,7 @@ import FooterComponent from "../components/FooterComponent";
 import { sendRequest } from "../api/index.js";
 
 export default {
-  name: "main",
+  name: "MyAccount",
   components: {
     UserInfo,
     HeadComponent,
@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       pseudo: "",
-      dateInscriotion: "",
+      dateInscription: "",
       imgProfil: "",
       monCompte: true,
       modificationCompte: false
@@ -29,7 +29,7 @@ export default {
           if (data.error !== 0) {
             // console.log(data);
             this.pseudo = data.pseudo;
-            this.dateInscriotion = data.date_inscription;
+            this.dateInscription = data.date_inscription;
             this.imgProfil = data.profil_img_url;
           } else {
             this.$router.push("/");
@@ -58,7 +58,7 @@ export default {
         <UserInfo
           :modeUpdateInfoUser="modeUpdateInfoUser"
           :pseudo="pseudo"
-          :dateInscriotion="dateInscriotion"
+          :dateInscription="dateInscription"
           :imgProfil="imgProfil"
           :monCompte="monCompte"
           :modificationCompte="modificationCompte"
@@ -95,7 +95,7 @@ main {
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px #ffd7d7;
+    box-shadow: 0 0 5px 2px #6b7689;
     #header {
       display: flex;
       flex-direction: row;
@@ -108,7 +108,7 @@ main {
         @media screen and (max-width: 568px) {
           margin: auto;
         }
-        border: 2px solid rgba(14, 33, 63, 0.5);
+        border: 2px solid #6b7689;
         border-radius: 50%;
         width: 200px;
         height: 200px;
@@ -127,7 +127,8 @@ main {
         }
         #btn-confirmation {
           display: flex;
-          justify-content: space-around;
+          flex-direction: column;
+          justify-content: center;
           flex-wrap: wrap;
           .orange {
             background-color: orange;

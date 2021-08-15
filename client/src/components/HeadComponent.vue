@@ -1,41 +1,41 @@
 <script>
 export default {
-  name: "HeadComponent",
+  name: "HeadComponent"
 };
 </script>
 
 <template>
   <header>
-      <div id="head"></div>
-      <div id="menu">
-        <nav class="large-screen">
-          <ul>
-            <li>
-              <a href="/moncompte">Mon profil</a>
-            </li>
-            <li>
-              <a href="#">Ecrire un post</a>
-            </li>
-            <li>
-              <a href="/main">Accueil</a>
-            </li>
-          </ul>
-        </nav>
-        <nav class="tight-screen">
-          <ul>
-            <li>
-              <a href="/moncompte"><i class="fas fa-user-circle"></i></a>
-            </li>
-            <li>
-              <a href="#"><i class="fas fa-paper-plane"></i></a>
-            </li>
-            <li>
-              <a href="/main"><i class="fas fa-home"></i></a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <div id="head"></div>
+    <div id="menu">
+      <nav class="large-screen">
+        <ul>
+          <li>
+            <router-link to="/moncompte">Mon profil</router-link>
+          </li>
+          <li>
+            <router-link to="/">Ecrire un post</router-link>
+          </li>
+          <li>
+            <router-link to="/main">Accueil</router-link>
+          </li>
+        </ul>
+      </nav>
+      <nav class="tight-screen">
+        <ul>
+          <li>
+            <router-link to="/moncompte">Mon profil</router-link>
+          </li>
+          <li>
+            <router-link to="/">Ecrire un post</router-link>
+          </li>
+          <li>
+            <router-link to="/main">Accueil</router-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 </template>
 
 <style lang="scss">
@@ -64,11 +64,13 @@ header {
     .large-screen,
     .tight-screen {
       @media screen and (max-width: 426px) {
+        margin: 0;
+        flex-basis: 100%;
+      }
+      @media screen and (max-width: 768px) {
         background-image: url(../assets/ico_white_a.png);
         background-size: 20vh;
         background-position: -5% 50%;
-        margin: 0;
-        flex-basis: 100%;
       }
       @media screen and (min-width: 1441px) {
         flex-basis: 900px;

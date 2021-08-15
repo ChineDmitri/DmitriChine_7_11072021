@@ -6,7 +6,7 @@ import FooterComponent from "../components/FooterComponent";
 import { sendRequest } from "../api/index.js";
 
 export default {
-  name: "main",
+  name: "Account",
   components: {
     UserInfo,
     HeadComponent,

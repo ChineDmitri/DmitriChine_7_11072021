@@ -8,20 +8,35 @@ export default {
   components: {
     PopUnder
   },
-  props: [
-    "modeUpdateInfoUser",
-    "pseudo",
-    "dateInscriotion",
-    "imgProfil",
-    "monCompte",
-    "modificationCompte",
-    "getInfoUser"
-  ],
+  props: {
+    modeUpdateInfoUser: {
+      type: Function,
+    },
+    pseudo: {
+      type: String,
+      required: true
+    },
+    dateInscription: {
+      type: String,
+      required: true
+    },
+    imgProfil: {
+      type: String,
+      required: true
+    },
+    monCompte: {
+      type: Boolean,
+      required: true,
+    },
+    modificationCompte: {
+      type: Boolean,
+    }
+  },
   data() {
     return {
       regexPseudo: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/,
       vPseudo: false,
-      changePseudo: null,
+      changePseudo: undefined,
       imageUrl: undefined,
       showmodal: false,
       messageErr: "Ce pseudo deja existe, veuillez choisir different que"
@@ -44,7 +59,9 @@ export default {
 
     updateInfoUser() {
       let newPseudo = document.getElementById("newPseudo")
-      if (this.vPseudo || newPseudo.value === this.pseudo) {
+      this.changePseudo = newPseudo.value;
+
+      if (this.vPseudo || this.changePseudo === this.pseudo) {
         const file = this.imageUrl ? this.imageUrl : this.imgProfil;
 
         const userData = new FormData();
@@ -62,7 +79,7 @@ export default {
               if (res.error.errno === 1062) {
                 document.getElementById("newPseudo").classList.add("invalid");
                 document.getElementById("newPseudo").classList.remove("valid");
-                this.showmodal = true;
+                this.modalBoolean();
               }
             }
           })
@@ -100,7 +117,6 @@ export default {
         :showmodal="showmodal"
         :modalBoolean="modalBoolean"
         :messageErr="messageErr"
-        :changePseudo="changePseudo"
       ></PopUnder>
     </transition>
     <div id="header">
@@ -152,7 +168,7 @@ export default {
         </div>
 
         <span v-if="!modificationCompte" id="header-info-dateInsc"
-          >Date d'inscription: {{ dateInscriotion }}</span
+          >Date d'inscription: {{ dateInscripotion }}</span
         >
         <div v-if="monCompte" id="header-info-manipulation">
           <button class="btn-ico">

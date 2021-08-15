@@ -1,7 +1,20 @@
 <script>
 export default {
   name: "PopUnder",
-  props: ["modalBoolean", "showmodal", "messageErr", "changePseudo"]
+  props: {
+    modalBoolean: {
+      type: Function,
+      required: true
+    },
+    showmodal: {
+      type: Boolean,
+      required: true
+    },
+    messageErr: {
+      type: String,
+      required: true
+    }
+  }
 };
 </script>
 
@@ -11,14 +24,15 @@ export default {
       <span id="popUnder-body-btnClose"
         ><button @click="modalBoolean" id="refuser">
           <i class="fas fa-times-circle"></i></button></span
-      ><span id="popUnder-body-p">{{ messageErr }} <b>{{ changePseudo }}</b></span>
+      ><span id="popUnder-body-p"
+        >{{ messageErr }} <b>{{ changePseudo }}</b></span
+      >
     </div>
   </div>
 </template>
 
 
 <style lang="scss">
-
 $objet_color: #ffffff;
 $negative_color: red;
 

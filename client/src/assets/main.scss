@@ -1,4 +1,7 @@
 body {
+  
+  
+  // options START
   margin: 0;
   font-family: "PT Sans", sans-serif;
   a {
@@ -11,7 +14,7 @@ body {
 
   #app {
     position: relative;
-    height: 100vh;
+    
   }
 
   .btn-ico {
@@ -59,4 +62,6 @@ body {
   .valid {
     border: 1px solid #0dc378;
   }
+  // options END
+
 }

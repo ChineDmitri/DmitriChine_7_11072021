@@ -32,6 +32,8 @@ export default {
 <style lang="scss">
 // main - begin
 main {
+  min-height: 70vh;
+  background-color: #ffffff;
   #content {
     @media screen and (max-width: 426px) {
       width: 100%;
@@ -54,7 +56,7 @@ main {
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px rgba(14, 33, 63, 0.5);
+    box-shadow: 0 0 5px 2px #6b7689;
     &-title {
       display: flex;
       flex-wrap: wrap;

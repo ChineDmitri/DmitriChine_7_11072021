@@ -17,9 +17,9 @@ export default {
 // footer - start
 footer {
   display: flex;
-  position: absolute;
-  bottom: 0;
-  background-color: rgba(14, 33, 63, 0.8);
+  // position: absolute;
+  // bottom: 0;
+  background-color: #6b7689;
   width: 100%;
   padding: 10px 0;
   margin: 25px 0 0;
