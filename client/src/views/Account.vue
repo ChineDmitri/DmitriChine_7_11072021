@@ -68,6 +68,7 @@ export default {
 <style lang="scss">
 // main - begin
 main {
+  min-height: 70vh;
   #content {
     @media screen and (max-width: 426px) {
       width: 100%;

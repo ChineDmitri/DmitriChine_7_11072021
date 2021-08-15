@@ -1,12 +1,12 @@
 <script>
 // sendRequest(url, method, body (null for GET!))
 import { sendRequestFD } from "../helpers/sendRequest.js";
-import PopUnder from "../components/PopUnder";
+import PopUnderInfo from "../components/PopUnderInfo";
 
 export default {
   name: "UserInfo",
   components: {
-    PopUnder
+    PopUnderInfo
   },
   props: {
     modeUpdateInfoUser: {
@@ -113,11 +113,11 @@ export default {
 <template>
   <div id="account">
     <transition name="fade">
-      <PopUnder
+      <PopUnderInfo
         :showmodal="showmodal"
         :modalBoolean="modalBoolean"
         :messageErr="messageErr"
-      ></PopUnder>
+      ></PopUnderInfo>
     </transition>
     <div id="header">
       <div id="header-photo">

@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "PopUnder",
+  name: "PopUnderInfo",
   props: {
     modalBoolean: {
       type: Function,

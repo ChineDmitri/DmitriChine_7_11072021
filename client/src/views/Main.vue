@@ -45,12 +45,12 @@ export default {
         .then(res => {
           if (res.error !== 0) {
             this.showMore = res[1].length === 0 ? false : true;
-            
+
             this.memberId = res[0];
 
             res[1].forEach(el => this.postNews.push(el));
 
-            console.log(this.postNews);
+            // console.log(this.postNews);
           } else {
             this.$router.push("/");
           }
@@ -59,11 +59,17 @@ export default {
           console.log(err);
         });
     },
+
     showMorePost(num) {
       num++;
       this.getAllPost(num);
-      console.log(this.counter);
+      // console.log(this.counter);
       return num;
+    },
+
+    deletePost(i) {
+      console.log("splice YES", i, "ID", this.postNews[i].id)
+      // this.postNews.splice(i, 1);
     }
   },
   beforeMount() {
@@ -80,7 +86,12 @@ export default {
     <main>
       <div id="content">
         <!-- main content -->
-        <PostNews v-for="postNew in postNews" :key="postNew.id"></PostNews>
+        <PostNews
+          v-for="(postNew, idx) in postNews"
+          :key="postNew.id"
+          :idx="idx"
+          :deletePost="deletePost"
+        ></PostNews>
 
         <button
           v-if="showMore"
@@ -172,15 +183,16 @@ main {
         display: flex;
         width: 100%;
         max-height: 200px;
-        &-one {
-          width: 100%;
+        width: 100%;
           max-height: 200px;
           img {
             width: 99%;
             max-height: 200px;
             object-fit: cover;
           }
-        }
+        // &-one {
+          
+        // }
       }
     }
     &-author {

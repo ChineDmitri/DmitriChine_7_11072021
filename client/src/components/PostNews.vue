@@ -1,6 +1,20 @@
 <script>
 export default {
   name: "PostNews",
+  props: [
+    "key",
+    "idx",
+    "deletePost"
+  ]
+  
+  // {
+  //   key: {
+  //     type: Number
+  //   },
+  //   showKey: {
+  //     type: Function
+  //   }
+  // }
 };
 </script>
 
@@ -12,7 +26,7 @@ export default {
         <button class="btn-ico modif">
           <i class="fas fa-pencil-alt orange"></i>
         </button>
-        <button class="btn-ico">
+        <button @click="deletePost(idx)" class="btn-ico">
           <i class="fas fa-trash-alt red"></i>
         </button>
       </span>
@@ -30,15 +44,9 @@ export default {
         id consequuntur fuga repellendus! Minus!
       </div>
       <div class="post-body-photo">
-        <a href="#" class="post-body-photo-one">
+        <!-- <a href="#" class="post-body-photo-one"> -->
           <img src="../assets/img.jpg" alt="Exo title" />
-        </a>
-        <a href="#" class="post-body-photo-one">
-          <img src="../assets/img.jpg" alt="Exo title" />
-        </a>
-        <!-- <a href="#" class="post-body-photo-one">
-                                <img src="./images/IMG_1632.JPG" alt="Exo title">
-                            </a> -->
+        <!-- </a> -->
       </div>
     </div>
     <span class="post-author">
