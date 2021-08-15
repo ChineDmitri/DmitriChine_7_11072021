@@ -24,13 +24,13 @@ export default {
       <nav class="tight-screen">
         <ul>
           <li>
-            <router-link to="/moncompte">Mon profil</router-link>
+            <router-link to="/moncompte"><i class="fas fa-user-circle"></i></router-link>
           </li>
           <li>
-            <router-link to="/">Ecrire un post</router-link>
+            <router-link to="/"><i class="fas fa-paper-plane"></i></router-link>
           </li>
           <li>
-            <router-link to="/main">Accueil</router-link>
+            <router-link to="/main"><i class="fas fa-home"></i></router-link>
           </li>
         </ul>
       </nav>
@@ -58,9 +58,9 @@ header {
     display: flex;
     flex-direction: row;
     position: absolute;
-    top: calc(100% - 8vh);
+    top: calc(100% - 9vh);
     width: 100%;
-    height: 8vh;
+    height: 9vh;
     .large-screen,
     .tight-screen {
       @media screen and (max-width: 426px) {
@@ -70,7 +70,7 @@ header {
       @media screen and (max-width: 768px) {
         background-image: url(../assets/ico_white_a.png);
         background-size: 20vh;
-        background-position: -5% 50%;
+        background-position: -10% 50%;
       }
       @media screen and (min-width: 1441px) {
         flex-basis: 900px;

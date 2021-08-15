@@ -3,7 +3,7 @@ import UserInfo from "../components/UserInfo";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 
-import { sendRequest } from "../api/index.js";
+import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "Account",

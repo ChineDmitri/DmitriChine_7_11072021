@@ -3,12 +3,71 @@ import PostNews from "../components/PostNews";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 
+import { sendRequest } from "../helpers/sendRequest.js";
+
 export default {
-  name: "main",
+  name: "Main",
   components: {
     PostNews,
     HeadComponent,
     FooterComponent
+  },
+  data() {
+    return {
+      memberId: undefined,
+      counter: 0,
+      postNews: [],
+      showMore: true
+    };
+  },
+  methods: {
+    getAllPost(num) {
+      let body = {
+        postCounter: num
+      };
+
+      // RESPONSE 1
+      // [userId]
+      // RESPONSE 2 [{
+      // "id": Number (id du post),
+      // "user_id": Number (id d'utilisateur qui a créé post)
+      // "date_publication": Date de publication ex "2021-08-06T11:11:19.000Z",
+      // "date_modification": Date de modification ex "2021-08-06T12:04:08.000Z" OR null,
+      // "title": title de post (max 200 char) ,
+      // "discription": text du post,
+      // "likes": combien likes (+Number) ,
+      // "dislikes": combien dislikes (-Nummber),
+      // "url_img": url pour image,
+      // "pseudo": ,
+      // "status": 1
+      // }]
+      sendRequest("http://localhost:3000/api/post", "POST", body)
+        .then(res => {
+          if (res.error !== 0) {
+            this.showMore = res[1].length === 0 ? false : true;
+            
+            this.memberId = res[0];
+
+            res[1].forEach(el => this.postNews.push(el));
+
+            console.log(this.postNews);
+          } else {
+            this.$router.push("/");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    showMorePost(num) {
+      num++;
+      this.getAllPost(num);
+      console.log(this.counter);
+      return num;
+    }
+  },
+  beforeMount() {
+    this.getAllPost(this.counter);
   }
 };
 </script>
@@ -20,8 +79,25 @@ export default {
 
     <main>
       <div id="content">
-        <PostNews></PostNews>
         <!-- main content -->
+        <PostNews v-for="postNew in postNews" :key="postNew.id"></PostNews>
+
+        <button
+          v-if="showMore"
+          @click="this.counter = showMorePost(this.counter)"
+          class="btn-classic"
+          value="0"
+        >
+          Afficher en plus
+        </button>
+        <!-- <button
+          v-else
+          @click="this.counter = showMorePost(this.counter)"
+          class="btn-classic"
+          value="0"
+        >
+          FINISH
+        </button> -->
       </div>
     </main>
 

@@ -1,5 +1,5 @@
 <script>
-import { sendRequest } from "../api/index.js";
+import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   data() {

@@ -4,7 +4,7 @@ import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 
 // sendRequest(url, method, body (null for GET!))
-import { sendRequest } from "../api/index.js";
+import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "MyAccount",

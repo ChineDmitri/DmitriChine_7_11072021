@@ -1,6 +1,6 @@
 <script>
 // sendRequest(url, method, body (null for GET!))
-import { sendRequestFD } from "../api/index.js";
+import { sendRequestFD } from "../helpers/sendRequest.js";
 import PopUnder from "../components/PopUnder";
 
 export default {
@@ -168,7 +168,7 @@ export default {
         </div>
 
         <span v-if="!modificationCompte" id="header-info-dateInsc"
-          >Date d'inscription: {{ dateInscripotion }}</span
+          >Date d'inscription: {{ dateInscription }}</span
         >
         <div v-if="monCompte" id="header-info-manipulation">
           <button class="btn-ico">
