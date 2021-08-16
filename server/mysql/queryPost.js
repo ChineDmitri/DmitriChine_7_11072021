@@ -63,10 +63,8 @@ exports.queryCreatePost = (post) => {
 
       SET @a:=LAST_INSERT_ID();
 
-      INSERT INTO Post_photo (url1, url2, url3, post_id) 
-      VALUES (${conn.escape(post.url1)},
-      ${conn.escape(post.url2)}, 
-      ${conn.escape(post.url3)},
+      INSERT INTO Post_photo (url_img, post_id) 
+      VALUES (${conn.escape(post.url_img)},
       @a);
 
       INSERT INTO Account_posts (user_id, post_id)
@@ -113,15 +111,16 @@ exports.queryModifyPost = (postId, post) => {
 
 
 // Query for delete post et ses photo, statistic account et like/dislike
-exports.queryDeletePost = (postId) => {
+exports.queryDeletePost = (userId, postId) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
       `DELETE FROM Post_photo WHERE post_id=${conn.escape(postId)};
-      DELETE FROM Account_posts WHERE post_id=${conn.escape(postId)};
+      DELETE FROM Account_posts WHERE post_id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};
       DELETE FROM Account_posts_liked WHERE post_id=${conn.escape(postId)};
       
-      DELETE FROM Post WHERE id=${conn.escape(postId)};`,
+      
+      DELETE FROM Post WHERE id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};`,
       (err, results) => {
         if (err) {
           reject(err);
@@ -143,7 +142,7 @@ exports.queryRecon = (body) => {
     conn.query(
       `SELECT * FROM Account_posts_liked 
       
-      WHERE post_id=${conn.escape(body.postId)} AND user_id=${conn.escape(body.userId)};`,
+      WHERE post_id = ${conn.escape(body.postId)} AND user_id = ${conn.escape(body.userId)}; `,
       (err, results) => {
         if (err) {
           reject(err);
@@ -162,19 +161,19 @@ exports.pushStatus = (body) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
-      `INSERT INTO Account_posts_liked (user_id, post_id, status)
-      
-      VALUES (${conn.escape(body.userId)},
+      `INSERT INTO Account_posts_liked(user_id, post_id, status)
+
+    VALUES(${conn.escape(body.userId)},
       ${conn.escape(body.postId)},
       ${conn.escape(body.status)});
       
       UPDATE Post 
-      SET likes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=1)
-      WHERE id=${conn.escape(body.postId)};
+      SET likes = (SELECT sum(status) FROM account_posts_liked WHERE post_id = ${conn.escape(body.postId)} AND status = 1)
+      WHERE id = ${conn.escape(body.postId)};
       
       UPDATE Post 
-      SET dislikes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=-1)
-      WHERE id=${conn.escape(body.postId)};`,
+      SET dislikes = (SELECT sum(status) FROM account_posts_liked WHERE post_id = ${conn.escape(body.postId)} AND status = -1)
+      WHERE id = ${conn.escape(body.postId)}; `,
       (err, results) => {
         if (err) {
           reject(err);
@@ -195,17 +194,17 @@ exports.updateStatus = (body, status) => {
     conn.query(
       `UPDATE Account_posts_liked
 
-      SET status=${conn.escape(status)}
+      SET status = ${conn.escape(status)}
 
-      WHERE post_id=${conn.escape(body.postId)} AND user_id=${conn.escape(body.userId)};
+      WHERE post_id = ${conn.escape(body.postId)} AND user_id = ${conn.escape(body.userId)};
       
       UPDATE Post 
-      SET likes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=1)
-      WHERE id=${conn.escape(body.postId)};
+      SET likes = (SELECT sum(status) FROM account_posts_liked WHERE post_id = ${conn.escape(body.postId)} AND status = 1)
+      WHERE id = ${conn.escape(body.postId)};
       
       UPDATE Post 
-      SET dislikes=(SELECT sum(status) FROM account_posts_liked WHERE post_id=${conn.escape(body.postId)} AND status=-1)
-      WHERE id=${conn.escape(body.postId)};`,
+      SET dislikes = (SELECT sum(status) FROM account_posts_liked WHERE post_id = ${conn.escape(body.postId)} AND status = -1)
+      WHERE id = ${conn.escape(body.postId)}; `,
       (err, results) => {
         if (err) {
           reject(err);

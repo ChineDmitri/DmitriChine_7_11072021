@@ -16,11 +16,13 @@ export default {
   },
   data() {
     return {
-      memberId: undefined,
-      counter: 0,
-      postNews: [],
-      showMore: true,
-      ready: true
+      memberId: undefined, // id de utilisateur
+      counter: 0, //counter pour affiché en plus des post
+      postNews: [], // variable pour stockage des posts
+      showMore: true, // si il y a rien à affiché on passe en false
+      ready: true, // Boolean pour SpinnerComponent qui en "Afficher en plus"
+      readyDelet: true, // Boolean pour SpinnerComponent lorsque on effectué DELET d'un post
+      modePublication: false
     };
   },
   methods: {
@@ -41,7 +43,8 @@ export default {
       // "title": title de post (max 200 char) ,
       // "discription": text du post,
       // "likes": combien likes (+Number) ,
-      // "dislikes": combien dislikes (-Nummber),
+      // "dislikes": combien dislikes (-Number),
+      // "comments": combien commentaires (Number unsigned)
       // "url_img": url pour image,
       // "pseudo": ,
       // "status": 1
@@ -53,11 +56,11 @@ export default {
 
             this.memberId = res[0];
 
+            console.log("member id", this.memberId);
+
             res[1].forEach(el => this.postNews.push(el));
 
             this.ready = true;
-
-            // console.log(this.postNews);
           } else {
             this.$router.push("/");
           }
@@ -69,6 +72,8 @@ export default {
     },
 
     showMorePost(num) {
+      // sendRequest("http://localhost:3000/api/post", "POST", body)
+
       num++;
       this.getAllPost(num);
       // console.log(this.counter);
@@ -76,8 +81,30 @@ export default {
     },
 
     deletePost(i) {
-      console.log("splice YES", i, "ID", this.postNews[i].id);
-      this.postNews.splice(i, 1);
+      this.readyDelet = false;
+
+      console.log(this.postNews[i].id);
+
+      sendRequest(
+        `http://localhost:3000/api/post/${this.postNews[i].id}`,
+        "DELETE"
+      )
+        .then(res => {
+          this.postNews.splice(i, 1);
+
+          this.readyDelet = true;
+
+          console.log(res, this.ready);
+        })
+        .catch(err => {
+          this.readyDelet = true;
+
+          console.log(err);
+        });
+
+      // console.log("splice YES", i, "ID", this.postNews[i].id);
+
+      // this.postNews.splice(i, 1);
     }
   },
   beforeMount() {
@@ -97,14 +124,31 @@ export default {
         <PostNews
           v-for="(postNew, idx) in postNews"
           :key="postNew.id"
+          :memberId="memberId"
+          :title="postNew.title"
+          :discription="postNew.discription"
+          :likes="postNew.likes"
+          :dislikes="postNew.dislikes"
+          :comments="postNew.comments"
+          :pseudo="postNew.pseudo"
+          :datePublication="postNew.date_publication"
+          :dateModification="postNew.date_modification"
+          :urlImg="postNew.url_img"
+          :userId="postNew.user_id"
           :idx="idx"
           :deletePost="deletePost"
+          :ready="ready"
+          :readyDelet="readyDelet"
         ></PostNews>
 
+        <!-- spinner lorsque on supprim un post -->
+        <SpinnerComponent :ready="readyDelet"></SpinnerComponent>
+
+        <!-- spinner lorsqur on demande afficher encore des post -->
         <SpinnerComponent :ready="ready"></SpinnerComponent>
 
         <button
-          v-if="showMore && ready"
+          v-if="showMore && ready && readyDelet"
           @click="this.counter = showMorePost(this.counter)"
           class="btn-classic"
           value="0"

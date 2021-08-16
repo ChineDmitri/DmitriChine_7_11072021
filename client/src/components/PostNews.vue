@@ -1,64 +1,112 @@
 <script>
 export default {
   name: "PostNews",
+  data() {
+    return {};
+  },
   props: [
-    "key",
+    "memberId",
+    "title",
+    "discription",
+    "likes",
+    "dislikes",
+    "comments",
+    "pseudo",
+    "datePublication",
+    "dateModification",
+    "urlImg",
+    "userId",
     "idx",
-    "deletePost"
+    "deletePost",
+    "ready",
+    "readyDelet"
   ]
-  
-  // {
-  //   key: {
-  //     type: Number
-  //   },
-  //   showKey: {
-  //     type: Function
-  //   }
-  // }
 };
 </script>
 
 <template>
-  <div class="post">
+  <div v-if="readyDelet" class="post">
+    <!-- START BAR avec title et button manip -->
     <div class="post-title">
-      <a href="#">Veni, vidi, vici... Veni, vidi, vici.ici... Veni</a>
-      <span>
+      <router-link :to="{ name: 'Compte', params: { id: idx } }">
+        {{ title }}
+      </router-link>
+      <!-- <a :href="idx">{{ title }}</a> -->
+
+      <span v-if="memberId === userId">
         <button class="btn-ico modif">
           <i class="fas fa-pencil-alt orange"></i>
         </button>
+
         <button @click="deletePost(idx)" class="btn-ico">
           <i class="fas fa-trash-alt red"></i>
         </button>
       </span>
+
       <hr />
     </div>
+    <!-- FIN BAR -->
 
+    <!-- START BLOCK BODY avec disciption et image -->
     <div class="post-body">
       <div class="post-body-text">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio eos
-        voluptatibus magnam. Quaerat, possimus voluptates, unde sit perferendis
-        accusamus officiis mollitia, optio iure omnis rerum vero deserunt cum
-        repellendus! Saepe. Lorem ipsum dolor sit amet consectetur adipisicing
-        elit. Veniam maxime doloremque, cumque cupiditate corrupti rem, nobis
-        aspernatur voluptatibus ducimus ipsa similique corporis velit quos illo
-        id consequuntur fuga repellendus! Minus!
+        {{ discription }}
       </div>
+
       <div class="post-body-photo">
         <!-- <a href="#" class="post-body-photo-one"> -->
-          <img src="../assets/img.jpg" alt="Exo title" />
+        <img :src="urlImg" :alt="title" />
         <!-- </a> -->
       </div>
     </div>
+    <!-- FIN BLOCK BODY -->
+
+    <!-- START BLOCK avec pseudo auteur / date pub / date modif -->
     <span class="post-author">
-      Ecrit par: <a href="#">Dimoto</a> à 25/05/2021 15h05
+      Ecrit par:
+      <router-link
+        v-if="memberId !== userId"
+        :to="{ name: 'Compte', params: { id: userId } }"
+      >
+        {{ pseudo }}
+      </router-link>
+
+      <router-link v-else to="/moncompte">
+        {{ pseudo }}
+      </router-link>
+
+      à {{ datePublication }}
+
       <br />
-      (dernier modification: 26/05/2021 21h50)
+
+      {{
+        dateModification !== null
+          ? `(dernier modification: ${dateModification})`
+          : null
+      }}
+      <!-- (dernier modification: 26/05/2021 21h50) -->
     </span>
+    <!-- FIN BLOCK -->
+
+    <!-- START BAR avec likes / dilikes / comments -->
     <span class="post-status">
-      <button class="btn-ico"><i class="far fa-thumbs-up green"></i></button>
-      <span class="counterLike">10</span>
-      <button class="btn-ico"><i class="far fa-thumbs-down"></i></button>
-      <button class="btn-ico"><i class="far fa-comment">25</i></button>
+      <button class="btn-ico">
+        <i class="far fa-thumbs-up green"></i>
+      </button>
+
+      <span class="counterLike">{{
+        likes == null && dislikes == null ? 0 : likes + dislikes
+      }}</span>
+
+      <button class="btn-ico">
+        <i class="far fa-thumbs-down"></i>
+      </button>
+
+      <router-link class="btn-ico btn-comment" to="/#">
+        <i class="far fa-comment"> 150 {{ comments }} </i>
+      </router-link>
+      <!-- <button class="btn-ico"><i class="far fa-comment">25</i></button> -->
     </span>
+    <!-- FIN BAR -->
   </div>
 </template>

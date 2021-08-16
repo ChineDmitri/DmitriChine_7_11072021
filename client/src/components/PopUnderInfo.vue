@@ -16,7 +16,6 @@ export default {
     },
     changePseudo: {
       type: String,
-      required: true
     }
   }
 };

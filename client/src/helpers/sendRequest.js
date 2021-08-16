@@ -25,7 +25,7 @@ export function sendRequest(url, method, body = null) {
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
             },
-            body: JSON.stringify(body),
+            body: body !== null ? JSON.stringify(body) : null, // si body null on fait pas JSON.stringify
             credentials: "include",
         };
 

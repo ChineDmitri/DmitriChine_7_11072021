@@ -157,7 +157,7 @@ exports.modifyInfoUser = (req, res, next) => {
                 if (req.file) {
                     console.log(user[0])
                     deleteImg(user[0])
-                        .then(() => {})
+                        .then(() => { })
                         .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
                 }
             } catch {

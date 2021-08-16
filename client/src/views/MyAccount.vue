@@ -64,7 +64,6 @@ export default {
     <main>
       <div id="content">
         <SpinnerComponent :ready="ready"></SpinnerComponent>
-
         <UserInfo
           :modeUpdateInfoUser="modeUpdateInfoUser"
           :pseudo="pseudo"

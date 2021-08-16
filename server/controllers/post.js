@@ -64,7 +64,7 @@ exports.modifyPost = (req, res, next) => {
 // Suppretion d'un post par son ID
 exports.deletePost = (req, res, next) => {
 
-    qPost.queryDeletePost(req.params.id)
+    qPost.queryDeletePost(req.body.userId, req.params.id)
         .then(() => res.status(200).json({ message: "Post deleted!" }))
         .catch((err) => res.status(400).json(err));
 
