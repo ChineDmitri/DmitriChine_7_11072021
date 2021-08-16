@@ -1,7 +1,12 @@
 <script>
+import SpinnerComponent from "../components/SpinnerComponent.vue";
 import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
+  components: {
+    SpinnerComponent
+  },
+
   data() {
     return {
       regexEmail: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){3}\.[a-z]{2,3}$/,
@@ -15,11 +20,11 @@ export default {
       secondPassValue: "",
       placeholderDoublePass: "Repetez mot de passe",
       placeholderRules: "Minimum 8 caractères",
-      message: ""
+      message: undefined,
+      ready: true,
     };
   },
-  computed: {},
-  watch: {},
+
   methods: {
     validInput(regex, value, event) {
       if (regex.test(value)) {
@@ -61,9 +66,9 @@ export default {
         return false;
       }
     },
-
     signUp(event) {
       event.preventDefault();
+      this.ready = false;
 
       let user = {
         email: this.email,
@@ -79,17 +84,17 @@ export default {
       ) {
         sendRequest("http://localhost:3000/api/auth/signup", "POST", user)
           .then(data => {
+            this.ready = true;
             if (data.created) {
               // si utilisateur créé
               this.$router.push("/");
             } else {
+              this.ready = true;
               this.message = data.message;
               switch (this.message) {
                 case "Pseudo deja exist":
                   {
-                    document
-                      .getElementById("pseudo")
-                      .classList.remove("valid");
+                    document.getElementById("pseudo").classList.remove("valid");
                     document.getElementById("pseudo").classList.add("invalid");
                   }
                   break;
@@ -103,6 +108,7 @@ export default {
             }
           })
           .catch(err => {
+            this.ready = true;
             console.log(err);
           });
       } else {
@@ -113,11 +119,16 @@ export default {
 };
 </script>
 
+
 <template>
   <div id="auth-form">
-    <h1><router-link to="/">Connexion</router-link> / Enregistré</h1>
+    <h1>
+      <router-link to="/">Connexion</router-link>
+      / Enregistré
+    </h1>
+
     <div>
-      <form>
+      <form >
         <label for="email">
           Email:
           <input
@@ -175,15 +186,18 @@ export default {
         >
           Mot de passe ne sont pas identique
         </p>
-        <p>
+
+        <p v-if="message != undefined">
           {{ message }}
         </p>
 
-        <input type="submit" @click="signUp" value="Créer" />
+        <input v-if="ready" type="submit" @click="signUp" value="Créer" />
       </form>
+      <SpinnerComponent :ready="ready"></SpinnerComponent>
     </div>
   </div>
 </template>
+
 
 <style lang="scss">
 $fontSize: 1rem;

@@ -36,7 +36,19 @@ exports.getOnePost = (req, res, next) => {
 // Pour creation d'un post
 exports.createPost = (req, res, next) => {
 
-    qPost.queryCreatePost(req.body)
+    const postObject = req.file ? {   
+        userId: req.body.userId,
+        title: req.body.title,
+        discription: req.body.discription,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    } : {   
+        userId: req.body.userId,
+        title: req.body.title,
+        discription: req.body.discription,
+        imageUrl: null,
+    }
+
+    qPost.queryCreatePost(body)
         .then(() => res.status(201).json({ message: "Post created!" }))
         .catch((err) => res.status(400).json(err));
 

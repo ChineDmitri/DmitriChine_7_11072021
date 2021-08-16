@@ -8,12 +8,14 @@ import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "Main",
+
   components: {
     SpinnerComponent,
     PostNews,
     HeadComponent,
     FooterComponent
   },
+
   data() {
     return {
       memberId: undefined, // id de utilisateur
@@ -25,9 +27,17 @@ export default {
       modePublication: false
     };
   },
+
   methods: {
     getAllPost(num) {
       this.ready = false;
+      if (
+        document.cookie
+          .split(";")
+          .filter(item => item.trim().startsWith("reader=")).length
+      ) {
+        console.log('The cookie "reader" exists (ES6)');
+      }
 
       let body = {
         postCounter: num
@@ -56,7 +66,7 @@ export default {
 
             this.memberId = res[0];
 
-            console.log("member id", this.memberId);
+            // console.log("member id", this.memberId);
 
             res[1].forEach(el => this.postNews.push(el));
 
@@ -70,7 +80,6 @@ export default {
           console.log(err);
         });
     },
-
     showMorePost(num) {
       // sendRequest("http://localhost:3000/api/post", "POST", body)
 
@@ -79,7 +88,6 @@ export default {
       // console.log(this.counter);
       return num;
     },
-
     deletePost(i) {
       this.readyDelet = false;
 
@@ -107,6 +115,7 @@ export default {
       // this.postNews.splice(i, 1);
     }
   },
+
   beforeMount() {
     this.ready = false;
     this.getAllPost(this.counter);
@@ -161,6 +170,7 @@ export default {
     <FooterComponent></FooterComponent>
   </div>
 </template>
+
 
 <style lang="scss">
 // main - begin

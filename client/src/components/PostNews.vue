@@ -1,9 +1,11 @@
 <script>
 export default {
   name: "PostNews",
+
   data() {
     return {};
   },
+
   props: [
     "memberId",
     "title",
@@ -24,6 +26,7 @@ export default {
 };
 </script>
 
+
 <template>
   <div v-if="readyDelet" class="post">
     <!-- START BAR avec title et button manip -->
@@ -31,7 +34,6 @@ export default {
       <router-link :to="{ name: 'Compte', params: { id: idx } }">
         {{ title }}
       </router-link>
-      <!-- <a :href="idx">{{ title }}</a> -->
 
       <span v-if="memberId === userId">
         <button class="btn-ico modif">

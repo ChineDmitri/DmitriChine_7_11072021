@@ -9,12 +9,14 @@ import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "MyAccount",
+
   components: {
     UserInfo,
     HeadComponent,
     FooterComponent,
     SpinnerComponent
   },
+
   data() {
     return {
       pseudo: "",
@@ -25,6 +27,7 @@ export default {
       ready: true
     };
   },
+
   methods: {
     getInfoUser() {
       this.ready = false;
@@ -51,11 +54,13 @@ export default {
       img.src = this.imgProfil;
     }
   },
+
   beforeMount() {
     this.getInfoUser();
   }
 };
 </script>
+
 
 <template>
   <div id="main-layout">
@@ -64,6 +69,7 @@ export default {
     <main>
       <div id="content">
         <SpinnerComponent :ready="ready"></SpinnerComponent>
+
         <UserInfo
           :modeUpdateInfoUser="modeUpdateInfoUser"
           :pseudo="pseudo"
@@ -73,7 +79,6 @@ export default {
           :modificationCompte="modificationCompte"
           v-if="ready"
         ></UserInfo>
-
         <!-- main content -->
       </div>
     </main>
@@ -81,6 +86,7 @@ export default {
     <FooterComponent></FooterComponent>
   </div>
 </template>
+
 
 <style lang="scss">
 // main - begin

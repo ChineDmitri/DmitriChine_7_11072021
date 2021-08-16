@@ -6,10 +6,12 @@ import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 export default {
   name: "UserInfo",
+
   components: {
     PopUnderInfo,
     SpinnerComponent
   },
+
   props: {
     modeUpdateInfoUser: {
       type: Function
@@ -34,6 +36,7 @@ export default {
       type: Boolean
     }
   },
+
   data() {
     return {
       regexPseudo: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/,
@@ -45,6 +48,7 @@ export default {
       messageErr: "Ce pseudo deja existe, veuillez choisir different que"
     };
   },
+
   methods: {
     validInput(regex, value, event) {
       if (regex.test(value)) {
@@ -94,7 +98,6 @@ export default {
           });
       }
     },
-
     getImg(event) {
       this.imageUrl = event.target.files[0];
       // console.log("this.imageUrl", this.imageUrl);
@@ -108,13 +111,13 @@ export default {
         img.src = event.target.result;
       };
     },
-
     modalBoolean() {
       return (this.showmodal = !this.showmodal);
     }
   }
 };
 </script>
+
 
 <template>
   <div id="account">
@@ -126,14 +129,17 @@ export default {
         :changePseudo="changePseudo"
       ></PopUnderInfo>
     </transition>
+
     <div id="header">
       <div id="header-photo">
         <img id="userPhoto" :src="imgProfil" alt="" />
       </div>
+
       <div id="header-info">
         <span v-if="!modificationCompte" id="header-info-pseudo">
           {{ pseudo }}
         </span>
+
         <label v-if="modificationCompte" for="newPseudo">
           Nouveau pseudo:
           <input
@@ -150,6 +156,7 @@ export default {
             "
           />
         </label>
+
         <label v-if="modificationCompte" for="inputFile">
           Photo profil:
           <input
@@ -171,6 +178,7 @@ export default {
           >
             Modifier
           </button>
+
           <button
             v-if="modificationCompte"
             @click="modeUpdateInfoUser"
@@ -180,25 +188,30 @@ export default {
           </button>
         </div>
 
-        <span v-if="!modificationCompte" id="header-info-dateInsc"
-          >Date d'inscription: {{ dateInscription }}</span
-        >
+        <span v-if="!modificationCompte" id="header-info-dateInsc">
+          Date d'inscription: {{ dateInscription }}
+        </span>
+
         <div v-if="monCompte" id="header-info-manipulation">
           <button class="btn-ico">
             <i
               @click="modeUpdateInfoUser"
               v-if="!modificationCompte"
               class="fas fa-pencil-alt orange"
-            ></i>
+            >
+            </i>
           </button>
+
           <button class="btn-ico">
-            <i v-if="!modificationCompte" class="fas fa-trash-alt red"></i>
+            <i v-if="!modificationCompte" class="fas fa-trash-alt red"> </i>
           </button>
         </div>
+
         <div id="header-info-statistic">
           <button v-if="!modificationCompte" class="btn-classic" value="0">
             Les posts publiés
           </button>
+
           <button v-if="!modificationCompte" class="btn-classic" value="0">
             Les commentaires publiés
           </button>

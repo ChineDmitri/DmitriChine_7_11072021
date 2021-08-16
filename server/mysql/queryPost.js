@@ -64,7 +64,7 @@ exports.queryCreatePost = (post) => {
       SET @a:=LAST_INSERT_ID();
 
       INSERT INTO Post_photo (url_img, post_id) 
-      VALUES (${conn.escape(post.url_img)},
+      VALUES (${conn.escape(post.imageUrl)},
       @a);
 
       INSERT INTO Account_posts (user_id, post_id)

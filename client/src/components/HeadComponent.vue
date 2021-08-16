@@ -4,6 +4,7 @@ export default {
 };
 </script>
 
+
 <template>
   <header>
     <div id="head"></div>
@@ -14,7 +15,7 @@ export default {
             <router-link to="/moncompte">Mon profil</router-link>
           </li>
           <li>
-            <router-link to="/">Ecrire un post</router-link>
+            <router-link to="/main/createpost">Ecrire un post</router-link>
           </li>
           <li>
             <router-link to="/main">Accueil</router-link>
@@ -27,7 +28,7 @@ export default {
             <router-link to="/moncompte"><i class="fas fa-user-circle"></i></router-link>
           </li>
           <li>
-            <router-link to="/"><i class="fas fa-paper-plane"></i></router-link>
+            <router-link to="/main/createpost"><i class="fas fa-paper-plane"></i></router-link>
           </li>
           <li>
             <router-link to="/main"><i class="fas fa-home"></i></router-link>
@@ -37,6 +38,7 @@ export default {
     </div>
   </header>
 </template>
+
 
 <style lang="scss">
 // header - begin

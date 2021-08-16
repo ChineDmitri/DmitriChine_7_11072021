@@ -17,6 +17,7 @@ const routes = [
   {
     path: '/main',
     name: 'Main',
+    props: true,
     component: () => import('../views/Main.vue')
   },
   {
@@ -30,6 +31,12 @@ const routes = [
     name: 'MonCompte',
     props: true,
     component: () => import('../views/MyAccount.vue')
+  },
+  {
+    path: '/main/createpost',
+    name: 'CreatePost',
+    props: true,
+    component: () => import('../views/CreatePost.vue')
   }
 ]
 

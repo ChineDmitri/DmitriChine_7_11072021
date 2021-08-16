@@ -2,43 +2,55 @@
 import UserInfo from "../components/UserInfo";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
+import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "Account",
+
   components: {
     UserInfo,
     HeadComponent,
-    FooterComponent
+    FooterComponent,
+    SpinnerComponent
   },
+
   data() {
     return {
       pseudo: "",
-      dateInscriotion: "",
+      dateInscription: "",
       imgProfil: "",
-      monCompte: false
+      monCompte: false,
+      ready: true
     };
   },
+
   methods: {
     getInfoUser() {
+      this.ready = false;
       sendRequest(
         `http://localhost:3000/api/auth/${this.$route.params.id}`,
         "GET"
       )
         .then(data => {
           if (data.error !== 0) {
-            console.log(data);
+            // console.log(data);
+            this.ready = true;
             this.pseudo = data.pseudo;
-            this.dateInscriotion = data.date_inscription;
+            this.dateInscription = data.date_inscription;
             this.imgProfil = data.profil_img_url;
           } else {
             this.$router.push("/");
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.ready = true;
+          console.log(err);
+        });
     }
   },
+
   beforeMount() {
     this.getInfoUser();
   }
@@ -51,11 +63,14 @@ export default {
 
     <main>
       <div id="content">
+        <SpinnerComponent :ready="ready"></SpinnerComponent>
+
         <UserInfo
           :pseudo="pseudo"
-          :dateInscriotion="dateInscriotion"
+          :dateInscription="dateInscription"
           :imgProfil="imgProfil"
           :monCompte="monCompte"
+          v-if="ready"
         ></UserInfo>
         <!-- main content -->
       </div>
@@ -64,6 +79,7 @@ export default {
     <FooterComponent></FooterComponent>
   </div>
 </template>
+
 
 <style lang="scss">
 // main - begin

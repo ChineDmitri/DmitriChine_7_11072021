@@ -1,6 +1,7 @@
 <script>
 export default {
   name: "SpinnerComponent",
+
   props: {
     ready: {
       type: Boolean,
@@ -10,11 +11,13 @@ export default {
 };
 </script>
 
+
 <template>
   <div v-if="!ready" class="spinner-border" role="status">
     <span class="sr-only"></span>
   </div>
 </template>
+
 
 <style lang="scss">
 .spinner-border {
@@ -22,8 +25,8 @@ export default {
   width: 5rem;
   height: 5rem;
   vertical-align: text-bottom;
-  border: 0.25em solid #6b7689;
-  border-right-color: transparent;
+  border: 0.25em solid #6b7689!important;
+  border-right-color: transparent!important;
   border-radius: 50%;
   -webkit-animation: spinner-border 0.75s linear infinite;
   animation: spinner-border 0.75s linear infinite;

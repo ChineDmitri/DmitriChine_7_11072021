@@ -1,6 +1,7 @@
 <script>
 export default {
   name: "PopUnderInfo",
+
   props: {
     modalBoolean: {
       type: Function,
@@ -15,7 +16,7 @@ export default {
       required: true
     },
     changePseudo: {
-      type: String,
+      type: String
     }
   }
 };
@@ -24,12 +25,15 @@ export default {
 <template>
   <div id="popUnder" v-if="showmodal">
     <div id="popUnder-body">
-      <span id="popUnder-body-btnClose"
-        ><button @click="modalBoolean" id="refuser">
-          <i class="fas fa-times-circle"></i></button></span
-      ><span id="popUnder-body-p"
-        >{{ messageErr }} <b>{{ changePseudo }}</b></span
-      >
+      <span id="popUnder-body-btnClose">
+        <button @click="modalBoolean" id="refuser">
+          <i class="fas fa-times-circle"></i>
+        </button>
+      </span>
+
+      <span id="popUnder-body-p">
+        {{ messageErr }} <b>{{ changePseudo }}</b>
+      </span>
     </div>
   </div>
 </template>

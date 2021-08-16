@@ -4,6 +4,7 @@ export default {
 };
 </script>
 
+
 <template>
   <footer>
     <ul>
@@ -12,6 +13,7 @@ export default {
     </ul>
   </footer>
 </template>
+
 
 <style lang="scss">
 // footer - start

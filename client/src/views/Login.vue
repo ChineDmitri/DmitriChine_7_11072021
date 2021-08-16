@@ -1,52 +1,67 @@
 <script>
+import SpinnerComponent from "../components/SpinnerComponent.vue";
+
 import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
+  components: {
+    SpinnerComponent
+  },
+
   data() {
     return {
       regexEmail: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){3}\.[a-z]{2,3}$/,
       vEmail: false,
       email: "",
       password: "",
-      message: ""
+      message: undefined,
+      ready: true // Boolean pour SpinnerComponent
     };
   },
 
   methods: {
     validInput(regex, value, event) {
       if (regex.test(value)) {
-        console.log("true", event.target);
+        // console.log("true", event.target);
         event.target.classList.remove("invalid");
         event.target.classList.add("valid");
         return true;
       } else {
-        console.log("false", event.target);
+        // console.log("false", event.target);
         event.target.classList.remove("valid");
         event.target.classList.add("invalid");
         return false;
       }
     },
-
     logIn(event) {
       event.preventDefault();
+      
 
       let user = {
         email: this.email,
         password: this.password
       };
 
-      sendRequest("http://localhost:3000/api/auth/login", "POST", user)
-        .then(data => {
-          if (data.auth) {
-            //si authentication reussit
-            this.$router.push("/moncompte/");
-          } else {
-            this.message = data.message;
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.vEmail) {
+        this.ready = false;
+        sendRequest("http://localhost:3000/api/auth/login", "POST", user)
+          .then(data => {
+            if (data.auth) {
+              //si authentication reussit
+              this.$router.push("/moncompte/");
+            } else {
+              this.ready = true;
+              this.message = data.message;
+            }
+          })
+          .catch(err => {
+            this.ready = true;
+            console.log(err);
+          });
+      } else {
+        this.ready = true;
+        this.message = "Veuillez remplire les champs correctement"
+      }
     }
   }
 };
@@ -55,7 +70,11 @@ export default {
 
 <template>
   <div id="auth-form">
-    <h1>Connexion / <router-link to="/signup">Enregistré </router-link></h1>
+    <h1>
+      Connexion /
+      <router-link to="/signup"> Enregistré </router-link>
+    </h1>
+
     <div>
       <form>
         <label for="email">
@@ -68,6 +87,7 @@ export default {
             @input="vEmail = validInput(regexEmail, email, $event)"
           />
         </label>
+
         <label for="password">
           Password:
           <input
@@ -78,15 +98,17 @@ export default {
           />
         </label>
 
-        <p v-if="message !== ''">
+        <p v-if="message !== undefined">
           {{ message }}
         </p>
 
-        <input type="submit" value="Entrer" v-on:click="logIn" />
+        <input v-if="ready" type="submit" value="Entrer" v-on:click="logIn" />
       </form>
+      <SpinnerComponent :ready="ready"></SpinnerComponent>
     </div>
   </div>
 </template>
+
 
 <style lang="scss">
 $fontSize: 1rem;
