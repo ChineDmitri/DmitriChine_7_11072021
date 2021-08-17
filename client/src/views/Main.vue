@@ -226,12 +226,12 @@ main {
       margin: 0 0 10px;
       $nLine: 5;
       &-text {
-        margin: 0 0 10px;
+        padding: 5px 0;
+        margin: 0 0 5px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         line-height: 16px; /* fallback */
-        max-height: calc(16 * $nLine); /* fallback */
         -webkit-line-clamp: $nLine; /* number of lines to show */
         -webkit-box-orient: vertical;
       }

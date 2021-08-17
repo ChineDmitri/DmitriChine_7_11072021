@@ -48,7 +48,9 @@ exports.createPost = (req, res, next) => {
         imageUrl: null,
     }
 
-    qPost.queryCreatePost(body)
+    console.log(postObject);
+
+    qPost.queryCreatePost(postObject)
         .then(() => res.status(201).json({ message: "Post created!" }))
         .catch((err) => res.status(400).json(err));
 

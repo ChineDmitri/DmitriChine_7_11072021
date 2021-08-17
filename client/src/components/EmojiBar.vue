@@ -1,7 +1,7 @@
 <script>
 export default {
   name: "EmojiBar",
-  props: ["emoji", "showEmoji", "addEmodji"]
+  props: ["showEmoji", "addEmodji"]
 };
 </script>
 
@@ -9,201 +9,166 @@ export default {
 <template>
   <span class="emoji">
     <input
-      @click="showEmoji"
-      v-if="!emoji"
-      type="button"
-      class="emoji-btn"
-      value="&#128578;"
-    />
-    <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128578;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128515;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128516;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128513;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128518;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128518;"
     /><input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128517;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129315;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128514;"
     /><input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129315;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128579;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128521;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128522;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128519;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129392;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128525;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129321;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128536;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128535;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128523;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128539;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128540;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129322;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#128541;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129297;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129303;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"
       value="&#129325;"
     />
     <input
-      v-if="emoji"
       @click="addEmodji"
       type="button"
       class="emoji-btn"

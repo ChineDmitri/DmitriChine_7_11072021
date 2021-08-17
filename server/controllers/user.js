@@ -92,6 +92,10 @@ exports.login = (req, res, next) => {
                         profil: user[0].profil
                     }
 
+                    const session = {
+                        start: Date.now()
+                    }
+
                     // ici token chifré
                     res.cookie('access_token', token, {
                         maxAge: 60000 * 60 * 24, // 24 heurs
@@ -104,6 +108,13 @@ exports.login = (req, res, next) => {
                     res.cookie('data', data, {
                         maxAge: 60000 * 60 * 24, // 24 heurs
                         httpOnly: true // OWASP utilisation par http seulement
+                        // secure: true // secure il faut decommenter en production!
+                    });
+
+                     // ici cokie pour le front-end
+                     res.cookie('session', session, {
+                        maxAge: 60000 * 60 * 24, // 24 heurs
+                        // httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
                     });
 

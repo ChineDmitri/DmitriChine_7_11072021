@@ -104,12 +104,16 @@ export default {
 
       let img = document.getElementById("userPhoto"); // où inserer preview photo
 
-      // pour lire le contenu de fichiers
-      let fReader = new FileReader();
-      fReader.readAsDataURL(event.target.files[0]);
-      fReader.onloadend = function(event) {
-        img.src = event.target.result;
-      };
+      if (event.target.files[0] !== undefined) {
+        // pour lire le contenu de fichiers
+        let fReader = new FileReader();
+        fReader.readAsDataURL(event.target.files[0]);
+        fReader.onloadend = function(event) {
+          img.src = event.target.result;
+        };
+      } else {
+        img.src = this.imgProfil;
+      }
     },
     modalBoolean() {
       return (this.showmodal = !this.showmodal);
@@ -161,7 +165,7 @@ export default {
           Photo profil:
           <input
             id="inputFile"
-            accept="image/png, image/gif, image/jpeg"
+            accept="image/png, image/jpg, image/jpeg,"
             type="file"
             title=" "
             @change="getImg"

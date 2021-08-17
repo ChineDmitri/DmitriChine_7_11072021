@@ -1,5 +1,8 @@
 <script>
 import EmojiBar from "../components/EmojiBar";
+
+import { sendRequestFD } from "../helpers/sendRequest.js";
+
 export default {
   name: "FormPost",
 
@@ -9,26 +12,80 @@ export default {
 
   data() {
     return {
-      textPost: "",
-      emoji: false
+      emoji: false,
+      imageUrl: null,
+      title: undefined,
+      textPost: ""
     };
   },
+
   methods: {
     addEmodji(event) {
-      // this.textPost += event.taget.value
-      // console.log(this.textPost);
-      // console.log(event.target.value);
+      console.log(decodeURI(event.target.value));
 
+      // Index d'un symbol apres dernier symbol selectioné
       let cursorIndex = document.getElementById("inputTextField").selectionEnd;
+
       this.textPost =
         this.textPost.substring(0, cursorIndex) +
         event.target.value +
         this.textPost.substring(cursorIndex);
+
       this.emoji = false;
     },
     showEmoji() {
-      // console.log("coucou");
+      // console.log(event.target.value);
       this.emoji = true;
+    },
+    getImg() {
+      this.imageUrl = event.target.files[0];
+
+      console.log(event.target.files[0]);
+
+      let img = document.getElementById("postPhoto"); // où inserer preview
+
+      if (event.target.files[0] !== undefined) {
+        // pour lire le contenu de fichiers
+        let fReader = new FileReader();
+        fReader.readAsDataURL(event.target.files[0]);
+        fReader.onloadend = function(event) {
+          img.src = event.target.result;
+          // console.log(event.target.result);
+        };
+      } else {
+        img.src = undefined;
+      }
+    },
+    createPost() {
+      console.log(this.title, this.textPost, this.imageUrl);
+
+      // const body = {
+      //   title: this.title,
+      //   discription: this.textPost,
+      //   imageUrl: this.imageUrl
+      // };
+
+      const postData = new FormData();
+
+      postData.append("title", this.title);
+      postData.append("discription", this.textPost);
+      postData.append("imageUrl", this.imageUrl);
+
+      // if (document.cookie.indexOf("session") == 0) {
+      //   console.log("Cookies yes", decodeURI(document.cookie));
+      // } else {
+      //   console.log("Cookies non");
+      // }
+
+      console.log(postData);
+
+      sendRequestFD("http://localhost:3000/api/post/create", "POST", postData)
+        .then(res => {
+          console.log("create ", res);
+        })
+        .catch(err => {
+          console.log("error ", err);
+        });
     }
   }
 };
@@ -39,28 +96,41 @@ export default {
   <div class="post">
     <label for="title">
       Title de post:
-      <input type="text" id="title" />
+      <input v-model="title" type="text" id="title" />
     </label>
+
     <label for="inputTextField">
       Text de post:
-      <textarea
-        v-model="textPost"
-        rows="10"
-        name="text"
-        id="inputTextField"
-      ></textarea>
+      <textarea v-model="textPost" rows="10" name="text" id="inputTextField">
+      </textarea>
     </label>
+
     <div id="attachment">
-      <EmojiBar
-        :emoji="emoji"
-        :showEmoji="showEmoji"
-        :addEmodji="addEmodji"
-      ></EmojiBar>
+      <span v-if="!emoji" class="emoji">
+        <input
+          @click="showEmoji"
+          type="button"
+          class="emoji-btn"
+          value="&#128578;"
+        />
+      </span>
+
+      <EmojiBar v-if="emoji" :showEmoji="showEmoji" :addEmodji="addEmodji">
+      </EmojiBar>
+
       <div class="fileDownload">
-        <input type="file" />
-        <img src="../assets/avatar.jpg" alt="" />
+        <input
+          type="file"
+          id="inputFile"
+          accept="image/png, image/jpg, image/gif, image/jpeg,"
+          title=" "
+          @change="getImg"
+        />
+
+        <img id="postPhoto" :src="imageUrl" alt="" />
       </div>
     </div>
+    <button @click="createPost" class="btn-classic">Publié</button>
   </div>
 </template>
 

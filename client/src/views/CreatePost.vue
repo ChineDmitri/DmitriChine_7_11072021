@@ -24,7 +24,7 @@ export default {
 
     <main>
       <div id="content">
-       <FormPost></FormPost>
+        <FormPost></FormPost>
         <!-- main content -->
       </div>
     </main>
