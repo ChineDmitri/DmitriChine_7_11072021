@@ -1,5 +1,6 @@
 <script>
 import EmojiBar from "../components/EmojiBar";
+import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 import { sendRequestFD } from "../helpers/sendRequest.js";
 
@@ -7,7 +8,8 @@ export default {
   name: "FormPost",
 
   components: {
-    EmojiBar
+    EmojiBar,
+    SpinnerComponent
   },
 
   data() {
@@ -15,7 +17,8 @@ export default {
       emoji: false,
       imageUrl: null,
       title: undefined,
-      textPost: ""
+      textPost: "",
+      ready: true
     };
   },
 
@@ -57,6 +60,7 @@ export default {
       }
     },
     createPost() {
+      this.ready = false;
       console.log(this.title, this.textPost, this.imageUrl);
 
       // const body = {
@@ -71,19 +75,18 @@ export default {
       postData.append("discription", this.textPost);
       postData.append("imageUrl", this.imageUrl);
 
-      // if (document.cookie.indexOf("session") == 0) {
-      //   console.log("Cookies yes", decodeURI(document.cookie));
-      // } else {
-      //   console.log("Cookies non");
-      // }
-
       console.log(postData);
 
       sendRequestFD("http://localhost:3000/api/post/create", "POST", postData)
         .then(res => {
+          this.ready = true;
+          if (res.status) {
+            this.$router.push("/main/");
+          }
           console.log("create ", res);
         })
         .catch(err => {
+          this.ready = true;
           console.log("error ", err);
         });
     }
@@ -130,7 +133,10 @@ export default {
         <img id="postPhoto" :src="imageUrl" alt="" />
       </div>
     </div>
-    <button @click="createPost" class="btn-classic">Publié</button>
+
+    <button v-if="ready" @click="createPost" class="btn-classic">Publié</button>
+
+    <SpinnerComponent :ready="ready"></SpinnerComponent>
   </div>
 </template>
 
@@ -158,7 +164,7 @@ $fontSize: 1rem;
     width: calc(100% - 12px);
     text-align: left;
     // position: center;
-    margin: 5px auto;
+    margin: auto;
     border: 1px solid #292829;
     border-radius: 3px 3px 3px 3px;
     padding: 5px;

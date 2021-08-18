@@ -14,6 +14,12 @@ export default {
 
   data() {
     return {};
+  },
+
+  beforeMount() {
+    if (document.cookie.indexOf("session") !== 0) {
+      this.$router.push("/");
+    }
   }
 };
 </script>

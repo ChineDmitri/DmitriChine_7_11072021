@@ -7,6 +7,7 @@ export default {
   },
 
   props: [
+    "key",
     "memberId",
     "title",
     "discription",
@@ -18,8 +19,10 @@ export default {
     "dateModification",
     "urlImg",
     "userId",
+    "status",
     "idx",
     "deletePost",
+    "votePost",
     "ready",
     "readyDelet"
   ]
@@ -92,20 +95,24 @@ export default {
 
     <!-- START BAR avec likes / dilikes / comments -->
     <span class="post-status">
-      <button class="btn-ico">
-        <i class="far fa-thumbs-up green"></i>
+      <button @click="votePost(idx, 1)" class="btn-ico">
+        <i class="far fa-thumbs-up"
+        :class="{ green: status === 1 }"> 
+        </i>
       </button>
 
       <span class="counterLike">{{
         likes == null && dislikes == null ? 0 : likes + dislikes
       }}</span>
 
-      <button class="btn-ico">
-        <i class="far fa-thumbs-down"></i>
+      <button @click="votePost(idx, -1)" class="btn-ico">
+        <i class="far fa-thumbs-down"
+        :class="{ red: status === -1 }" >
+        </i>
       </button>
 
       <router-link class="btn-ico btn-comment" to="/#">
-        <i class="far fa-comment"> 150 {{ comments }} </i>
+        <i class="far fa-comment">  {{ status }} 150 {{ comments }} </i>
       </router-link>
       <!-- <button class="btn-ico"><i class="far fa-comment">25</i></button> -->
     </span>

@@ -57,7 +57,7 @@ export default {
       // "comments": combien commentaires (Number unsigned)
       // "url_img": url pour image,
       // "pseudo": ,
-      // "status": 1
+      // "status": -1 / 0 / 1
       // }]
       sendRequest("http://localhost:3000/api/post", "POST", body)
         .then(res => {
@@ -113,6 +113,54 @@ export default {
       // console.log("splice YES", i, "ID", this.postNews[i].id);
 
       // this.postNews.splice(i, 1);
+    },
+    votePost(idx, status) {
+      // let onePostNew = this.postNews[idx];
+
+      const body = {
+        postId: this.postNews[idx].id,
+        status: status
+      };
+
+      let oldStatus = this.postNews[idx].status;
+
+      // console.log("id Post", this.postNews[idx].id)
+
+      sendRequest(`http://localhost:3000/api/post/like`, "PATCH", body)
+        .then(res => {
+          this.postNews[idx].status = res.stat;
+
+          console.log("RAS!!!", res);
+          console.log("now status!!!", this.postNews[idx].status);
+          console.log("old status!!!", oldStatus);
+
+          if (res.stat === 1 && oldStatus !== res.stat) {
+            this.postNews[idx].likes += status;
+          }
+          if (res.stat === -1 && oldStatus !== res.stat) {
+            this.postNews[idx].dislikes += status;
+          }
+          if (res.stat === 0 && oldStatus !== 1) {
+            this.postNews[idx].likes = this.postNews[idx].likes + 1;
+          }
+          if (res.stat === 0 && oldStatus !== -1) {
+            this.postNews[idx].dislikes = this.postNews[idx].dislikes - 1;
+          }
+
+          if (this.postNews[idx].status < 0 && oldStatus > 0) {
+            console.log('difficil 1')
+            this.postNews[idx].likes = this.postNews[idx].likes + 1;
+            this.postNews[idx].dislikes = this.postNews[idx].dislikes - 2;
+          }
+          if (this.postNews[idx].status > 0 && oldStatus < 0) {
+            console.log('difficil -1')
+            this.postNews[idx].likes = this.postNews[idx].likes + 2;
+            this.postNews[idx].dislikes = this.postNews[idx].dislikes - 1;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
 
@@ -144,8 +192,10 @@ export default {
           :dateModification="postNew.date_modification"
           :urlImg="postNew.url_img"
           :userId="postNew.user_id"
+          :status="postNew.status"
           :idx="idx"
           :deletePost="deletePost"
+          :votePost="votePost"
           :ready="ready"
           :readyDelet="readyDelet"
         ></PostNews>

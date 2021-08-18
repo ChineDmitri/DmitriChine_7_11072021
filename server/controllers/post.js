@@ -12,10 +12,10 @@ exports.getAllPost = (req, res, next) => {
     qPost.queryAllPost(body)
         .then((object) => {
             let result = [
-                req.body.userId, 
+                req.body.userId,
                 object
-            ] 
-            
+            ]
+
             res.status(200).json(result)
         })
         .catch((err) => res.status(404).json(err));
@@ -36,22 +36,23 @@ exports.getOnePost = (req, res, next) => {
 // Pour creation d'un post
 exports.createPost = (req, res, next) => {
 
-    const postObject = req.file ? {   
+    const postObject = req.file ? {
         userId: req.body.userId,
         title: req.body.title,
         discription: req.body.discription,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-    } : {   
+    } : {
         userId: req.body.userId,
         title: req.body.title,
         discription: req.body.discription,
         imageUrl: null,
     }
 
-    console.log(postObject);
-
     qPost.queryCreatePost(postObject)
-        .then(() => res.status(201).json({ message: "Post created!" }))
+        .then(() => res.status(201).json({
+            message: "Post created!",
+            status: true
+        }))
         .catch((err) => res.status(400).json(err));
 
 };
@@ -88,7 +89,15 @@ exports.deletePost = (req, res, next) => {
 // like or dislike d'un post
 exports.votePost = (req, res, next) => {
 
-    qPost.queryRecon(req.body)
+    const body = {
+        userId: req.body.userId,
+        postId: req.body.postId,
+        status: req.body.status,
+    };
+
+    console.log(body)
+
+    qPost.queryRecon(body)
         // si était jamais liké ou disliké crée nouveau INSERT
         .then((result) => {
             if (result.length === 0) {
@@ -102,11 +111,12 @@ exports.votePost = (req, res, next) => {
 
             } else {
                 if (result[0].status === req.body.status) {
-
+                    console.log("nous somme la")
                     return qPost.updateStatus(req.body, 0)
                         .then(res.status(200).json({
-                            message: "Post status added!",
-                            stat: ("IN: " + req.body.status + " | OUT: " + (req.body.status * 0))
+                            message: "Post status added! toujour 0",
+                            // stat: ("IN: " + req.body.status + " | OUT: " + (req.body.status * 0))
+                            stat: 0
                         }))
                         .catch((err) => res.status(409).json(err));
 
@@ -116,8 +126,8 @@ exports.votePost = (req, res, next) => {
 
                             qPost.updateStatus(req.body, -1)
                                 .then(res.status(200).json({
-                                    message: "Post status added!",
-                                    stat: "DISLIKE"
+                                    message: "Post status added! switch -1",
+                                    stat: -1
                                 }))
                                 .catch((err) => res.status(402).json(err));
 
@@ -126,8 +136,8 @@ exports.votePost = (req, res, next) => {
 
                             qPost.updateStatus(req.body, 1)
                                 .then(res.status(200).json({
-                                    message: "Post status added!",
-                                    stat: "LIKE"
+                                    message: "Post status added!  switch -1",
+                                    stat: 1
                                 }))
                                 .catch((err) => res.status(403).json(err));
 
@@ -137,7 +147,7 @@ exports.votePost = (req, res, next) => {
                             qPost.updateStatus(req.body, 0)
                                 .then(res.status(200).json({
                                     message: "Post status added!",
-                                    stat: "AUCUNE"
+                                    stat: req.body.status
                                 }))
                                 .catch((err) => res.status(403).json(err));
 
