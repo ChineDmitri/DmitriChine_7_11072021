@@ -124,38 +124,42 @@ export default {
 
       let oldStatus = this.postNews[idx].status;
 
-      // console.log("id Post", this.postNews[idx].id)
-
       sendRequest(`http://localhost:3000/api/post/like`, "PATCH", body)
         .then(res => {
           this.postNews[idx].status = res.stat;
 
-          console.log("RAS!!!", res);
-          console.log("now status!!!", this.postNews[idx].status);
-          console.log("old status!!!", oldStatus);
-
-          if (res.stat === 1 && oldStatus !== res.stat) {
-            this.postNews[idx].likes += status;
-          }
-          if (res.stat === -1 && oldStatus !== res.stat) {
-            this.postNews[idx].dislikes += status;
-          }
-          if (res.stat === 0 && oldStatus !== 1) {
-            this.postNews[idx].likes = this.postNews[idx].likes + 1;
-          }
-          if (res.stat === 0 && oldStatus !== -1) {
-            this.postNews[idx].dislikes = this.postNews[idx].dislikes - 1;
+          // si response 1 (LIKE) et precedant n'est pas comme response 1 (LIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas 1 (LIKE)
+          if (
+            (res.stat === 1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== 1)
+          ) {
+            // increment likes
+            this.postNews[idx].likes++;
           }
 
-          if (this.postNews[idx].status < 0 && oldStatus > 0) {
-            console.log('difficil 1')
-            this.postNews[idx].likes = this.postNews[idx].likes + 1;
-            this.postNews[idx].dislikes = this.postNews[idx].dislikes - 2;
+          // si response -1 (DISLIKE) et precedant n'est pas comme reponse -1 (DISLIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas -1 (DISLIKE)
+          if (
+            (res.stat === -1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== -1)
+          ) {
+            // decriment dislike
+            this.postNews[idx].dislikes--;
           }
-          if (this.postNews[idx].status > 0 && oldStatus < 0) {
-            console.log('difficil -1')
-            this.postNews[idx].likes = this.postNews[idx].likes + 2;
-            this.postNews[idx].dislikes = this.postNews[idx].dislikes - 1;
+
+          // de LIKE vers DISLIKE
+          if (this.postNews[idx].status === -1 && oldStatus === 1) {
+            this.postNews[idx].likes++;
+            this.postNews[idx].dislikes -= 2;
+          }
+
+          // de DISLIKE vers LIKE
+          if (this.postNews[idx].status === 1 && oldStatus === -1) {
+            this.postNews[idx].likes += 2;
+            this.postNews[idx].dislikes--;
           }
         })
         .catch(err => {

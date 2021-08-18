@@ -95,8 +95,6 @@ exports.votePost = (req, res, next) => {
         status: req.body.status,
     };
 
-    console.log(body)
-
     qPost.queryRecon(body)
         // si était jamais liké ou disliké crée nouveau INSERT
         .then((result) => {
