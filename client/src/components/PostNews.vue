@@ -8,6 +8,7 @@ export default {
 
   props: [
     "key",
+    "postId",
     "memberId",
     "title",
     "discription",
@@ -34,7 +35,7 @@ export default {
   <div v-if="readyDelet" class="post">
     <!-- START BAR avec title et button manip -->
     <div class="post-title">
-      <router-link :to="{ name: 'Compte', params: { id: idx } }">
+      <router-link :to="{ name: 'OnePostNews', params: { id: postId } }">
         {{ title }}
       </router-link>
 

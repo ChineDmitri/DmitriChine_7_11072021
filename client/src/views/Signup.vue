@@ -21,12 +21,14 @@ export default {
       placeholderDoublePass: "Repetez mot de passe",
       placeholderRules: "Minimum 8 caractères",
       message: undefined,
-      ready: true,
+      ready: true
     };
   },
 
   methods: {
     validInput(regex, value, event) {
+      this.message = undefined;
+
       if (regex.test(value)) {
         console.log("true", event.target);
         event.target.classList.remove("invalid");
@@ -41,6 +43,7 @@ export default {
     },
 
     validFirstPassword() {
+      this.message = undefined;
       if (this.firstPassValue.length > 7) {
         event.target.classList.remove("invalid");
         event.target.classList.add("valid");
@@ -53,6 +56,7 @@ export default {
     },
 
     validSecondPassword() {
+      this.message = undefined;
       if (
         this.secondPassValue.length > 7 &&
         this.secondPassValue === this.firstPassValue
@@ -68,7 +72,6 @@ export default {
     },
     signUp(event) {
       event.preventDefault();
-      this.ready = false;
 
       let user = {
         email: this.email,
@@ -82,6 +85,8 @@ export default {
         this.vPassword &&
         this.secondPassValue === this.firstPassValue
       ) {
+        this.ready = false;
+
         sendRequest("http://localhost:3000/api/auth/signup", "POST", user)
           .then(data => {
             this.ready = true;
@@ -128,7 +133,7 @@ export default {
     </h1>
 
     <div>
-      <form >
+      <form>
         <label for="email">
           Email:
           <input

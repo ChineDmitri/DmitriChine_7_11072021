@@ -23,24 +23,17 @@ export default {
       postNews: [], // variable pour stockage des posts
       showMore: true, // si il y a rien à affiché on passe en false
       ready: true, // Boolean pour SpinnerComponent qui en "Afficher en plus"
-      readyDelet: true, // Boolean pour SpinnerComponent lorsque on effectué DELET d'un post
-      modePublication: false
+      readyDelet: true // Boolean pour SpinnerComponent lorsque on effectué DELET d'un post
     };
   },
 
   methods: {
-    getAllPost(num) {
-      this.ready = false;
-      if (
-        document.cookie
-          .split(";")
-          .filter(item => item.trim().startsWith("reader=")).length
-      ) {
-        console.log('The cookie "reader" exists (ES6)');
-      }
+    // Obtenir tout les poste counter 0 = plus recent
+    getAllPost(counter) {
+      this.ready = false; // start spinner
 
       let body = {
-        postCounter: num
+        postCounter: counter
       };
 
       // RESPONSE 1
@@ -62,13 +55,13 @@ export default {
       sendRequest("http://localhost:3000/api/post", "POST", body)
         .then(res => {
           if (res.error !== 0) {
-            this.showMore = res[1].length === 0 ? false : true;
+            this.showMore = res[1].length === 2 ? true : false; //
 
-            this.memberId = res[0];
+            this.memberId = res[0]; // attribution member ID (userId)
 
-            // console.log("member id", this.memberId);
-
-            res[1].forEach(el => this.postNews.push(el));
+            res[1].forEach(el => {
+              this.postNews.push(el);
+            });
 
             this.ready = true;
           } else {
@@ -80,51 +73,54 @@ export default {
           console.log(err);
         });
     },
+    // Obtenir en plus de posté et mettre dans this.postNews
     showMorePost(num) {
-      // sendRequest("http://localhost:3000/api/post", "POST", body)
-
       num++;
+
       this.getAllPost(num);
-      // console.log(this.counter);
+
       return num;
     },
+    // methode pour DELETE d'un post et reformé this.postNews
     deletePost(i) {
       this.readyDelet = false;
-
-      console.log(this.postNews[i].id);
 
       sendRequest(
         `http://localhost:3000/api/post/${this.postNews[i].id}`,
         "DELETE"
       )
-        .then(res => {
-          this.postNews.splice(i, 1);
+        .then(() => {
+          // this.postNews.splice(i, 1); // ce la n'est function pas comme il faut
+
+          this.postNews = [];
+
+          // formé en nouveau this.postNews
+          for (let k = 0; k <= this.counter; k++) {
+            this.getAllPost(k);
+          }
 
           this.readyDelet = true;
-
-          console.log(res, this.ready);
         })
         .catch(err => {
           this.readyDelet = true;
 
           console.log(err);
         });
-
-      // console.log("splice YES", i, "ID", this.postNews[i].id);
-
-      // this.postNews.splice(i, 1);
     },
+    // LIKE ou DISLIKE :D
     votePost(idx, status) {
-      // let onePostNew = this.postNews[idx];
-
       const body = {
         postId: this.postNews[idx].id,
         status: status
       };
 
-      let oldStatus = this.postNews[idx].status;
+      let oldStatus = this.postNews[idx].status; // Status precedant avant de changement
 
-      sendRequest(`http://localhost:3000/api/post/like`, "PATCH", body)
+      sendRequest(
+        `http://localhost:3000/api/post/${this.postNews[idx].id}/like`,
+        "PATCH",
+        body
+      )
         .then(res => {
           this.postNews[idx].status = res.stat;
 
@@ -185,6 +181,7 @@ export default {
         <PostNews
           v-for="(postNew, idx) in postNews"
           :key="postNew.id"
+          :postId="postNew.id"
           :memberId="memberId"
           :title="postNew.title"
           :discription="postNew.discription"

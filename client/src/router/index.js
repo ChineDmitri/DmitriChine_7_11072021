@@ -37,6 +37,12 @@ const routes = [
     name: 'CreatePost',
     props: true,
     component: () => import('../views/CreatePost.vue')
+  },
+  {
+    path: '/main/post/:id',
+    name: 'OnePostNews',
+    props: true,
+    component: () => import('../views/OnePostNews.vue')
   }
 ]
 

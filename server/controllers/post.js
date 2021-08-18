@@ -91,7 +91,7 @@ exports.votePost = (req, res, next) => {
 
     const body = {
         userId: req.body.userId,
-        postId: req.body.postId,
+        postId: req.body.postId, // si avac params faute de CORS
         status: req.body.status,
     };
 
@@ -109,10 +109,9 @@ exports.votePost = (req, res, next) => {
 
             } else {
                 if (result[0].status === req.body.status) {
-                    console.log("nous somme la")
                     return qPost.updateStatus(req.body, 0)
                         .then(res.status(200).json({
-                            message: "Post status added! toujour 0",
+                            message: "Post status added!",
                             // stat: ("IN: " + req.body.status + " | OUT: " + (req.body.status * 0))
                             stat: 0
                         }))
@@ -134,7 +133,7 @@ exports.votePost = (req, res, next) => {
 
                             qPost.updateStatus(req.body, 1)
                                 .then(res.status(200).json({
-                                    message: "Post status added!  switch -1",
+                                    message: "Post status added!  switch 1",
                                     stat: 1
                                 }))
                                 .catch((err) => res.status(403).json(err));
