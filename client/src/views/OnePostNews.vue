@@ -1,6 +1,8 @@
 <script>
-// import SpinnerComponent from "../components/SpinnerComponent.vue";
+import SpinnerComponent from "../components/SpinnerComponent.vue";
+import EmojiBar from "../components/EmojiBar";
 import PostNews from "../components/PostNews";
+import CommentNews from "../components/CommentNews";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 
@@ -10,10 +12,12 @@ export default {
   name: "OnePostNews",
 
   components: {
-    // SpinnerComponent,
+    SpinnerComponent,
     PostNews,
     HeadComponent,
-    FooterComponent
+    FooterComponent,
+    CommentNews,
+    EmojiBar
   },
 
   data() {
@@ -22,29 +26,33 @@ export default {
       postNew: "", // variable pour stockage des posts
       showMore: true, // si il y a rien à affiché on passe en false
       ready: true, // Boolean pour SpinnerComponent qui en "Afficher en plus"
-      readyDelet: true // Boolean pour SpinnerComponent lorsque on effectué DELET d'un post
+      goComment: true, // pour ajout des comments
+      emoji: false // affiché emoji ou caché
     };
   },
 
   methods: {},
 
   beforeMount() {
+    this.ready = false;
     sendRequest(
       `http://localhost:3000/api/post/${this.$route.params.id}`,
       "GET"
     )
       .then(res => {
-        this.postNew = res[1]
+        this.ready = true;
+        this.postNew = res[1];
         // this.postNew = new Object(
         //   res[1]
         // )
 
-        this.memberId = res[0]
+        this.memberId = res[0];
 
-        console.log('bf', this.postNew)
+        console.log("bf", this.postNew);
         // console.log('bf', res[1])
       })
       .catch(err => {
+        this.ready = true;
         console.log(err);
       });
   }
@@ -73,8 +81,63 @@ export default {
           :userId="postNew.user_id"
           :status="postNew.status"
           :ready="ready"
-          :readyDelet="readyDelet"
         ></PostNews>
+
+        <SpinnerComponent :ready="ready"></SpinnerComponent>
+
+        <div v-if="ready" class="container-comments">
+          <h2>Commentaires:</h2>
+          <CommentNews></CommentNews>
+          <CommentNews></CommentNews>
+          <CommentNews></CommentNews>
+          <CommentNews></CommentNews>
+        </div>
+
+        <button v-if="ready" class="btn-classic">Voir les commentaire</button>
+
+        <button
+          v-if="!goComment && ready"
+          @click="goComment = true"
+          class="btn-classic"
+        >
+          Ajouté commentaire
+        </button>
+
+        <div v-if="goComment" class="container-comments">
+          <div class="comments">
+            <label for="inputTextField">
+              Text de commentaire:
+              <textarea
+                v-model="textPost"
+                rows="5"
+                name="text"
+                id="inputTextField"
+              >
+              </textarea>
+            </label>
+
+            <!-- START EMOJI -->
+            <span v-if="!emoji" class="emoji">
+              <input
+                @click="emoji = true"
+                type="button"
+                class="emoji-btn"
+                value="&#128578;"
+              />
+            </span>
+
+            <EmojiBar
+              v-if="emoji"
+              :showEmoji="showEmoji"
+              :addEmodji="addEmodji"
+            ></EmojiBar>
+            <!-- FIN EMOJIO -->
+
+            <button @click="goComment = true" class="btn-classic">
+              Envoyer!
+            </button>
+          </div>
+        </div>
 
         <!-- spinner lorsque on supprim un post -->
         <!-- <SpinnerComponent :ready="readyDelet"></SpinnerComponent> -->
@@ -116,7 +179,35 @@ main {
     width: 70%;
     background-color: white;
   }
-  .post {
+  .container-comments {
+    @media screen and (max-width: 426px) {
+      width: 90%;
+    }
+    width: 70%;
+    margin: 15px auto 0 auto;
+    padding: 0;
+    h2 {
+      margin: 0 5%;
+    }
+  }
+  .post,
+  .comments {
+    label {
+      margin: 5px 0;
+      position: relative;
+    }
+    input,
+    textarea {
+      outline: none;
+      width: calc(100% - 12px);
+      text-align: left;
+      // position: center;
+      margin: auto;
+      border: 1px solid #292829;
+      border-radius: 3px 3px 3px 3px;
+      padding: 5px;
+      font-size: 1rem;
+    }
     display: flex;
     flex-direction: column;
     margin: 15px auto 0 auto;

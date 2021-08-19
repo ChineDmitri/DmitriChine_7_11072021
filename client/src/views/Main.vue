@@ -21,9 +21,9 @@ export default {
       memberId: undefined, // id de utilisateur
       counter: 0, //counter pour affiché en plus des post
       postNews: [], // variable pour stockage des posts
-      showMore: true, // si il y a rien à affiché on passe en false
-      ready: true, // Boolean pour SpinnerComponent qui en "Afficher en plus"
-      readyDelet: true // Boolean pour SpinnerComponent lorsque on effectué DELET d'un post
+      // showMore: true, // si il y a rien à affiché on passe en false
+      ready: true // Boolean pour SpinnerComponent qui en "Afficher en plus"
+      // readyDelet: true // Boolean pour SpinnerComponent lorsque on effectué DELET d'un post
     };
   },
 
@@ -55,7 +55,7 @@ export default {
       sendRequest("http://localhost:3000/api/post", "POST", body)
         .then(res => {
           if (res.error !== 0) {
-            this.showMore = res[1].length === 2 ? true : false; //
+            this.ready = res[1].length === 2 ? true : false; //
 
             this.memberId = res[0]; // attribution member ID (userId)
 
@@ -83,7 +83,7 @@ export default {
     },
     // methode pour DELETE d'un post et reformé this.postNews
     deletePost(i) {
-      this.readyDelet = false;
+      this.ready = false;
 
       sendRequest(
         `http://localhost:3000/api/post/${this.postNews[i].id}`,
@@ -99,10 +99,10 @@ export default {
             this.getAllPost(k);
           }
 
-          this.readyDelet = true;
+          this.ready = true;
         })
         .catch(err => {
-          this.readyDelet = true;
+          this.ready = true;
 
           console.log(err);
         });
@@ -198,17 +198,16 @@ export default {
           :deletePost="deletePost"
           :votePost="votePost"
           :ready="ready"
-          :readyDelet="readyDelet"
         ></PostNews>
 
         <!-- spinner lorsque on supprim un post -->
-        <SpinnerComponent :ready="readyDelet"></SpinnerComponent>
+        <!-- <SpinnerComponent :ready="readyDelet"></SpinnerComponent> -->
 
         <!-- spinner lorsqur on demande afficher encore des post -->
         <SpinnerComponent :ready="ready"></SpinnerComponent>
 
         <button
-          v-if="showMore && ready && readyDelet"
+          v-if="ready"
           @click="this.counter = showMorePost(this.counter)"
           class="btn-classic"
           value="0"

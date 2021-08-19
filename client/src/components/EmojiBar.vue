@@ -187,7 +187,7 @@ export default {
   // flex-direction: row;
   // flex-wrap: wrap;
   font-size: 1rem;
-  width: 50%;
+  width: 100%;
   &-btn {
     width: auto !important;
     margin: 1px !important;

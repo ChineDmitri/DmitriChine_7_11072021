@@ -25,14 +25,13 @@ export default {
     "deletePost",
     "votePost",
     "ready",
-    "readyDelet"
   ]
 };
 </script>
 
 
 <template>
-  <div v-if="readyDelet" class="post">
+  <div v-if="ready" class="post">
     <!-- START BAR avec title et button manip -->
     <div class="post-title">
       <router-link :to="{ name: 'OnePostNews', params: { id: postId } }">
