@@ -54,3 +54,24 @@ exports.queryAllCommentsForPost = (body, postId) => {
         );
     });
 };
+
+
+// supprime un commentaire
+exports.queryDeleteCommentForPost = (userId, commentId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `DELETE FROM Account_commentaires WHERE commentaire_id=${conn.escape(commentId)} AND user_id=${conn.escape(userId)};
+            DELETE FROM Account_commentaires_liked WHERE commentaire_id=${conn.escape(commentId)};
+                  
+            DELETE FROM Post_commentaire WHERE id=${conn.escape(commentId)} AND user_id=${conn.escape(userId)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+    });
+};

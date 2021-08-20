@@ -36,3 +36,15 @@ exports.getAllCommentsForPost = (req, res, next) => {
         .catch((err) => res.status(421).json(err));
 
 };
+
+
+// supprimé un commentaire 
+exports.deleteCommentForPost = (req, res, next) => {
+
+    console.log(req.body.userId, req.params.id_comment)
+
+    qComment.queryDeleteCommentForPost(req.body.userId, req.params.id_comment)
+        .then(() => res.status(201).json({ message: "Comment deleted!" }))
+        .catch((err) => res.status(421).json(err));
+
+};
