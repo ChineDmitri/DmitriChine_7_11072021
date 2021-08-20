@@ -8,4 +8,5 @@ module.exports = mysql.createPool({
   host: process.env.hostDB,
   port: process.env.portDB,
   multipleStatements: true,
+  charset : 'utf8mb4'
 });

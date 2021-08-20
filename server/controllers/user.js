@@ -92,6 +92,10 @@ exports.login = (req, res, next) => {
                         profil: user[0].profil
                     }
 
+                    const session = {
+                        start: Date.now()
+                    }
+
                     // ici token chifré
                     res.cookie('access_token', token, {
                         maxAge: 60000 * 60 * 24, // 24 heurs
@@ -104,6 +108,13 @@ exports.login = (req, res, next) => {
                     res.cookie('data', data, {
                         maxAge: 60000 * 60 * 24, // 24 heurs
                         httpOnly: true // OWASP utilisation par http seulement
+                        // secure: true // secure il faut decommenter en production!
+                    });
+
+                     // ici cokie pour le front-end
+                     res.cookie('session', session, {
+                        maxAge: 60000 * 60 * 24, // 24 heurs
+                        // httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
                     });
 
@@ -157,7 +168,7 @@ exports.modifyInfoUser = (req, res, next) => {
                 if (req.file) {
                     console.log(user[0])
                     deleteImg(user[0])
-                        .then(() => {})
+                        .then(() => { })
                         .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
                 }
             } catch {
@@ -170,8 +181,7 @@ exports.modifyInfoUser = (req, res, next) => {
     qUser.updateInfoUser(userObject)
         .then(() => res.status(200).json({
             message: 'User info modified',
-            status: true,
-            test: req.body.userId
+            status: true
         }))
         .catch((error) => res.status(404).json({ error }));
 
