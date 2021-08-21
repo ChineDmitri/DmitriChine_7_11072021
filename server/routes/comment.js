@@ -6,6 +6,9 @@ const commentCtrl = require("../controllers/comment");
 // middlewares
 const auth = require('../middleware/auth');
 
-router.post("/post/:id_post", auth, commentCtrl.createCommentForPost);
+router.post("/create/post/:id_post", auth, commentCtrl.createCommentForPost);
+router.post("/all/post/:id_post", auth, commentCtrl.getAllCommentsForPost);
+router.delete("/:id_comment/post/:id_post", auth, commentCtrl.deleteCommentForPost);
+router.put("/:id_comment/post/:id_post", auth, commentCtrl.modifyCommentForPost);
 
 module.exports = router;

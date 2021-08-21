@@ -112,7 +112,7 @@ exports.votePost = (req, res, next) => {
                         message: "Post status added!",
                         stat: req.body.status
                     }))
-                    .catch((err) => res.status(409).json(err));
+                    .catch((err) => res.status(400).json(err));
 
             } else {
                 if (result[0].status === req.body.status) {
@@ -122,7 +122,7 @@ exports.votePost = (req, res, next) => {
                             // stat: ("IN: " + req.body.status + " | OUT: " + (req.body.status * 0))
                             stat: 0
                         }))
-                        .catch((err) => res.status(409).json(err));
+                        .catch((err) => res.status(404).json(err));
 
                 } else {
                     switch (req.body.status) {
@@ -133,7 +133,7 @@ exports.votePost = (req, res, next) => {
                                     message: "Post status added! switch -1",
                                     stat: -1
                                 }))
-                                .catch((err) => res.status(402).json(err));
+                                .catch((err) => res.status(404).json(err));
 
                             break;
                         case 1:
@@ -143,7 +143,7 @@ exports.votePost = (req, res, next) => {
                                     message: "Post status added!  switch 1",
                                     stat: 1
                                 }))
-                                .catch((err) => res.status(403).json(err));
+                                .catch((err) => res.status(404).json(err));
 
                             break;
                         case 0:
@@ -153,7 +153,7 @@ exports.votePost = (req, res, next) => {
                                     message: "Post status added!",
                                     stat: req.body.status
                                 }))
-                                .catch((err) => res.status(403).json(err));
+                                .catch((err) => res.status(404).json(err));
 
                             break;
                         default: res.status(400).json({ message: "ERROR" });
@@ -161,6 +161,6 @@ exports.votePost = (req, res, next) => {
                 };
             }
         })
-        .catch((err) => res.status(400).json(err));
+        .catch((err) => res.status(404).json(err));
 
 };
