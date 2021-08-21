@@ -14,7 +14,9 @@ exports.queryCreateCommentForPost = (body, postId) => {
             
             SET @a:=LAST_INSERT_ID();
 
-            UPDATE Post SET comments = comments + 1 WHERE id=${conn.escape(postId)};
+            UPDATE Post 
+            SET comments = comments + 1 
+            WHERE id=${conn.escape(postId)};
             
             INSERT INTO Account_commentaires (user_id, commentaire_id)
             VALUES (${conn.escape(body.userId)}, @a);`,
@@ -57,14 +59,42 @@ exports.queryAllCommentsForPost = (body, postId) => {
 
 
 // supprime un commentaire
-exports.queryDeleteCommentForPost = (userId, commentId) => {
+exports.queryDeleteCommentForPost = (userId, commentId, postId) => {
     return new Promise((resolve, reject) => {
 
         conn.query(
             `DELETE FROM Account_commentaires WHERE commentaire_id=${conn.escape(commentId)} AND user_id=${conn.escape(userId)};
             DELETE FROM Account_commentaires_liked WHERE commentaire_id=${conn.escape(commentId)};
                   
-            DELETE FROM Post_commentaire WHERE id=${conn.escape(commentId)} AND user_id=${conn.escape(userId)}`,
+            DELETE FROM Post_commentaire WHERE id=${conn.escape(commentId)} AND user_id=${conn.escape(userId)};
+            
+            UPDATE Post
+            SET comments = comments - 1
+            WHERE id=${conn.escape(postId)};`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+    });
+};
+
+
+// modifier un commentaire
+exports.queryModifyCommentForPost = (body, commentId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `UPDATE Post_commentaire 
+
+            SET 
+            commentaire=${conn.escape(body.text)},
+            date_modification=NOW()
+
+            WHERE id=${conn.escape(commentId)} AND user_id=${conn.escape(body.userId)}`,
             (err, result) => {
                 if (err) {
                     reject(err)

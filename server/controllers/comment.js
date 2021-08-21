@@ -11,7 +11,7 @@ exports.createCommentForPost = (req, res, next) => {
 
     qComment.queryCreateCommentForPost(body, req.params.id_post)
         .then(() => res.status(201).json({ message: "Commentaire created!" }))
-        .catch((err) => res.status(421).json(err));
+        .catch((err) => res.status(400).json(err));
 
 };
 
@@ -31,9 +31,9 @@ exports.getAllCommentsForPost = (req, res, next) => {
                 object
             ]
 
-            res.status(201).json(result)
+            res.status(200).json(result)
         })
-        .catch((err) => res.status(421).json(err));
+        .catch((err) => res.status(404).json(err));
 
 };
 
@@ -41,10 +41,23 @@ exports.getAllCommentsForPost = (req, res, next) => {
 // supprimé un commentaire 
 exports.deleteCommentForPost = (req, res, next) => {
 
-    console.log(req.body.userId, req.params.id_comment)
+    qComment.queryDeleteCommentForPost(req.body.userId, req.params.id_comment, req.params.id_post)
+        .then(() => res.status(200).json({ message: "Comment deleted!" }))
+        .catch((err) => res.status(400).json(err));
 
-    qComment.queryDeleteCommentForPost(req.body.userId, req.params.id_comment)
-        .then(() => res.status(201).json({ message: "Comment deleted!" }))
-        .catch((err) => res.status(421).json(err));
+};
+
+
+// modification d'un commentaire 
+exports.modifyCommentForPost = (req, res, next) => {
+
+    const body = {
+        userId: req.body.userId,
+        text: req.body.text
+    }
+
+    qComment.queryModifyCommentForPost(body, req.params.id_comment)
+        .then(() => res.status(200).json({ message: "Comment modify!" }))
+        .catch((err) => res.status(400).json(err));
 
 };

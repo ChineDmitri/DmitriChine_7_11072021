@@ -111,8 +111,8 @@ exports.login = (req, res, next) => {
                         // secure: true // secure il faut decommenter en production!
                     });
 
-                     // ici cokie pour le front-end
-                     res.cookie('session', session, {
+                    // ici cokie pour le front-end
+                    res.cookie('session', session, {
                         maxAge: 60000 * 60 * 24, // 24 heurs
                         // httpOnly: true // OWASP utilisation par http seulement
                         // secure: true // secure il faut decommenter en production!
@@ -127,6 +127,17 @@ exports.login = (req, res, next) => {
                 .catch((err) => res.status(502).json({ err }));
         })
         .catch((err) => res.status(501).json({ err }))
+
+};
+
+
+// destribution de info user
+exports.getInfo = (req, res, next) => {
+
+    res.status(200).json({
+        userId: req.body.userId,
+        userId: req.body.profil
+    })
 
 };
 
