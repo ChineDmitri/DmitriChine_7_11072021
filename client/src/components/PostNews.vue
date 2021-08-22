@@ -23,15 +23,14 @@ export default {
     "status",
     "idx",
     "deletePost",
-    "votePost",
-    "ready",
+    "votePost"
   ]
 };
 </script>
 
 
 <template>
-  <div v-if="ready" class="post">
+  <div class="post">
     <!-- START BAR avec title et button manip -->
     <div class="post-title">
       <router-link :to="{ name: 'OnePostNews', params: { id: postId } }">
@@ -96,9 +95,7 @@ export default {
     <!-- START BAR avec likes / dilikes / comments -->
     <span class="post-status">
       <button @click="votePost(idx, 1)" class="btn-ico">
-        <i class="far fa-thumbs-up"
-        :class="{ green: status === 1 }"> 
-        </i>
+        <i class="far fa-thumbs-up" :class="{ green: status === 1 }"> </i>
       </button>
 
       <span class="counterLike">{{
@@ -106,13 +103,12 @@ export default {
       }}</span>
 
       <button @click="votePost(idx, -1)" class="btn-ico">
-        <i class="far fa-thumbs-down"
-        :class="{ red: status === -1 }" >
-        </i>
+        <i class="far fa-thumbs-down" :class="{ red: status === -1 }"> </i>
       </button>
 
-      <router-link class="btn-ico btn-comment" to="/#">
-        <i class="far fa-comment">  {{ status }} 150 {{ comments }} </i>
+      <router-link class="btn-ico btn-comment" :to="{ name: 'OnePostNews', params: { id: postId } }">
+        <i class="far fa-comment"></i>
+        {{ comments }}
       </router-link>
       <!-- <button class="btn-ico"><i class="far fa-comment">25</i></button> -->
     </span>

@@ -36,10 +36,10 @@ export default {
 
       this.emoji = false;
     },
-    showEmoji() {
-      // console.log(event.target.value);
-      this.emoji = true;
-    },
+    // showEmoji() {
+    //   // console.log(event.target.value);
+    //   this.emoji = true;
+    // },
     getImg() {
       this.imageUrl = event.target.files[0];
 
@@ -111,14 +111,14 @@ export default {
     <div id="attachment">
       <span v-if="!emoji" class="emoji">
         <input
-          @click="showEmoji"
+          @click="emoji = true"
           type="button"
           class="emoji-btn"
           value="&#128578;"
         />
       </span>
 
-      <EmojiBar v-if="emoji" :showEmoji="showEmoji" :addEmodji="addEmodji">
+      <EmojiBar v-if="emoji" :addEmodji="addEmodji">
       </EmojiBar>
 
       <div class="fileDownload">

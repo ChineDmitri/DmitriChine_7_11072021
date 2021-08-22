@@ -30,7 +30,7 @@ export default {
     getInfoUser() {
       this.ready = false;
       sendRequest(
-        `http://localhost:3000/api/auth/${this.$route.params.id}`,
+        `http://localhost:3000/api/user/${this.$route.params.id}`,
         "GET"
       )
         .then(data => {

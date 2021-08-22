@@ -78,7 +78,7 @@ export default {
 
         // console.log(userData);
 
-        sendRequestFD("http://localhost:3000/api/auth/", "PUT", userData)
+        sendRequestFD("http://localhost:3000/api/user/", "PUT", userData)
           .then(res => {
             if (res.status) {
               // console.log(res);

@@ -135,8 +135,8 @@ exports.login = (req, res, next) => {
 exports.getInfo = (req, res, next) => {
 
     res.status(200).json({
-        userId: req.body.userId,
-        userId: req.body.profil
+        user: req.body.userId,
+        profil: req.body.profil
     })
 
 };

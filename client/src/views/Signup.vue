@@ -87,7 +87,7 @@ export default {
       ) {
         this.ready = false;
 
-        sendRequest("http://localhost:3000/api/auth/signup", "POST", user)
+        sendRequest("http://localhost:3000/api/user/signup", "POST", user)
           .then(data => {
             this.ready = true;
             if (data.created) {

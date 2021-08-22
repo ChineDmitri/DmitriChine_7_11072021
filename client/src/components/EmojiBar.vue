@@ -1,7 +1,7 @@
 <script>
 export default {
   name: "EmojiBar",
-  props: ["showEmoji", "addEmodji"]
+  props: ["addEmodji"]
 };
 </script>
 

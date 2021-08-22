@@ -8,61 +8,57 @@ import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "Main",
+  //-----------
 
+  //-----------
   components: {
     SpinnerComponent,
     PostNews,
     HeadComponent,
     FooterComponent
   },
+  //-----------
 
+  //-----------
   data() {
     return {
       memberId: undefined, // id de utilisateur
       counter: 0, //counter pour affiché en plus des post
       postNews: [], // variable pour stockage des posts
       // showMore: true, // si il y a rien à affiché on passe en false
-      ready: true // Boolean pour SpinnerComponent qui en "Afficher en plus"
-      // readyDelet: true // Boolean pour SpinnerComponent lorsque on effectué DELET d'un post
+      ready: true, // Boolean pour SpinnerComponent qui en "Afficher en plus"
+      readyShowMore: true, // Boolean pour button show more
+      getMorePost: true // Boolean pour button show more
     };
   },
+  //-----------
 
+  //-----------
   methods: {
-    // Obtenir tout les poste counter 0 = plus recent
+    // Obtenir les 2 poste plus recents (this.counter = 0 NON counter)
     getAllPost(counter) {
-      this.ready = false; // start spinner
+      this.readyShowMore = false; // start spinner
 
       let body = {
         postCounter: counter
       };
 
-      // RESPONSE 1
-      // [userId]
-      // RESPONSE 2 [{
-      // "id": Number (id du post),
-      // "user_id": Number (id d'utilisateur qui a créé post)
-      // "date_publication": Date de publication ex "2021-08-06T11:11:19.000Z",
-      // "date_modification": Date de modification ex "2021-08-06T12:04:08.000Z" OR null,
-      // "title": title de post (max 200 char) ,
-      // "discription": text du post,
-      // "likes": combien likes (+Number) ,
-      // "dislikes": combien dislikes (-Number),
-      // "comments": combien commentaires (Number unsigned)
-      // "url_img": url pour image,
-      // "pseudo": ,
-      // "status": -1 / 0 / 1
-      // }]
+      // requete pour obtenir les deux post plus recents
       sendRequest("http://localhost:3000/api/post", "POST", body)
         .then(res => {
           if (res.error !== 0) {
-            this.ready = res[1].length === 2 ? true : false; //
+            // si response n'as pas deux post donc plus besoin button "Affiche en plus"
+            this.getMorePost = res[1].length === 2 ? true : false;
 
-            this.memberId = res[0]; // attribution member ID (userId)
-
+            // chaque post ajouté dans le array final this.commentsPostNew
             res[1].forEach(el => {
               this.postNews.push(el);
             });
 
+            // fin de spinner pour button
+            this.readyShowMore = true;
+
+            // spinner general caché
             this.ready = true;
           } else {
             this.$router.push("/");
@@ -73,14 +69,18 @@ export default {
           console.log(err);
         });
     },
+
     // Obtenir en plus de posté et mettre dans this.postNews
     showMorePost(num) {
       num++;
 
+      // appele cette function avec counter deja incrimenté
       this.getAllPost(num);
 
+      // return valeur incrémenté pour prochaine fois
       return num;
     },
+    
     // methode pour DELETE d'un post et reformé this.postNews
     deletePost(i) {
       this.ready = false;
@@ -107,6 +107,7 @@ export default {
           console.log(err);
         });
     },
+
     // LIKE ou DISLIKE :D
     votePost(idx, status) {
       const body = {
@@ -163,9 +164,25 @@ export default {
         });
     }
   },
+  //-----------
 
+  //-----------
   beforeMount() {
     this.ready = false;
+
+    // verification user et distribution ID
+    sendRequest(`http://localhost:3000/api/user/info`, "GET")
+      .then(res => {
+        if (res.error === 0) {
+          // unauthorized direction page login
+          this.$router.push("/");
+        }
+        this.memberId = res.user;
+      })
+      .then(err => {
+        console.log(err);
+      });
+
     this.getAllPost(this.counter);
   }
 };
@@ -176,7 +193,9 @@ export default {
   <div id="main-layout">
     <HeadComponent></HeadComponent>
     <main>
-      <div id="content">
+      <!-- spinner lorsqur on demande afficher encore des post -->
+      <SpinnerComponent :ready="ready"></SpinnerComponent>
+      <div id="content" v-if="ready">
         <!-- main content -->
         <PostNews
           v-for="(postNew, idx) in postNews"
@@ -197,23 +216,20 @@ export default {
           :idx="idx"
           :deletePost="deletePost"
           :votePost="votePost"
-          :ready="ready"
         ></PostNews>
 
         <!-- spinner lorsque on supprim un post -->
         <!-- <SpinnerComponent :ready="readyDelet"></SpinnerComponent> -->
 
-        <!-- spinner lorsqur on demande afficher encore des post -->
-        <SpinnerComponent :ready="ready"></SpinnerComponent>
-
         <button
-          v-if="ready"
+          v-if="readyShowMore && getMorePost"
           @click="this.counter = showMorePost(this.counter)"
           class="btn-classic"
           value="0"
         >
           Afficher en plus
         </button>
+        <SpinnerComponent :ready="readyShowMore"></SpinnerComponent>
       </div>
     </main>
 

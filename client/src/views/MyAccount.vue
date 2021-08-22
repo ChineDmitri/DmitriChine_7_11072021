@@ -31,7 +31,7 @@ export default {
   methods: {
     getInfoUser() {
       this.ready = false;
-      sendRequest(`http://localhost:3000/api/auth/`, "GET")
+      sendRequest(`http://localhost:3000/api/user/`, "GET")
         .then(data => {
           if (data.error !== 0) {
             // console.log(data);

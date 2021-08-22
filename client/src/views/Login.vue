@@ -35,7 +35,6 @@ export default {
     },
     logIn(event) {
       event.preventDefault();
-      
 
       let user = {
         email: this.email,
@@ -44,7 +43,7 @@ export default {
 
       if (this.vEmail) {
         this.ready = false;
-        sendRequest("http://localhost:3000/api/auth/login", "POST", user)
+        sendRequest("http://localhost:3000/api/user/login", "POST", user)
           .then(data => {
             if (data.auth) {
               //si authentication reussit
@@ -60,7 +59,7 @@ export default {
           });
       } else {
         this.ready = true;
-        this.message = "Veuillez remplire les champs correctement"
+        this.message = "Veuillez remplire les champs correctement";
       }
     }
   }
