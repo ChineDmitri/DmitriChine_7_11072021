@@ -123,7 +123,7 @@ exports.queryDeletePost = (userId, postId) => {
       LEFT JOIN account_commentaires ac ON pc.id=ac.commentaire_id 
       WHERE pc.post_id=${conn.escape(postId)};
 
-      DELETE FROM Post_commentaire WHERE post_id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};
+      DELETE FROM Post_commentaire WHERE post_id=${conn.escape(postId)};
       
       DELETE FROM Post WHERE id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};`,
       (err, results) => {

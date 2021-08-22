@@ -32,12 +32,13 @@ export default {
       commentsPostNew: [], // array pour commentaires
       showMore: true, // si il y a rien à affiché on passe en false
       ready: true, // Boolean pour SpinnerComponent en general
-      readyShowMore: true, // Boolean pour SpinnerComponent qui en "Voir les commentaires en plus"
-      getMorePost: true, // affiche en plus ou non
       textComment: "", // variable pour text d'un commentaire à créer
       textCommentModify: "", // variable pour text d'un commentaire à modifié
       commentIdModify: 0, // object d'un commentaire à modifier
-      readyButtonComment: true, // pour button Envoyer (commentaire)
+      sendBtn: true, // pour button Envoyer (commentaire)
+      showMoreBtn: true, // pour button "Voir les commentaires en plus"
+      deleteCommentBtn: true, // pour button ico (delete)
+      getMoreCommentsCtrl: true, // affiche en plus ou non
       goComment: false, // pour ajout readyCommentsButton comments (mode Commentateur)
       goModify: false, // mode de modification
       emoji: false // affiché emoji ou caché
@@ -77,7 +78,7 @@ export default {
 
     // obtenir commentaire (par deux plus recent)
     getAllComments(counter) {
-      this.readyShowMore = false;
+      this.showMoreBtn = false;
       let body = {
         postCounter: counter
       };
@@ -89,7 +90,7 @@ export default {
       )
         .then(res => {
           // si on obtienne pas 2 post donc c'est terminé plus besoins affiché button
-          this.getMorePost = res[1].length === 2 ? true : false;
+          this.getMoreCommentsCtrl = res[1].length === 2 ? true : false;
 
           // chaque commentaire ajouté dans le array final this.commentsPostNew
           res[1].forEach(el => {
@@ -97,7 +98,7 @@ export default {
           });
 
           // fin de spinner pour button
-          this.readyShowMore = true;
+          this.showMoreBtn = true;
         })
         .catch(err => {
           this.readyComments = true;
@@ -118,7 +119,7 @@ export default {
 
     // ajouter commentaire pour post=route.params.id
     addComment() {
-      this.readyButtonComment = false;
+      this.sendBtn = false;
 
       const body = {
         text: this.textComment
@@ -133,14 +134,13 @@ export default {
           if (res.created) {
             this.commentsPostNew = [];
 
-            // cache form pour envoyer un commentaire
-            this.goComment = false;
+            this.postNew.comments++;
 
-            // affiche button pour envoyer un commentaire
-            this.readyButtonComment = true;
+            this.goComment = false; // cache form pour envoyer un commentaire
 
-            // netoyer textarea
-            this.textComment = "";
+            this.sendBtn = true; // affiche button pour envoyer un commentaire
+
+            this.textComment = ""; // netoyage textarea
 
             for (let k = 0; k <= this.counter; k++) {
               this.getAllComments(k);
@@ -148,7 +148,7 @@ export default {
           }
         })
         .catch(err => {
-          this.readyButtonComment = true;
+          this.sendBtn = false;
 
           console.log(err);
         });
@@ -157,6 +157,7 @@ export default {
     // Delete un commentaire
     deleteComment(i) {
       // caché les commentaire lorsque on travail
+      this.deleteCommentBtn = false;
 
       sendRequest(
         `http://localhost:3000/api/comment/${this.commentsPostNew[i].id}/post/${this.$route.params.id}`,
@@ -172,9 +173,11 @@ export default {
           for (let k = 0; k <= this.counter; k++) {
             this.getAllComments(k);
           }
+
+          this.deleteCommentBtn = true;
         })
         .catch(err => {
-          this.readyShowMore = true;
+          this.showMoreBtn = true;
           console.log(err);
         });
     },
@@ -196,7 +199,7 @@ export default {
 
     // ajouté modification pour commentaire
     addModificationComment() {
-      console.log(this.commentIdModify);
+      this.sendBtn = false;
 
       const body = {
         text: this.textCommentModify
@@ -221,10 +224,88 @@ export default {
             this.goModify = false;
 
             // // si jamais forme pour rajuté commentaire deja ouvert, il faut fermer
-            // this.goComment = false;
+            this.goComment = false;
           }
         })
         .catch(err => {
+          console.log(err);
+        });
+    },
+
+    // LIKE ou DISLIKE :D
+    votePost(idx = null, status) {
+      console.log(idx); // ES Linter conflict jamais utilisé
+
+      const body = {
+        postId: this.postNew.id,
+        status: status
+      };
+
+      let oldStatus = this.postNew.status; // Status precedant avant de changement
+
+      sendRequest(
+        `http://localhost:3000/api/post/${this.postNew.id}/like`,
+        "PATCH",
+        body
+      )
+        .then(res => {
+          this.postNew.status = res.stat;
+
+          // si response 1 (LIKE) et precedant n'est pas comme response 1 (LIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas 1 (LIKE)
+          if (
+            (res.stat === 1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== 1)
+          ) {
+            // increment likes
+            this.postNew.likes++;
+          }
+
+          // si response -1 (DISLIKE) et precedant n'est pas comme reponse -1 (DISLIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas -1 (DISLIKE)
+          if (
+            (res.stat === -1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== -1)
+          ) {
+            // decriment dislike
+            this.postNew.dislikes--;
+          }
+
+          // de LIKE vers DISLIKE
+          if (this.postNew.status === -1 && oldStatus === 1) {
+            this.postNew.likes++;
+            this.postNew.dislikes -= 2;
+          }
+
+          // de DISLIKE vers LIKE
+          if (this.postNew.status === 1 && oldStatus === -1) {
+            this.postNew.likes += 2;
+            this.postNew.dislikes--;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    // methode pour DELETE d'un post et reformé this.postNews
+    deletePost(i) {
+      console.log(i);
+
+      this.ready = false;
+
+      sendRequest(
+        `http://localhost:3000/api/post/${this.$route.params.id}`,
+        "DELETE"
+      )
+        .then(() => {
+          this.$router.push("/main/");
+        })
+        .catch(err => {
+          this.ready = true;
+
           console.log(err);
         });
     }
@@ -293,6 +374,8 @@ export default {
           :urlImg="postNew.url_img"
           :userId="postNew.user_id"
           :status="postNew.status"
+          :votePost="votePost"
+          :deletePost="deletePost"
         ></PostNews>
 
         <div class="container-comments" v-if="!goModify">
@@ -317,16 +400,20 @@ export default {
         </div>
 
         <button
-          v-if="readyShowMore && getMorePost && !goModify"
+          v-if="
+            showMoreBtn && getMoreCommentsCtrl && !goModify && deleteCommentBtn
+          "
           @click="this.counter = showMoreComments(this.counter)"
           class="btn-classic"
         >
           Voir les commentaire en plus
         </button>
-        <SpinnerComponent :ready="readyShowMore"></SpinnerComponent>
+        <SpinnerComponent
+          :ready="showMoreBtn && deleteCommentBtn"
+        ></SpinnerComponent>
 
         <button
-          v-if="!goComment && ready && !goModify"
+          v-if="showMoreBtn && !goModify && !goComment && deleteCommentBtn"
           @click="goComment = true"
           class="btn-classic"
         >
@@ -360,14 +447,10 @@ export default {
             <EmojiBar v-if="emoji" :addEmodji="addEmodji"></EmojiBar>
             <!-- END EMOJIO -->
 
-            <button
-              v-if="readyButtonComment"
-              @click="addComment"
-              class="btn-classic"
-            >
+            <button v-if="sendBtn" @click="addComment" class="btn-classic">
               Envoyer!
             </button>
-            <SpinnerComponent :ready="readyButtonComment"></SpinnerComponent>
+            <SpinnerComponent :ready="sendBtn"></SpinnerComponent>
           </div>
         </div>
         <!-- END form pour ajout des commentair -->
@@ -400,7 +483,7 @@ export default {
             <!-- END EMOJIO -->
 
             <button
-              v-if="readyButtonComment"
+              v-if="sendBtn"
               @click="addModificationComment()"
               class="btn-classic"
             >
@@ -408,13 +491,13 @@ export default {
             </button>
 
             <button
-              v-if="readyButtonComment"
+              v-if="sendBtn"
               @click="goModify = false"
               class="btn-classic btn-orange"
             >
               Retourner!
             </button>
-            <SpinnerComponent :ready="readyButtonComment"></SpinnerComponent>
+            <SpinnerComponent :ready="sendBtn"></SpinnerComponent>
           </div>
         </div>
         <!-- END -->
