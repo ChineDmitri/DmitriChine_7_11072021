@@ -43,23 +43,18 @@ export default {
         postCounter: counter
       };
 
-      // requete pour obtenir les deux post plus recents
-      sendRequest("http://localhost:3000/api/post", "POST", body)
+      sendRequest("http://localhost:3000/api/post", "POST", body) // requete pour obtenir les deux post plus recents
         .then(res => {
           if (res.error !== 0) {
-            // si response n'as pas deux post donc plus besoin button "Affiche en plus"
-            this.getMorePost = res[1].length === 2 ? true : false;
+            this.getMorePost = res[1].length === 2 ? true : false; // si response n'as pas deux post donc plus besoin button "Affiche en plus"
 
-            // chaque post ajouté dans le array final this.commentsPostNew
             res[1].forEach(el => {
-              this.postNews.push(el);
+              this.postNews.push(el); // chaque post ajouté dans le array final this.commentsPostNew
             });
 
-            // fin de spinner pour button
-            this.readyShowMore = true;
+            this.readyShowMore = true; // fin de spinner pour button
 
-            // spinner general caché
-            this.ready = true;
+            this.ready = true; // spinner general caché
           } else {
             this.$router.push("/");
           }
@@ -74,13 +69,11 @@ export default {
     showMorePost(num) {
       num++;
 
-      // appele cette function avec counter deja incrimenté
-      this.getAllPost(num);
+      this.getAllPost(num); // appele cette function avec counter deja incrimenté
 
-      // return valeur incrémenté pour prochaine fois
-      return num;
+      return num; // return valeur incrémenté pour prochaine fois
     },
-    
+
     // methode pour DELETE d'un post et reformé this.postNews
     deletePost(i) {
       this.ready = false;
@@ -90,13 +83,10 @@ export default {
         "DELETE"
       )
         .then(() => {
-          // this.postNews.splice(i, 1); // ce la n'est function pas comme il faut
-
           this.postNews = [];
 
-          // formé en nouveau this.postNews
           for (let k = 0; k <= this.counter; k++) {
-            this.getAllPost(k);
+            this.getAllPost(k); // formé en nouveau this.postNews
           }
 
           this.ready = true;
@@ -132,8 +122,7 @@ export default {
             (res.stat === 1 && oldStatus !== res.stat) ||
             (res.stat === 0 && oldStatus !== 1)
           ) {
-            // increment likes
-            this.postNews[idx].likes++;
+            this.postNews[idx].likes++; // increment likes
           }
 
           // si response -1 (DISLIKE) et precedant n'est pas comme reponse -1 (DISLIKE)
@@ -143,8 +132,7 @@ export default {
             (res.stat === -1 && oldStatus !== res.stat) ||
             (res.stat === 0 && oldStatus !== -1)
           ) {
-            // decriment dislike
-            this.postNews[idx].dislikes--;
+            this.postNews[idx].dislikes--; // decriment dislike
           }
 
           // de LIKE vers DISLIKE
@@ -170,12 +158,10 @@ export default {
   beforeMount() {
     this.ready = false;
 
-    // verification user et distribution ID
-    sendRequest(`http://localhost:3000/api/user/info`, "GET")
+    sendRequest(`http://localhost:3000/api/user/info`, "GET") // verification user et distribution ID
       .then(res => {
         if (res.error === 0) {
-          // unauthorized direction page login
-          this.$router.push("/");
+          this.$router.push("/"); // unauthorized direction page login
         }
         this.memberId = res.user;
       })

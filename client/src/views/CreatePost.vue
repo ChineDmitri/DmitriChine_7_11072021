@@ -3,23 +3,40 @@ import FormPost from "../components/FormPost";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 
+import { sendRequest } from "../helpers/sendRequest.js";
+
 export default {
   name: "CreatePost",
+  //-----------
 
+  //-----------
   components: {
     HeadComponent,
     FooterComponent,
     FormPost
   },
+  //-----------
 
+  //-----------
   data() {
     return {};
   },
+  //-----------
 
+  //-----------
   beforeMount() {
-    if (document.cookie.indexOf("session") !== 0) {
-      this.$router.push("/");
-    }
+    // verification user et distribution ID
+    sendRequest(`http://localhost:3000/api/user/info`, "GET")
+      .then(res => {
+        if (res.error === 0) {
+          // unauthorized direction page login
+          this.$router.push("/");
+        }
+        this.memberId = res.user;
+      })
+      .then(err => {
+        console.log(err);
+      });
   }
 };
 </script>

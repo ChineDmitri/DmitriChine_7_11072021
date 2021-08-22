@@ -6,7 +6,9 @@ export default {
   components: {
     SpinnerComponent
   },
+  //-----------
 
+  //-----------
   data() {
     return {
       regexEmail: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){3}\.[a-z]{2,3}$/,
@@ -24,7 +26,9 @@ export default {
       ready: true
     };
   },
+  //-----------
 
+  //-----------
   methods: {
     validInput(regex, value, event) {
       this.message = undefined;
@@ -70,6 +74,7 @@ export default {
         return false;
       }
     },
+
     signUp(event) {
       event.preventDefault();
 
@@ -120,6 +125,23 @@ export default {
         this.message = "Veuillez remplire les champs correctement";
       }
     }
+  },
+  //-----------
+
+  //-----------
+  beforeMount() {
+    // verification user et distribution ID
+    sendRequest(`http://localhost:3000/api/user/info`, "GET")
+      .then(res => {
+        if (res.error !== 0) {
+          // authorized direction vers la page main
+          this.$router.push("/main/");
+        }
+        this.memberId = res.user;
+      })
+      .then(err => {
+        console.log(err);
+      });
   }
 };
 </script>

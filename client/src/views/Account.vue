@@ -8,14 +8,18 @@ import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "Account",
+  //-----------
 
+  //-----------
   components: {
     UserInfo,
     HeadComponent,
     FooterComponent,
     SpinnerComponent
   },
+  //-----------
 
+  //-----------
   data() {
     return {
       pseudo: "",
@@ -25,7 +29,9 @@ export default {
       ready: true
     };
   },
+  //-----------
 
+  //-----------
   methods: {
     getInfoUser() {
       this.ready = false;
@@ -50,8 +56,23 @@ export default {
         });
     }
   },
+  //-----------
 
+  //-----------
   beforeMount() {
+    // verification user et distribution ID
+    sendRequest(`http://localhost:3000/api/user/info`, "GET")
+      .then(res => {
+        if (res.error === 0) {
+          // unauthorized direction page login
+          this.$router.push("/");
+        }
+        this.memberId = res.user;
+      })
+      .then(err => {
+        console.log(err);
+      });
+
     this.getInfoUser();
   }
 };

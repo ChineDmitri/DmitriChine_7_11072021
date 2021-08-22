@@ -111,13 +111,6 @@ exports.login = (req, res, next) => {
                         // secure: true // secure il faut decommenter en production!
                     });
 
-                    // ici cokie pour le front-end
-                    res.cookie('session', session, {
-                        maxAge: 60000 * 60 * 24, // 24 heurs
-                        // httpOnly: true // OWASP utilisation par http seulement
-                        // secure: true // secure il faut decommenter en production!
-                    });
-
                     res.status(200).json({
                         message: "Auth -> OK",
                         auth: true

@@ -36,10 +36,7 @@ export default {
 
       this.emoji = false;
     },
-    // showEmoji() {
-    //   // console.log(event.target.value);
-    //   this.emoji = true;
-    // },
+
     getImg() {
       this.imageUrl = event.target.files[0];
 
@@ -59,15 +56,10 @@ export default {
         img.src = undefined;
       }
     },
+
     createPost() {
       this.ready = false;
       console.log(this.title, this.textPost, this.imageUrl);
-
-      // const body = {
-      //   title: this.title,
-      //   discription: this.textPost,
-      //   imageUrl: this.imageUrl
-      // };
 
       const postData = new FormData();
 
@@ -80,8 +72,10 @@ export default {
       sendRequestFD("http://localhost:3000/api/post/create", "POST", postData)
         .then(res => {
           this.ready = true;
-          if (res.status) {
+          if (res.status && res.error !== 0) {
             this.$router.push("/main/");
+          } else { 
+            this.$router.push("/");
           }
           console.log("create ", res);
         })
@@ -118,8 +112,7 @@ export default {
         />
       </span>
 
-      <EmojiBar v-if="emoji" :addEmodji="addEmodji">
-      </EmojiBar>
+      <EmojiBar v-if="emoji" :addEmodji="addEmodji"> </EmojiBar>
 
       <div class="fileDownload">
         <input
