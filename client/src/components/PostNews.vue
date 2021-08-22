@@ -23,6 +23,7 @@ export default {
     "status",
     "idx",
     "deletePost",
+    "modifyPost",
     "votePost"
   ]
 };
@@ -38,7 +39,7 @@ export default {
       </router-link>
 
       <span v-if="memberId === userId">
-        <button class="btn-ico modif">
+        <button @click="modifyPost(idx)" class="btn-ico modif">
           <i class="fas fa-pencil-alt orange"></i>
         </button>
 

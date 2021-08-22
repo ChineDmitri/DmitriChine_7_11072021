@@ -186,7 +186,7 @@ export default {
           <button
             v-if="modificationCompte"
             @click="modeUpdateInfoUser"
-            class="btn-classic orange"
+            class="btn-classic btn-orange"
           >
             Retourner
           </button>

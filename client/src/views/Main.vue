@@ -1,5 +1,6 @@
 <script>
 import PostNews from "../components/PostNews";
+import FormPost from "../components/FormPost";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 import SpinnerComponent from "../components/SpinnerComponent.vue";
@@ -12,10 +13,11 @@ export default {
 
   //-----------
   components: {
-    SpinnerComponent,
     PostNews,
+    FormPost,
     HeadComponent,
-    FooterComponent
+    FooterComponent,
+    SpinnerComponent
   },
   //-----------
 
@@ -25,10 +27,12 @@ export default {
       memberId: undefined, // id de utilisateur
       counter: 0, //counter pour affiché en plus des post
       postNews: [], // variable pour stockage des posts
+      iPostNew: undefined, // index de post à modifié
       // showMore: true, // si il y a rien à affiché on passe en false
       ready: true, // Boolean pour SpinnerComponent qui en "Afficher en plus"
       readyShowMore: true, // Boolean pour button show more
-      getMorePost: true // Boolean pour button show more
+      getMorePost: true, // Boolean pour button show more
+      goModify: false
     };
   },
   //-----------
@@ -98,11 +102,20 @@ export default {
         });
     },
 
+    // modification d'un post
+    modifyPost(i) {
+      this.goModify = !this.goModify;
+
+      this.iPostNew = i;
+
+      // console.log(this.iPostNew);
+    },
+
     // LIKE ou DISLIKE :D
     votePost(idx, status) {
       const body = {
         postId: this.postNews[idx].id,
-        status: status
+        status: status,
       };
 
       let oldStatus = this.postNews[idx].status; // Status precedant avant de changement
@@ -181,37 +194,50 @@ export default {
     <main>
       <!-- spinner lorsqur on demande afficher encore des post -->
       <SpinnerComponent :ready="ready"></SpinnerComponent>
+
       <div id="content" v-if="ready">
         <!-- main content -->
-        <PostNews
-          v-for="(postNew, idx) in postNews"
-          :key="postNew.id"
-          :postId="postNew.id"
-          :memberId="memberId"
-          :title="postNew.title"
-          :discription="postNew.discription"
-          :likes="postNew.likes"
-          :dislikes="postNew.dislikes"
-          :comments="postNew.comments"
-          :pseudo="postNew.pseudo"
-          :datePublication="postNew.date_publication"
-          :dateModification="postNew.date_modification"
-          :urlImg="postNew.url_img"
-          :userId="postNew.user_id"
-          :status="postNew.status"
-          :idx="idx"
-          :deletePost="deletePost"
-          :votePost="votePost"
-        ></PostNews>
+        <FormPost
+          v-if="goModify"
+          :modifyPost="modifyPost"
+          :goModify="goModify"
+          :mImageUrl="postNews[iPostNew].url_img"
+          :mTitle="postNews[iPostNew].title"
+          :mTextPost="postNews[iPostNew].discription"
+          :idPostNew="postNews[iPostNew].id"
+        ></FormPost>
+
+        <div v-if="!goModify">
+          <PostNews
+            v-for="(postNew, idx) in postNews"
+            :key="postNew.id"
+            :postId="postNew.id"
+            :memberId="memberId"
+            :title="postNew.title"
+            :discription="postNew.discription"
+            :likes="postNew.likes"
+            :dislikes="postNew.dislikes"
+            :comments="postNew.comments"
+            :pseudo="postNew.pseudo"
+            :datePublication="postNew.date_publication"
+            :dateModification="postNew.date_modification"
+            :urlImg="postNew.url_img"
+            :userId="postNew.user_id"
+            :status="postNew.status"
+            :idx="idx"
+            :deletePost="deletePost"
+            :modifyPost="modifyPost"
+            :votePost="votePost"
+          ></PostNews>
+        </div>
 
         <!-- spinner lorsque on supprim un post -->
         <!-- <SpinnerComponent :ready="readyDelet"></SpinnerComponent> -->
 
         <button
-          v-if="readyShowMore && getMorePost"
+          v-if="readyShowMore && getMorePost && !goModify"
           @click="this.counter = showMorePost(this.counter)"
           class="btn-classic"
-          value="0"
         >
           Afficher en plus
         </button>

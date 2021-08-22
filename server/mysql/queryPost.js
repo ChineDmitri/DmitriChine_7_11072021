@@ -95,7 +95,7 @@ exports.queryModifyPost = (postId, post) => {
       WHERE id=${conn.escape(postId)};
       
       UPDATE Post_photo 
-      SET url1=${conn.escape(post.url1)}, url2=${conn.escape(post.url2)}, url3=${conn.escape(post.url3)}
+      SET url_img=${conn.escape(post.imageUrl)}
       WHERE post_id=${conn.escape(postId)};`,
       (err, results) => {
         if (err) {

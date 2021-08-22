@@ -68,14 +68,31 @@ exports.createPost = (req, res, next) => {
 // Modification d'un post
 exports.modifyPost = (req, res, next) => {
 
+    const postObject = req.file ? {
+        userId: req.body.userId,
+        title: req.body.title,
+        discription: req.body.discription,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    } : {
+        userId: req.body.userId,
+        title: req.body.title,
+        discription: req.body.discription,
+        imageUrl: null,
+    }
+
+    console.log(postObject)
+
     qPost.queryOnePost(req.params.id)
         .then((ArrPost) => {
             let post = ArrPost[0];
             if (req.body.userId !== post.user_id) {
                 throw 'Acces is denied';
             }
-            qPost.queryModifyPost(req.params.id, req.body)
-                .then(() => res.status(200).json({ message: "Post modified!" }))
+            qPost.queryModifyPost(req.params.id, postObject)
+                .then(() => res.status(200).json({ 
+                    message: "Post modified!", 
+                    modified: true
+                }))
                 .catch((err) => res.status(404).json(err));
         })
         .catch((err) => res.status(403).json({ error: err | 'Forbidden!' }));

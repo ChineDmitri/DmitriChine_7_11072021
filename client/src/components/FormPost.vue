@@ -6,12 +6,48 @@ import { sendRequestFD } from "../helpers/sendRequest.js";
 
 export default {
   name: "FormPost",
+  //-----------
 
+  //-----------
   components: {
     EmojiBar,
     SpinnerComponent
   },
+  //-----------
 
+  //-----------
+  props: {
+    mImageUrl: {
+      type: [String, null],
+      required: false,
+      default: null
+    },
+    mTitle: {
+      type: String,
+      required: false,
+      default: undefined
+    },
+    mTextPost: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    modifyPost: {
+      type: Function
+    },
+    goModify: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    idPostNew: {
+      type: Number,
+      required: false,
+    }
+  },
+  //-----------
+
+  //-----------
   data() {
     return {
       emoji: false,
@@ -21,13 +57,14 @@ export default {
       ready: true
     };
   },
+  //-----------
 
+  //-----------
   methods: {
     addEmodji(event) {
       console.log(decodeURI(event.target.value));
 
-      // Index d'un symbol apres dernier symbol selectioné
-      let cursorIndex = document.getElementById("inputTextField").selectionEnd;
+      let cursorIndex = document.getElementById("inputTextField").selectionEnd; // Index d'un symbol apres dernier symbol selectioné
 
       this.textPost =
         this.textPost.substring(0, cursorIndex) +
@@ -37,6 +74,7 @@ export default {
       this.emoji = false;
     },
 
+    // preview d'une image
     getImg() {
       this.imageUrl = event.target.files[0];
 
@@ -57,6 +95,7 @@ export default {
       }
     },
 
+    // creation du post
     createPost() {
       this.ready = false;
       console.log(this.title, this.textPost, this.imageUrl);
@@ -74,7 +113,7 @@ export default {
           this.ready = true;
           if (res.status && res.error !== 0) {
             this.$router.push("/main/");
-          } else { 
+          } else {
             this.$router.push("/");
           }
           console.log("create ", res);
@@ -83,7 +122,44 @@ export default {
           this.ready = true;
           console.log("error ", err);
         });
+    },
+
+    // modification du post
+    modificationPost() {
+      this.ready = false;
+      // console.log(this.title, this.textPost, this.imageUrl);
+
+      const postData = new FormData();
+
+      postData.append("title", this.title);
+      postData.append("discription", this.textPost);
+      postData.append("imageUrl", this.imageUrl);
+
+      console.log('fd', postData);
+
+      sendRequestFD(`http://localhost:3000/api/post/${this.idPostNew}`, "PUT", postData)
+        .then(res => {
+          this.ready = true;
+          if (res.modified) {
+            this.$router.push(`/main/${this.idPostNew}`);
+          } else {
+            this.$router.push("/");
+          }
+          // console.log("create ", res);
+        })
+        .catch(err => {
+          this.ready = true;
+          console.log("error ", err);
+        });
     }
+  },
+  //-----------
+
+  //-----------
+  beforeMount() {
+    (this.imageUrl = this.mImageUrl),
+      (this.title = this.mTitle),
+      (this.textPost = this.mTextPost);
   }
 };
 </script>
@@ -127,7 +203,15 @@ export default {
       </div>
     </div>
 
-    <button v-if="ready" @click="createPost" class="btn-classic">Publié</button>
+    <button v-if="ready && !goModify" @click="createPost" class="btn-classic">Publié</button>
+
+    <button v-if="goModify && ready" @click="modificationPost" class="btn-classic">
+      Modifier
+    </button>
+
+    <button v-if="goModify && ready" @click="modifyPost" class="btn-classic btn-orange">
+      Retourné
+    </button>
 
     <SpinnerComponent :ready="ready"></SpinnerComponent>
   </div>
