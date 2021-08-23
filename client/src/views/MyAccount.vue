@@ -40,7 +40,6 @@ export default {
       sendRequest(`http://localhost:3000/api/user/`, "GET")
         .then(data => {
           if (data.error !== 0) {
-            // console.log(data);
             this.ready = true;
             this.pseudo = data.pseudo;
             this.dateInscription = data.date_inscription;

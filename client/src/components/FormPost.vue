@@ -35,7 +35,7 @@ export default {
     modifyPost: {
       type: Function
     },
-    goModify: {
+    goModify: { // si nous sommes en modification = true
       type: Boolean,
       required: false,
       default: false
@@ -127,21 +127,19 @@ export default {
     // modification du post
     modificationPost() {
       this.ready = false;
-      // console.log(this.title, this.textPost, this.imageUrl);
 
-      const postData = new FormData();
+      const postData = new FormData(); // creation nouvelle instance FormData
 
       postData.append("title", this.title);
       postData.append("discription", this.textPost);
       postData.append("imageUrl", this.imageUrl);
 
-      console.log('fd', postData);
-
       sendRequestFD(`http://localhost:3000/api/post/${this.idPostNew}`, "PUT", postData)
         .then(res => {
           this.ready = true;
           if (res.modified) {
-            this.$router.push(`/main/${this.idPostNew}`);
+            this.$router.push(`/main/post/${this.idPostNew}`);
+            this.modifyPost()
           } else {
             this.$router.push("/");
           }

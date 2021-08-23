@@ -1,4 +1,5 @@
 const qPost = require("../mysql/queryPost");
+const helpers = require("../helpers/index");
 
 
 // Obtenir tout les post
@@ -77,7 +78,7 @@ exports.modifyPost = (req, res, next) => {
         userId: req.body.userId,
         title: req.body.title,
         discription: req.body.discription,
-        imageUrl: null,
+        imageUrl: req.body.imageUrl,
     }
 
     console.log(postObject)
@@ -87,6 +88,15 @@ exports.modifyPost = (req, res, next) => {
             let post = ArrPost[0];
             if (req.body.userId !== post.user_id) {
                 throw 'Acces is denied';
+            }
+            try {
+                if (req.file) {
+                    helpers.deleteImg(post.url_img)
+                        .then(() => { })
+                        .catch((err) => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
+                }
+            } catch {
+                throw "User n'existe pas"
             }
             qPost.queryModifyPost(req.params.id, postObject)
                 .then(() => res.status(200).json({ 

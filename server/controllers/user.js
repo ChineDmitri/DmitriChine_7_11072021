@@ -1,28 +1,11 @@
 const qUser = require("../mysql/queryUser");
+const helpers = require("../helpers/index");
 
 // package
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
 const { reject } = require("bcrypt/promises");
-
-// fonction pour supprimé photo de utilisateur dans le file system
-function deleteImg(user) {
-    return new Promise((resolve, reject) => {
-        const fileName = user.profil_img_url.split('/images/')[1];
-        fs.unlink(`images/${fileName}`, (err) => {
-            if (err) {
-                reject(err)
-            }
-            else {
-                resolve()
-            }
-
-        });
-    })
-}
-
 
 // enregisté un utilisateur
 exports.signup = (req, res, next) => {
@@ -171,7 +154,7 @@ exports.modifyInfoUser = (req, res, next) => {
             try {
                 if (req.file) {
                     console.log(user[0])
-                    deleteImg(user[0])
+                    helpers.deleteImg(user[0].profil_img_url)
                         .then(() => { })
                         .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
                 }

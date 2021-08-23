@@ -33,9 +33,10 @@ exports.queryOnePost = (id, userId) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
-      `SELECT p.*, u.pseudo, apl.status FROM Post p
+      `SELECT p.*, pp.url_img, u.pseudo, apl.status FROM Post p
       LEFT JOIN User u ON p.user_id=u.id 
       LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(userId)}
+      LEFT JOIN post_photo pp ON p.id=pp.post_id
       WHERE p.id=${conn.escape(id)}`,
       (err, results) => {
         if (err || results[0] === undefined) {

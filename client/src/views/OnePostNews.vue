@@ -2,6 +2,7 @@
 import SpinnerComponent from "../components/SpinnerComponent.vue";
 import EmojiBar from "../components/EmojiBar";
 import PostNews from "../components/PostNews";
+import FormPost from "../components/FormPost";
 import CommentNews from "../components/CommentNews";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
@@ -16,6 +17,7 @@ export default {
   components: {
     SpinnerComponent,
     PostNews,
+    FormPost,
     HeadComponent,
     FooterComponent,
     CommentNews,
@@ -40,8 +42,9 @@ export default {
       deleteCommentBtn: true, // pour button ico (delete)
       getMoreCommentsCtrl: true, // affiche en plus ou non
       goComment: false, // pour ajout readyCommentsButton comments (mode Commentateur)
-      goModify: false, // mode de modification
-      emoji: false // affiché emoji ou caché
+      goModifyComment: false, // mode de modification d'un commentaire
+      emoji: false, // affiché emoji ou caché
+      goModify: false // pour modification d'un post
     };
   },
   //-----------
@@ -50,12 +53,10 @@ export default {
   methods: {
     // ajout emodji dans textarea
     addEmodji(event) {
-      console.log(decodeURI(event.target.value));
-
       // Index d'un symbol apres dernier symbol selectioné
       let cursorIndex = document.getElementById("inputTextField").selectionEnd;
 
-      if (this.goModify) {
+      if (this.goModifyComment) {
         // Où on va inserer emoji
         this.textCommentModify =
           this.textCommentModify.substring(0, cursorIndex) +
@@ -149,7 +150,6 @@ export default {
         })
         .catch(err => {
           this.sendBtn = false;
-
           console.log(err);
         });
     },
@@ -184,10 +184,10 @@ export default {
 
     // vers modification
     modifyComment(i) {
-      console.log(this.commentsPostNew[i]);
+      // console.log(this.commentsPostNew[i]);
 
       // passage vers mode de modification d'un commentaire
-      this.goModify = true;
+      this.goModifyComment = true;
 
       // si jamais forme pour rajuté commentaire deja ouvert, il faut fermer
       this.goComment = false;
@@ -221,7 +221,7 @@ export default {
             }
 
             // annulé mode de modification
-            this.goModify = false;
+            this.goModifyComment = false;
 
             // // si jamais forme pour rajuté commentaire deja ouvert, il faut fermer
             this.goComment = false;
@@ -230,6 +230,15 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+
+    // modification d'un post
+    modifyPost(i) {
+      this.goModify = !this.goModify;
+
+      this.iPostNew = i;
+
+      // console.log(this.iPostNew);
     },
 
     // LIKE ou DISLIKE :D
@@ -292,7 +301,7 @@ export default {
 
     // methode pour DELETE d'un post et reformé this.postNews
     deletePost(i) {
-      console.log(i);
+      console.log(i); // ES Linter conflict jamais utilisé
 
       this.ready = false;
 
@@ -326,14 +335,14 @@ export default {
         }
         this.memberId = res.user;
       })
-      .then(err => {
+      .catch(err => {
         console.log(err);
       });
 
     //obtenir deux plus recent commentaire
     this.getAllComments(this.counter);
 
-    //obtenir les post numero route.params.id
+    //obtenir les post par numero (route.params.id)
     sendRequest(
       `http://localhost:3000/api/post/${this.$route.params.id}`,
       "GET"
@@ -360,7 +369,18 @@ export default {
       <SpinnerComponent :ready="ready"></SpinnerComponent>
       <div id="content" v-if="ready">
         <!-- main content -->
+        <FormPost
+          v-if="goModify"
+          :modifyPost="modifyPost"
+          :goModify="goModify"
+          :mImageUrl="postNew.url_img"
+          :mTitle="postNew.title"
+          :mTextPost="postNew.discription"
+          :idPostNew="postNew.id"
+        ></FormPost>
+
         <PostNews
+          v-if="!goModify"
           :postId="postNew.id"
           :memberId="memberId"
           :title="postNew.title"
@@ -374,11 +394,12 @@ export default {
           :urlImg="postNew.url_img"
           :userId="postNew.user_id"
           :status="postNew.status"
-          :votePost="votePost"
           :deletePost="deletePost"
+          :modifyPost="modifyPost"
+          :votePost="votePost"
         ></PostNews>
 
-        <div class="container-comments" v-if="!goModify">
+        <div class="container-comments" v-if="!goModify && !goModifyComment">
           <h2>Commentaires:</h2>
           <CommentNews
             v-for="(comment, idx) in commentsPostNew"
@@ -401,7 +422,10 @@ export default {
 
         <button
           v-if="
-            showMoreBtn && getMoreCommentsCtrl && !goModify && deleteCommentBtn
+            showMoreBtn &&
+            getMoreCommentsCtrl &&
+            !goModifyComment &&
+            deleteCommentBtn
           "
           @click="this.counter = showMoreComments(this.counter)"
           class="btn-classic"
@@ -413,7 +437,13 @@ export default {
         ></SpinnerComponent>
 
         <button
-          v-if="showMoreBtn && !goModify && !goComment && deleteCommentBtn"
+          v-if="
+            showMoreBtn &&
+            !goModifyComment &&
+            !goComment &&
+            deleteCommentBtn &&
+            !goModify
+          "
           @click="goComment = true"
           class="btn-classic"
         >
@@ -456,7 +486,7 @@ export default {
         <!-- END form pour ajout des commentair -->
 
         <!-- START form pour modification d'un commentaire-->
-        <div v-if="goModify" class="container-comments">
+        <div v-if="goModifyComment" class="container-comments">
           <div class="comments">
             <label for="inputTextField">
               Text de commentaire à modifier:
@@ -492,7 +522,7 @@ export default {
 
             <button
               v-if="sendBtn"
-              @click="goModify = false"
+              @click="goModifyComment = false"
               class="btn-classic btn-orange"
             >
               Retourner!
