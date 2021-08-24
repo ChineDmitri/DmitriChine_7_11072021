@@ -86,3 +86,30 @@ exports.updateInfoUser = (user) => {
 
     });
 };
+
+
+// desactivé user et mettre dans user_deleted
+exports.queryDeletePost = (userId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `INSERT INTO user_deleted (user_id, email, pseudo)
+            SELECT id, email, pseudo FROM user WHERE id=${conn.escape(userId)};
+            
+            UPDATE User
+            SET email=NULL, pseudo=NULL
+            WHERE id=${conn.escape(userId)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
+

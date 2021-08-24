@@ -33,9 +33,10 @@ exports.queryOnePost = (id, userId) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
-      `SELECT p.*, u.pseudo, apl.status FROM Post p
+      `SELECT p.*, pp.url_img, u.pseudo, apl.status FROM Post p
       LEFT JOIN User u ON p.user_id=u.id 
       LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(userId)}
+      LEFT JOIN post_photo pp ON p.id=pp.post_id
       WHERE p.id=${conn.escape(id)}`,
       (err, results) => {
         if (err || results[0] === undefined) {
@@ -95,7 +96,7 @@ exports.queryModifyPost = (postId, post) => {
       WHERE id=${conn.escape(postId)};
       
       UPDATE Post_photo 
-      SET url1=${conn.escape(post.url1)}, url2=${conn.escape(post.url2)}, url3=${conn.escape(post.url3)}
+      SET url_img=${conn.escape(post.imageUrl)}
       WHERE post_id=${conn.escape(postId)};`,
       (err, results) => {
         if (err) {
@@ -123,7 +124,7 @@ exports.queryDeletePost = (userId, postId) => {
       LEFT JOIN account_commentaires ac ON pc.id=ac.commentaire_id 
       WHERE pc.post_id=${conn.escape(postId)};
 
-      DELETE FROM Post_commentaire WHERE post_id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};
+      DELETE FROM Post_commentaire WHERE post_id=${conn.escape(postId)};
       
       DELETE FROM Post WHERE id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};`,
       (err, results) => {

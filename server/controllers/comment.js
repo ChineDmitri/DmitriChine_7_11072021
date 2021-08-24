@@ -10,7 +10,10 @@ exports.createCommentForPost = (req, res, next) => {
     }
 
     qComment.queryCreateCommentForPost(body, req.params.id_post)
-        .then(() => res.status(201).json({ message: "Commentaire created!" }))
+        .then(() => res.status(201).json({
+            message: "Commentaire created!",
+            created: true
+        }))
         .catch((err) => res.status(400).json(err));
 
 };
@@ -42,7 +45,9 @@ exports.getAllCommentsForPost = (req, res, next) => {
 exports.deleteCommentForPost = (req, res, next) => {
 
     qComment.queryDeleteCommentForPost(req.body.userId, req.params.id_comment, req.params.id_post)
-        .then(() => res.status(200).json({ message: "Comment deleted!" }))
+        .then(() => res.status(200).json({
+            message: "Comment deleted!"
+        }))
         .catch((err) => res.status(400).json(err));
 
 };
@@ -57,7 +62,10 @@ exports.modifyCommentForPost = (req, res, next) => {
     }
 
     qComment.queryModifyCommentForPost(body, req.params.id_comment)
-        .then(() => res.status(200).json({ message: "Comment modify!" }))
+        .then(() => res.status(200).json({
+            message: "Comment modify!",
+            modified: true
+        }))
         .catch((err) => res.status(400).json(err));
 
 };

@@ -1,4 +1,5 @@
 const qPost = require("../mysql/queryPost");
+const modules = require("../modules/index");
 
 
 // Obtenir tout les post
@@ -68,14 +69,40 @@ exports.createPost = (req, res, next) => {
 // Modification d'un post
 exports.modifyPost = (req, res, next) => {
 
-    qPost.queryOnePost(req.params.id)
+    const postObject = req.file ? {
+        userId: req.body.userId,
+        title: req.body.title,
+        discription: req.body.discription,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    } : {
+        userId: req.body.userId,
+        title: req.body.title,
+        discription: req.body.discription,
+        imageUrl: req.body.imageUrl,
+    }
+
+    console.log(postObject)
+
+    qPost.queryOnePost(req.params.id, req.body.userId)
         .then((ArrPost) => {
             let post = ArrPost[0];
             if (req.body.userId !== post.user_id) {
                 throw 'Acces is denied';
             }
-            qPost.queryModifyPost(req.params.id, req.body)
-                .then(() => res.status(200).json({ message: "Post modified!" }))
+            try {
+                if (req.file) {
+                    modules.deleteImg(post.url_img)
+                        .then(() => { })
+                        .catch((err) => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
+                }
+            } catch {
+                throw "User n'existe pas"
+            }
+            qPost.queryModifyPost(req.params.id, postObject)
+                .then(() => res.status(200).json({ 
+                    message: "Post modified!", 
+                    modified: true
+                }))
                 .catch((err) => res.status(404).json(err));
         })
         .catch((err) => res.status(403).json({ error: err | 'Forbidden!' }));
@@ -85,6 +112,25 @@ exports.modifyPost = (req, res, next) => {
 
 // Suppretion d'un post par son ID
 exports.deletePost = (req, res, next) => {
+
+    qPost.queryOnePost(req.params.id, req.body.userId)
+    .then((ArrPost) => {
+        let post = ArrPost[0];
+        if (req.body.userId !== post.user_id) {
+            throw 'Acces is denied';
+        }
+        try {
+            if (req.file) {
+                modules.deleteImg(post.url_img)
+                    .then(() => { })
+                    .catch((err) => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
+            }
+        } catch {
+            throw "User n'existe pas"
+        }
+    })
+    .catch((err) => res.status(403).json({ error: err | 'Forbidden!' }));
+
 
     qPost.queryDeletePost(req.body.userId, req.params.id)
         .then(() => res.status(200).json({ message: "Post deleted!" }))

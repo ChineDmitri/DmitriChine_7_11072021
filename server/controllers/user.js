@@ -1,27 +1,11 @@
 const qUser = require("../mysql/queryUser");
+const modules = require("../modules/index");
 
 // package
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
 const { reject } = require("bcrypt/promises");
-
-// fonction pour supprimé photo de utilisateur dans le file system
-function deleteImg(user) {
-    return new Promise((resolve, reject) => {
-        const fileName = user.profil_img_url.split('/images/')[1];
-        fs.unlink(`images/${fileName}`, (err) => {
-            if (err) {
-                reject(err)
-            }
-            else {
-                resolve()
-            }
-
-        });
-    })
-}
 
 
 // enregisté un utilisateur
@@ -111,13 +95,6 @@ exports.login = (req, res, next) => {
                         // secure: true // secure il faut decommenter en production!
                     });
 
-                    // ici cokie pour le front-end
-                    res.cookie('session', session, {
-                        maxAge: 60000 * 60 * 24, // 24 heurs
-                        // httpOnly: true // OWASP utilisation par http seulement
-                        // secure: true // secure il faut decommenter en production!
-                    });
-
                     res.status(200).json({
                         message: "Auth -> OK",
                         auth: true
@@ -135,8 +112,8 @@ exports.login = (req, res, next) => {
 exports.getInfo = (req, res, next) => {
 
     res.status(200).json({
-        userId: req.body.userId,
-        userId: req.body.profil
+        user: req.body.userId,
+        profil: req.body.profil
     })
 
 };
@@ -178,7 +155,7 @@ exports.modifyInfoUser = (req, res, next) => {
             try {
                 if (req.file) {
                     console.log(user[0])
-                    deleteImg(user[0])
+                    modules.deleteImg(user[0].profil_img_url)
                         .then(() => { })
                         .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
                 }
@@ -195,5 +172,34 @@ exports.modifyInfoUser = (req, res, next) => {
             status: true
         }))
         .catch((error) => res.status(404).json({ error }));
+
+};
+
+
+// desactivation user 
+exports.deleteUser = (req, res, next) => {
+
+    qUser.queryGetOneUser(req.body.userId)
+        .then((user) => {
+            try {
+                modules.deleteImg(user[0].profil_img_url)
+                    .then(() => { })
+                    .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
+            } catch {
+                throw "User n'existe pas"
+            }
+        })
+        .catch((error) => res.status(500).json({ error }));
+
+    qPost.queryDeletePost(req.body.userId, req.params.id)
+        .then(() => {
+
+            res.clearCookie("access_token"); // supprimé cookie avec tooken
+
+            res.clearCookie("data"); // supprimé cookie avec des donnés: userId et profil(admin, user...)
+
+            res.status(200).json({ message: "User deleted!" })
+        })
+        .catch((err) => res.status(400).json(err));
 
 };
