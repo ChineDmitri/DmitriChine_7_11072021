@@ -89,7 +89,7 @@ exports.updateInfoUser = (user) => {
 
 
 // desactivé user et mettre dans user_deleted
-exports.queryDeletePost = (userId) => {
+exports.queryDeleteUser = (userId) => {
     return new Promise((resolve, reject) => {
 
         conn.query(

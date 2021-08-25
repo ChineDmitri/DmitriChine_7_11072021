@@ -11,6 +11,10 @@ const { reject } = require("bcrypt/promises");
 // enregisté un utilisateur
 exports.signup = (req, res, next) => {
 
+    const hashEmail = crypto.createHmac('sha256', process.env.SHA256_KEY)
+        .update(req.body.email)
+        .digest('hex');
+
     bcrypt.hash(req.body.password, 10) // salt = 10 tours, en suite retourn un promise
         .then((hashPassword) => {
 
@@ -47,13 +51,13 @@ exports.login = (req, res, next) => {
     qUser.findUser(hashEmail)
         .then((user) => {
 
-
             if (user.length === 0) {
                 return res.status(401).json({
                     message: "Utilisateur n'est pas trouvé",
                     auth: false
                 }); // Underfined user
             }
+
             bcrypt.compare(req.body.password, user[0].password)
                 .then((validation) => {
                     if (!validation) {
@@ -74,10 +78,6 @@ exports.login = (req, res, next) => {
                     const data = {
                         userId: user[0].id,
                         profil: user[0].profil
-                    }
-
-                    const session = {
-                        start: Date.now()
                     }
 
                     // ici token chifré
@@ -189,9 +189,9 @@ exports.deleteUser = (req, res, next) => {
                 throw "User n'existe pas"
             }
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => res.status(500).json({ error }));  
 
-    qPost.queryDeletePost(req.body.userId, req.params.id)
+    qUser.queryDeleteUser(req.body.userId)
         .then(() => {
 
             res.clearCookie("access_token"); // supprimé cookie avec tooken
