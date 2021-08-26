@@ -71,7 +71,8 @@ export default {
         v-if="memberId !== userId"
         :to="{ name: 'Compte', params: { id: userId } }"
       >
-        {{ pseudo }}
+        <!-- pseudo à afficher -->
+        {{ pseudo === null ? "Utilisateur Supprimé" : pseudo }}
       </router-link>
 
       <router-link v-else to="/moncompte">

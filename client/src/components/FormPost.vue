@@ -35,14 +35,15 @@ export default {
     modifyPost: {
       type: Function
     },
-    goModify: { // si nous sommes en modification = true
+    goModify: {
+      // si nous sommes en modification = true
       type: Boolean,
       required: false,
       default: false
     },
     idPostNew: {
       type: Number,
-      required: false,
+      required: false
     }
   },
   //-----------
@@ -134,12 +135,21 @@ export default {
       postData.append("discription", this.textPost);
       postData.append("imageUrl", this.imageUrl);
 
-      sendRequestFD(`http://localhost:3000/api/post/${this.idPostNew}`, "PUT", postData)
+      sendRequestFD(
+        `http://localhost:3000/api/post/${this.idPostNew}`,
+        "PUT",
+        postData
+      )
         .then(res => {
           this.ready = true;
           if (res.modified) {
-            this.$router.push(`/main/post/${this.idPostNew}`);
-            this.modifyPost()
+            // this.$router.push(`/main/post/${this.idPostNew}`);
+            if (this.$route.params.id == this.idPostNew) { // si changement depuis post il faut faire reload() pour fair mise à jour
+              window.location.reload();
+            } else {
+              this.$router.push(`/main/post/${this.idPostNew}`);
+              this.modifyPost();
+            } 
           } else {
             this.$router.push("/");
           }
@@ -201,13 +211,23 @@ export default {
       </div>
     </div>
 
-    <button v-if="ready && !goModify" @click="createPost" class="btn-classic">Publié</button>
+    <button v-if="ready && !goModify" @click="createPost" class="btn-classic">
+      Publié
+    </button>
 
-    <button v-if="goModify && ready" @click="modificationPost" class="btn-classic">
+    <button
+      v-if="goModify && ready"
+      @click="modificationPost"
+      class="btn-classic"
+    >
       Modifier
     </button>
 
-    <button v-if="goModify && ready" @click="modifyPost" class="btn-classic btn-orange">
+    <button
+      v-if="goModify && ready"
+      @click="modifyPost"
+      class="btn-classic btn-orange"
+    >
       Retourné
     </button>
 
@@ -220,6 +240,7 @@ export default {
 $fontSize: 1rem;
 
 .post {
+  position: relative;
   display: flex;
   flex-direction: column;
   margin: 15px auto 0 auto;

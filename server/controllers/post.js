@@ -12,12 +12,7 @@ exports.getAllPost = (req, res, next) => {
 
     qPost.queryAllPost(body)
         .then((object) => {
-            let result = [
-                req.body.userId,
-                object
-            ]
-
-            res.status(200).json(result)
+            res.status(200).json(object)
         })
         .catch((err) => res.status(404).json(err));
 
@@ -29,12 +24,7 @@ exports.getOnePost = (req, res, next) => {
 
     qPost.queryOnePost(req.params.id, req.body.userId)
         .then((object) => {
-            let result = [
-                req.body.userId,
-                object[0]
-            ]
-
-            res.status(200).json(result)
+            res.status(200).json(object)
         })
         .catch((err) => res.status(404).json(err));
 

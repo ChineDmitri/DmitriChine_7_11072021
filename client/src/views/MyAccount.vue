@@ -23,6 +23,8 @@ export default {
   //-----------
   data() {
     return {
+      memberId: undefined, // id de utilisateur
+      memberProfil: undefined, // Profil d'un utilisateur
       pseudo: "",
       dateInscription: "",
       imgProfil: "",
@@ -71,6 +73,7 @@ export default {
           this.$router.push("/");
         }
         this.memberId = res.user;
+        this.memberProfil = res.profil;
       })
       .then(err => {
         console.log(err);

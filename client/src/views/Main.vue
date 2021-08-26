@@ -25,6 +25,7 @@ export default {
   data() {
     return {
       memberId: undefined, // id de utilisateur
+      memberProfil: undefined, // Profil d'un utilisateur
       counter: 0, //counter pour affiché en plus des post
       postNews: [], // variable pour stockage des posts
       iPostNew: undefined, // index de post à modifié
@@ -50,9 +51,9 @@ export default {
       sendRequest("http://localhost:3000/api/post", "POST", body) // requete pour obtenir les deux post plus recents
         .then(res => {
           if (res.error !== 0) {
-            this.getMorePost = res[1].length === 2 ? true : false; // si response n'as pas deux post donc plus besoin button "Affiche en plus"
+            this.getMorePost = res.length === 2 ? true : false; // si response n'as pas deux post donc plus besoin button "Affiche en plus"
 
-            res[1].forEach(el => {
+            res.forEach(el => {
               this.postNews.push(el); // chaque post ajouté dans le array final this.commentsPostNew
             });
 
@@ -177,6 +178,7 @@ export default {
           this.$router.push("/"); // unauthorized direction page login
         }
         this.memberId = res.user;
+        this.memberProfil = res.profil;
       })
       .then(err => {
         console.log(err);

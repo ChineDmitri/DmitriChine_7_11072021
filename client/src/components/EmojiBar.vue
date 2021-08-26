@@ -180,14 +180,14 @@ export default {
 <style lang="scss">
 .emoji {
   // position: absolute;
-  // bottom: -30px;
-  // left: 5px;
+  // bottom: 20%;
+  // left: 20px;
   // display: flex;
   // justify-content: flex-start;
   // flex-direction: row;
   // flex-wrap: wrap;
   font-size: 1rem;
-  width: 100%;
+  width: 50%;
   &-btn {
     width: auto !important;
     margin: 1px !important;

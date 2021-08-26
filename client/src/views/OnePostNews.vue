@@ -28,8 +28,9 @@ export default {
   //-----------
   data() {
     return {
-      counter: 0, //counter pour affiché en plus des commentaires
       memberId: undefined, // id de utilisateur
+      memberProfil: undefined, // Profil d'un utilisateur
+      counter: 0, //counter pour affiché en plus des commentaires
       postNew: "", // variable pour stockage des posts
       commentsPostNew: [], // array pour commentaires
       showMore: true, // si il y a rien à affiché on passe en false
@@ -334,6 +335,7 @@ export default {
           this.$router.push("/");
         }
         this.memberId = res.user;
+        this.memberProfil = res.profil;
       })
       .catch(err => {
         console.log(err);
@@ -348,7 +350,7 @@ export default {
       "GET"
     )
       .then(res => {
-        this.postNew = res[1];
+        this.postNew = res[0];
 
         // términé requet - cahché spinner
         this.ready = true;
@@ -561,6 +563,7 @@ main {
     @media screen and (max-width: 426px) {
       width: 90%;
     }
+    position: relative;
     width: 70%;
     margin: 15px auto 0 auto;
     padding: 0;

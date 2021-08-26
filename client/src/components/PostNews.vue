@@ -73,7 +73,8 @@ export default {
         v-if="memberId !== userId"
         :to="{ name: 'Compte', params: { id: userId } }"
       >
-        {{ pseudo }}
+        <!-- pseudo à afficher -->
+        {{ pseudo === null ? "Utilisateur Supprimé" : pseudo }}
       </router-link>
 
       <router-link v-else to="/moncompte">
@@ -107,7 +108,10 @@ export default {
         <i class="far fa-thumbs-down" :class="{ red: status === -1 }"> </i>
       </button>
 
-      <router-link class="btn-ico btn-comment" :to="{ name: 'OnePostNews', params: { id: postId } }">
+      <router-link
+        class="btn-ico btn-comment"
+        :to="{ name: 'OnePostNews', params: { id: postId } }"
+      >
         <i class="far fa-comment"></i>
         {{ comments }}
       </router-link>

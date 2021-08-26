@@ -22,6 +22,8 @@ export default {
   //-----------
   data() {
     return {
+      memberId: undefined, // id de utilisateur
+      memberProfil: undefined, // Profil d'un utilisateur
       pseudo: "",
       dateInscription: "",
       imgProfil: "",
@@ -68,6 +70,7 @@ export default {
           this.$router.push("/");
         }
         this.memberId = res.user;
+        this.memberProfil = res.profil;
       })
       .then(err => {
         console.log(err);
@@ -127,7 +130,7 @@ main {
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px #ffd7d7;
+    box-shadow: 0 0 5px 2px #6b7689;
     #header {
       display: flex;
       flex-direction: row;

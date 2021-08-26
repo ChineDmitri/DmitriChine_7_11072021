@@ -174,7 +174,8 @@ export default {
 
       <div id="header-info">
         <span v-if="!modificationCompte" id="header-info-pseudo">
-          {{ pseudo }}
+          <!-- pseudo à afficher -->
+          {{ pseudo === null ? "Utilisateur Supprimé" : pseudo }} 
         </span>
 
         <label v-if="modificationCompte" for="newPseudo">
