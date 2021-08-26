@@ -1,5 +1,5 @@
 const qUser = require("../mysql/queryUser");
-const helpers = require("../helpers/index");
+const modules = require("../modules/index");
 
 // package
 const crypto = require('crypto');
@@ -9,6 +9,10 @@ const { reject } = require("bcrypt/promises");
 
 // enregisté un utilisateur
 exports.signup = (req, res, next) => {
+
+    const hashEmail = crypto.createHmac('sha256', process.env.SHA256_KEY)
+        .update(req.body.email)
+        .digest('hex');
 
     bcrypt.hash(req.body.password, 10) // salt = 10 tours, en suite retourn un promise
         .then((hashPassword) => {
@@ -46,13 +50,13 @@ exports.login = (req, res, next) => {
     qUser.findUser(hashEmail)
         .then((user) => {
 
-
             if (user.length === 0) {
                 return res.status(401).json({
                     message: "Utilisateur n'est pas trouvé",
                     auth: false
                 }); // Underfined user
             }
+
             bcrypt.compare(req.body.password, user[0].password)
                 .then((validation) => {
                     if (!validation) {
@@ -73,10 +77,6 @@ exports.login = (req, res, next) => {
                     const data = {
                         userId: user[0].id,
                         profil: user[0].profil
-                    }
-
-                    const session = {
-                        start: Date.now()
                     }
 
                     // ici token chifré
@@ -154,7 +154,7 @@ exports.modifyInfoUser = (req, res, next) => {
             try {
                 if (req.file) {
                     console.log(user[0])
-                    helpers.deleteImg(user[0].profil_img_url)
+                    modules.deleteImg(user[0].profil_img_url)
                         .then(() => { })
                         .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
                 }
@@ -171,5 +171,37 @@ exports.modifyInfoUser = (req, res, next) => {
             status: true
         }))
         .catch((error) => res.status(404).json({ error }));
+
+};
+
+
+// desactivation user 
+exports.deleteUser = (req, res, next) => {
+
+    qUser.queryGetOneUser(req.body.userId)
+        .then((user) => {
+            try {
+                modules.deleteImg(user[0].profil_img_url)
+                    .then(() => { })
+                    .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
+            } catch {
+                throw "User n'existe pas"
+            }
+        })
+        .catch((error) => res.status(500).json({ error }));  
+
+    qUser.queryDeleteUser(req.body.userId)
+        .then(() => {
+
+            res.clearCookie("access_token"); // supprimé cookie avec tooken
+
+            res.clearCookie("data"); // supprimé cookie avec des donnés: userId et profil(admin, user...)
+
+            res.status(200).json({ 
+                message: "User deleted!",
+                deleted: true 
+            })
+        })
+        .catch((err) => res.status(400).json(err));
 
 };

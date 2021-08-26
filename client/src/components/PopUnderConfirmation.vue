@@ -1,38 +1,39 @@
 <script>
 export default {
-  name: "PopUnderInfo",
+  name: "PopUnderConfirmation",
 
   props: {
-    changeBooleanInfo: {
+    deleteUser: {
       type: Function,
       required: true
     },
-    showInfo: {
+    changeBooleanConfirmation: {
+      type: Function,
+      required: true
+    },
+    showConfirmation: {
       type: Boolean,
       required: true
     },
-    messageErr: {
+    message: {
       type: String,
       required: true
-    },
-    changePseudo: {
-      type: String
     }
   }
 };
 </script>
 
 <template>
-  <div id="popUnder" v-if="showInfo">
+  <div id="popUnder" v-if="showConfirmation">
     <div id="popUnder-body">
-      <span id="popUnder-body-btnClose">
-        <button @click="changeBooleanInfo" id="refuser">
-          <i class="fas fa-times-circle"></i>
+      <span id="popUnder-body-p"> {{ message }} </span>
+      <span id="popUnder-body-btnVerification">
+        <button @click="deleteUser" id="accepter" value="">
+          <i class="fas fa-check-square"></i>
         </button>
-      </span>
-
-      <span id="popUnder-body-p">
-        {{ messageErr }} <b>{{ changePseudo }}</b>
+        <button @click="changeBooleanConfirmation" id="refuser">
+          <i class="fas fa-window-close"></i>
+        </button>
       </span>
     </div>
   </div>
@@ -63,7 +64,7 @@ $refuser_color: red;
       background-color: rgba(0, 0, 0, 0.5);
     }
   }
-   #accepter,
+  #accepter,
   #refuser {
     margin: 0 1rem;
     font-size: 1.5rem;
@@ -101,7 +102,10 @@ $refuser_color: red;
     }
     &-p {
       padding: 0;
-      margin: 1rem 2rem 2rem;
+      margin: 0 0 1rem;
+      text-align: center;
+    }
+    &-btnVerification {
       text-align: center;
     }
     &-btnClose {

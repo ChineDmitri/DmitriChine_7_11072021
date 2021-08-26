@@ -1,7 +1,8 @@
 <script>
 // sendRequest(url, method, body (null for GET!))
-import { sendRequestFD } from "../helpers/sendRequest.js";
+import { sendRequestFD, sendRequest } from "../helpers/sendRequest.js";
 import PopUnderInfo from "../components/PopUnderInfo";
+import PopUnderConfirmation from "../components/PopUnderConfirmation";
 import SpinnerComponent from "../components/SpinnerComponent.vue";
 
 export default {
@@ -9,6 +10,7 @@ export default {
 
   components: {
     PopUnderInfo,
+    PopUnderConfirmation,
     SpinnerComponent
   },
 
@@ -43,13 +45,16 @@ export default {
       vPseudo: false,
       changePseudo: undefined,
       imageUrl: undefined,
-      showmodal: false,
+      showInfo: false,
+      showConfirmation: false,
       ready: true,
-      messageErr: "Ce pseudo deja existe, veuillez choisir different que"
+      messageErr: "Ce pseudo deja existe, veuillez choisir different que",
+      message: "Voulez-vous vraiment supprimer ce votre compte?"
     };
   },
 
   methods: {
+    // validation d'input et attribution le classe correspendant
     validInput(regex, value, event) {
       if (regex.test(value)) {
         // console.log("true", event.target);
@@ -64,6 +69,7 @@ export default {
       }
     },
 
+    // mis a jour nouveau donné d'un utilisateur
     updateInfoUser() {
       let newPseudo = document.getElementById("newPseudo");
       this.changePseudo = newPseudo.value;
@@ -72,7 +78,7 @@ export default {
         this.ready = false;
         const file = this.imageUrl ? this.imageUrl : this.imgProfil;
 
-        const userData = new FormData();
+        const userData = new FormData(); // creation nouvalle instance FormData
         userData.append("pseudo", newPseudo.value);
         userData.append("imageUrl", file);
 
@@ -88,7 +94,7 @@ export default {
               if (res.error.errno === 1062) {
                 document.getElementById("newPseudo").classList.add("invalid");
                 document.getElementById("newPseudo").classList.remove("valid");
-                this.modalBoolean();
+                this.changeBooleanInfo();
               }
             }
           })
@@ -98,6 +104,19 @@ export default {
           });
       }
     },
+
+    // supprimé compte
+    deleteUser() {
+      sendRequest("http://localhost:3000/api/user/", "DELETE")
+        .then(res => {
+          if (res.deleted) {
+            this.$router.push("/");
+          }
+        })
+        .catch(err => console.log(err));
+    },
+
+    // obtenir preview d'un image pour photo de compte
     getImg(event) {
       this.imageUrl = event.target.files[0];
       // console.log("this.imageUrl", this.imageUrl);
@@ -115,8 +134,13 @@ export default {
         img.src = this.imgProfil;
       }
     },
-    modalBoolean() {
-      return (this.showmodal = !this.showmodal);
+
+    changeBooleanInfo() {
+      return (this.showInfo = !this.showInfo);
+    },
+
+    changeBooleanConfirmation() {
+      return (this.showConfirmation = !this.showConfirmation);
     }
   }
 };
@@ -127,11 +151,20 @@ export default {
   <div id="account">
     <transition name="fade">
       <PopUnderInfo
-        :showmodal="showmodal"
-        :modalBoolean="modalBoolean"
+        :changeBooleanInfo="changeBooleanInfo"
+        :showInfo="showInfo"
         :messageErr="messageErr"
         :changePseudo="changePseudo"
       ></PopUnderInfo>
+    </transition>
+
+    <transition name="fade">
+      <PopUnderConfirmation
+        :deleteUser="deleteUser"
+        :changeBooleanConfirmation="changeBooleanConfirmation"
+        :showConfirmation="showConfirmation"
+        :message="message"
+      ></PopUnderConfirmation>
     </transition>
 
     <div id="header">
@@ -207,7 +240,12 @@ export default {
           </button>
 
           <button class="btn-ico">
-            <i v-if="!modificationCompte" class="fas fa-trash-alt red"> </i>
+            <i
+              @click="changeBooleanConfirmation"
+              v-if="!modificationCompte"
+              class="fas fa-trash-alt red"
+            >
+            </i>
           </button>
         </div>
 

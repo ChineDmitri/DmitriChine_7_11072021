@@ -2,7 +2,7 @@
 // send request sans fichier
 export function sendRequest(url, method, body = null) {
 
-    if (method === "GET") {
+    if (method === "GET" || method === "DELETE") {
 
         let options = {
             method: method,
