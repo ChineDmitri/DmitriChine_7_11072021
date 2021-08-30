@@ -117,7 +117,7 @@ exports.queryDeletePost = (userId, postId) => {
 
     conn.query(
       `DELETE FROM Post_photo WHERE post_id=${conn.escape(postId)};
-      DELETE FROM Account_posts WHERE post_id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};
+      DELETE FROM Account_posts WHERE post_id=${conn.escape(postId)};
       DELETE FROM Account_posts_liked WHERE post_id=${conn.escape(postId)};
 
       DELETE ac.* FROM Post_commentaire pc 
@@ -126,7 +126,7 @@ exports.queryDeletePost = (userId, postId) => {
 
       DELETE FROM Post_commentaire WHERE post_id=${conn.escape(postId)};
       
-      DELETE FROM Post WHERE id=${conn.escape(postId)} AND user_id=${conn.escape(userId)};`,
+      DELETE FROM Post WHERE id=${conn.escape(postId)};`,
       (err, results) => {
         if (err) {
           reject(err);

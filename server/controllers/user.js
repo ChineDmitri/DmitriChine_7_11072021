@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { reject } = require("bcrypt/promises");
 
-
 // enregisté un utilisateur
 exports.signup = (req, res, next) => {
 
@@ -108,6 +107,21 @@ exports.login = (req, res, next) => {
 };
 
 
+// LogOut (suppretion des cookies)
+exports.logout = (req, res, next) => {
+    console.log(('good'))
+    
+    res.clearCookie("access_token"); // Suppprimé cookies avec token
+
+    res.clearCookie("data"); // Supprimé cookies avec les donné
+
+    res.status(200).json({ 
+        message: "LogOut -> OK",
+        logout: true 
+    })
+}
+
+
 // destribution de info user
 exports.getInfo = (req, res, next) => {
 
@@ -198,7 +212,10 @@ exports.deleteUser = (req, res, next) => {
 
             res.clearCookie("data"); // supprimé cookie avec des donnés: userId et profil(admin, user...)
 
-            res.status(200).json({ message: "User deleted!" })
+            res.status(200).json({ 
+                message: "User deleted!",
+                deleted: true 
+            })
         })
         .catch((err) => res.status(400).json(err));
 
