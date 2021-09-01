@@ -9,6 +9,7 @@ module.exports = (req, res, next) => {
         // ici nous avons donné decodé
         const userId = decodedToken.userId;
         const profil = decodedToken.profil;
+        const active = decodedToken.active;
 
         // recuperation donée d'un utilisateur
         // data.userId & data.profil
@@ -20,9 +21,10 @@ module.exports = (req, res, next) => {
             && data.profil !== profil) {
             throw 'User ID non valable';
         } else {
-            // attribution userId et son profil(A M U)
+            // attribution userId, son profil(A M U), et compte active: TRUE/FALSE
             req.body.userId = userId;
             req.body.profil = profil;
+            req.body.active = active;
 
             // console.log('from MW ', req.body.userId)
 

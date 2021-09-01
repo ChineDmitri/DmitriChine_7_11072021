@@ -57,6 +57,13 @@ exports.login = (req, res, next) => {
                 }); // Underfined user
             }
 
+            if (!user[0].active) {
+                return res.status(401).json({
+                    message: "Utilisateur n'est pas activé, veuillez attendre la validation du compte",
+                    auth: false
+                }); // Underfined user
+            }
+
             bcrypt.compare(req.body.password, user[0].password)
                 .then((validation) => {
                     if (!validation) {
@@ -69,14 +76,16 @@ exports.login = (req, res, next) => {
                     const token = jwt.sign(
                         {
                             userId: user[0].id,
-                            profil: user[0].profil
+                            profil: user[0].profil,
+                            active: user[0].active
                         },
                         process.env.JWT_KEY,
                     )
 
                     const data = {
                         userId: user[0].id,
-                        profil: user[0].profil
+                        profil: user[0].profil,
+                        active: user[0].active
                     }
 
                     // ici token chifré
@@ -110,14 +119,14 @@ exports.login = (req, res, next) => {
 // LogOut (suppretion des cookies)
 exports.logout = (req, res, next) => {
     console.log(('good'))
-    
+
     res.clearCookie("access_token"); // Suppprimé cookies avec token
 
     res.clearCookie("data"); // Supprimé cookies avec les donné
 
-    res.status(200).json({ 
+    res.status(200).json({
         message: "LogOut -> OK",
-        logout: true 
+        logout: true
     })
 }
 
@@ -127,7 +136,8 @@ exports.getInfo = (req, res, next) => {
 
     res.status(200).json({
         user: req.body.userId,
-        profil: req.body.profil
+        profil: req.body.profil,
+        active: req.body.active
     })
 
 };
@@ -195,15 +205,14 @@ exports.deleteUser = (req, res, next) => {
 
     qUser.queryGetOneUser(req.body.userId)
         .then((user) => {
-            try {
+            if (user[0].profil_img_url !== "http://localhost:3000/images/custom_photo_user.png" ||
+                user[0].profil_img_url !== null) {
                 modules.deleteImg(user[0].profil_img_url)
                     .then(() => { })
                     .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
-            } catch {
-                throw "User n'existe pas"
             }
         })
-        .catch((error) => res.status(500).json({ error }));  
+        .catch((error) => res.status(500).json({ error }));
 
     qUser.queryDeleteUser(req.body.userId)
         .then(() => {
@@ -212,9 +221,9 @@ exports.deleteUser = (req, res, next) => {
 
             res.clearCookie("data"); // supprimé cookie avec des donnés: userId et profil(admin, user...)
 
-            res.status(200).json({ 
+            res.status(200).json({
                 message: "User deleted!",
-                deleted: true 
+                deleted: true
             })
         })
         .catch((err) => res.status(400).json(err));

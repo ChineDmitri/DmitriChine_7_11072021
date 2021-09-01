@@ -140,7 +140,7 @@ exports.queryDeletePost = (userId, postId) => {
 };
 
 
-// POUR LIKE et DISLIKE
+// START pour LIKE et DISLIKE
 // Pour verifie exist pour post like - dilike
 exports.queryRecon = (body) => {
   return new Promise((resolve, reject) => {
@@ -222,3 +222,4 @@ exports.updateStatus = (body, status) => {
 
   });
 };
+// FIN pour LIKE et DISLIKE
