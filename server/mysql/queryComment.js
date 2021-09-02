@@ -105,3 +105,88 @@ exports.queryModifyCommentForPost = (body, commentId) => {
         );
     });
 };
+
+
+// START pour LIKE et DISLIKE
+// Pour verifie exist pour commentaire like - dilike
+exports.queryRecon = (body) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `SELECT * FROM Account_commentaires_liked
+      
+            WHERE commentaire_id = ${conn.escape(body.commentId)} AND user_id = ${conn.escape(body.userId)};`,
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+
+    });
+};
+
+
+// Insertion like OR dislike
+exports.pushStatus = (body) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `INSERT INTO Account_commentaires_liked(user_id, commentaire_id, status)
+  
+            VALUES(${conn.escape(body.userId)},
+            ${conn.escape(body.commentId)},
+            ${conn.escape(body.status)});
+        
+            UPDATE post_commentaire
+            SET likes = (SELECT SUM(status) FROM account_commentaires_liked WHERE commentaire_id = ${conn.escape(body.commentId)} AND status = 1)
+            WHERE id = ${conn.escape(body.commentId)};
+        
+            UPDATE post_commentaire
+            SET dislikes = (SELECT SUM(status) FROM account_commentaires_liked WHERE commentaire_id = ${conn.escape(body.commentId)} AND status = -1)
+            WHERE id = ${conn.escape(body.commentId)};`,
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+
+    });
+};
+
+
+// update like => unlike OR dislike => undislike
+exports.updateStatus = (body, status) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `UPDATE Account_commentaires_liked
+  
+            SET status = ${conn.escape(status)}
+  
+            WHERE commentaire_id = ${conn.escape(body.commentId)} AND user_id = ${conn.escape(body.userId)};
+        
+            UPDATE post_commentaire
+            SET likes = (SELECT SUM(status) FROM account_commentaires_liked WHERE commentaire_id = ${conn.escape(body.commentId)} AND status = 1)
+            WHERE id = ${conn.escape(body.commentId)};
+        
+            UPDATE post_commentaire 
+            SET dislikes = (SELECT SUM(status) FROM account_commentaires_liked WHERE commentaire_id = ${conn.escape(body.commentId)} AND status = -1)
+            WHERE id = ${conn.escape(body.commentId)};`,
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            }
+        );
+
+    });
+};
+  // FIN pour LIKE et DISLIKE
