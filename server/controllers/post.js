@@ -128,8 +128,8 @@ exports.deletePost = (req, res, next) => {
             try {
 
                 if (req.body.userId === post.user_id ||
-                    req.body.profil === 'm' ||
-                    req.body.profil === 'a') {
+                    req.body.profil == 'm' ||
+                    req.body.profil == 'a') {
                     qPost.queryDeletePost(req.body.userId, req.params.id)
                         .then(() => res.status(200).json({ message: "Post deleted!" }))
                         .catch((err) => res.status(400).json(err));

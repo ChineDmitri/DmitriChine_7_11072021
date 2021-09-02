@@ -92,10 +92,10 @@ export default {
       )
         .then(res => {
           // si on obtienne pas 2 post donc c'est terminé plus besoins affiché button
-          this.getMoreCommentsCtrl = res[1].length === 2 ? true : false;
+          this.getMoreCommentsCtrl = res.length === 2 ? true : false;
 
           // chaque commentaire ajouté dans le array final this.commentsPostNew
-          res[1].forEach(el => {
+          res.forEach(el => {
             this.commentsPostNew.push(el);
           });
 
@@ -242,7 +242,7 @@ export default {
       // console.log(this.iPostNew);
     },
 
-    // LIKE ou DISLIKE :D
+    // LIKE ou DISLIKE d'un post
     votePost(idx = null, status) {
       console.log(idx); // ES Linter conflict jamais utilisé
 
@@ -254,7 +254,7 @@ export default {
       let oldStatus = this.postNew.status; // Status precedant avant de changement
 
       sendRequest(
-        `http://localhost:3000/api/post/${this.postNew.id}/like`,
+        `http://localhost:3000/api/post/${this.postNew.id}/vote`,
         "PATCH",
         body
       )
@@ -293,6 +293,59 @@ export default {
           if (this.postNew.status === 1 && oldStatus === -1) {
             this.postNew.likes += 2;
             this.postNew.dislikes--;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    // LIKE ou DISLIKE d'un commentaire
+    voteComment(idx, status) {
+      const body = {
+        status: status
+      };
+
+      let oldStatus = this.commentsPostNew[idx].status; // Status precedant avant de changement
+
+      sendRequest(
+        `http://localhost:3000/api/comment/${this.commentsPostNew[idx].id}/vote/`,
+        "PATCH",
+        body
+      )
+        .then(res => {
+          this.commentsPostNew[idx].status = res.stat;
+
+          // si response 1 (LIKE) et precedant n'est pas comme response 1 (LIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas 1 (LIKE)
+          if (
+            (res.stat === 1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== 1)
+          ) {
+            this.commentsPostNew[idx].likes++; // increment likes
+          }
+
+          // si response -1 (DISLIKE) et precedant n'est pas comme reponse -1 (DISLIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas -1 (DISLIKE)
+          if (
+            (res.stat === -1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== -1)
+          ) {
+            this.commentsPostNew[idx].dislikes--; // decriment dislike
+          }
+
+          // de LIKE vers DISLIKE
+          if (this.postNews[idx].status === -1 && oldStatus === 1) {
+            this.commentsPostNew[idx].likes++;
+            this.commentsPostNew[idx].dislikes -= 2;
+          }
+
+          // de DISLIKE vers LIKE
+          if (this.postNews[idx].status === 1 && oldStatus === -1) {
+            this.commentsPostNew[idx].likes += 2;
+            this.commentsPostNew[idx].dislikes--;
           }
         })
         .catch(err => {
@@ -385,6 +438,7 @@ export default {
           v-if="!goModify"
           :postId="postNew.id"
           :memberId="memberId"
+          :memberProfil="memberProfil"
           :title="postNew.title"
           :discription="postNew.discription"
           :likes="postNew.likes"
@@ -408,6 +462,7 @@ export default {
             :key="comment.id"
             :commentId="comment.id"
             :memberId="memberId"
+            :memberProfil="memberProfil"
             :commentaire="comment.commentaire"
             :datePublication="comment.date_publication"
             :dateModification="comment.date_modification"
@@ -419,6 +474,7 @@ export default {
             :idx="idx"
             :deleteComment="deleteComment"
             :modifyComment="modifyComment"
+            :voteComment="voteComment"
           ></CommentNews>
         </div>
 

@@ -1,6 +1,7 @@
 <script>
 export default {
   name: "CommentNews",
+
   props: {
     commentId: {
       type: Number,
@@ -8,6 +9,10 @@ export default {
     },
     memberId: {
       type: Number,
+      required: true
+    },
+    memberProfil: {
+      type: String,
       required: true
     },
     commentaire: {
@@ -23,11 +28,11 @@ export default {
       required: true
     },
     likes: {
-      type: Number,
+      type: [Number, null],
       required: true
     },
     dislikes: {
-      type: Number,
+      type: [Number, null],
       required: true
     },
     status: {
@@ -39,7 +44,7 @@ export default {
       required: true
     },
     pseudo: {
-      type: String,
+      type: [String, null],
       required: true
     },
     idx: {
@@ -53,8 +58,12 @@ export default {
     modifyComment: {
       type: Function,
       required: true
+    },
+    voteComment: {
+      type: Function,
+      required: true
     }
-  }
+  },
 };
 </script>
 
@@ -104,7 +113,7 @@ export default {
         <i class="far fa-thumbs-down" :class="{ red: status === -1 }"> </i>
       </button>
 
-      <span v-if="memberId === userId">
+      <span v-if="memberId === userId || memberProfil === 'm' || memberProfil === 'a'">
         <button @click="modifyComment(idx)" class="btn-ico modif">
           <i class="fas fa-pencil-alt orange"></i>
         </button>

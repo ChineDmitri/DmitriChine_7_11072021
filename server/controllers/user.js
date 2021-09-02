@@ -57,13 +57,6 @@ exports.login = (req, res, next) => {
                 }); // Underfined user
             }
 
-            if (!user[0].active) {
-                return res.status(401).json({
-                    message: "Utilisateur n'est pas activé, veuillez attendre la validation du compte",
-                    auth: false
-                }); // Underfined user
-            }
-
             bcrypt.compare(req.body.password, user[0].password)
                 .then((validation) => {
                     if (!validation) {
@@ -71,6 +64,13 @@ exports.login = (req, res, next) => {
                             message: "Mot de pass incorrect",
                             auth: false
                         }); // MdP incorrect
+                    }
+
+                    if (!user[0].active) {
+                        return res.status(401).json({
+                            message: "Utilisateur n'est pas activé, veuillez attendre la validation du compte",
+                            auth: false
+                        }); // Underfined user
                     }
 
                     const token = jwt.sign(

@@ -3,13 +3,16 @@ export default {
   name: "PostNews",
 
   data() {
-    return {};
+    return {
+      moder: "m"
+    };
   },
 
   props: [
     "key",
     "postId",
     "memberId",
+    "memberProfil",
     "title",
     "discription",
     "likes",
@@ -38,7 +41,9 @@ export default {
         {{ title }}
       </router-link>
 
-      <span v-if="memberId === userId">
+      <span
+        v-if="memberId === userId || memberProfil === 'm' || memberProfil === 'a'"
+      >
         <button @click="modifyPost(idx)" class="btn-ico modif">
           <i class="fas fa-pencil-alt orange"></i>
         </button>

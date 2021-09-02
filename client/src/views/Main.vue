@@ -122,7 +122,7 @@ export default {
       let oldStatus = this.postNews[idx].status; // Status precedant avant de changement
 
       sendRequest(
-        `http://localhost:3000/api/post/${this.postNews[idx].id}/like`,
+        `http://localhost:3000/api/post/${this.postNews[idx].id}/vote`,
         "PATCH",
         body
       )
@@ -180,7 +180,7 @@ export default {
         this.memberId = res.user;
         this.memberProfil = res.profil;
       })
-      .then(err => {
+      .catch(err => {
         console.log(err);
       });
 
@@ -215,6 +215,7 @@ export default {
             :key="postNew.id"
             :postId="postNew.id"
             :memberId="memberId"
+            :memberProfil="memberProfil"
             :title="postNew.title"
             :discription="postNew.discription"
             :likes="postNew.likes"
