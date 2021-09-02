@@ -49,7 +49,7 @@ export default {
       showConfirmation: false,
       ready: true,
       messageErr: "Ce pseudo deja existe, veuillez choisir different que",
-      message: "Voulez-vous vraiment supprimer ce votre compte?"
+      message: "Voulez-vous vraiment supprimer votre compte?"
     };
   },
 

@@ -4,6 +4,7 @@ import FormPost from "../components/FormPost";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 import SpinnerComponent from "../components/SpinnerComponent.vue";
+import PopUnderConfirmationPost from "../components/PopUnderConfirmationPost";
 
 import { sendRequest } from "../helpers/sendRequest.js";
 
@@ -17,7 +18,8 @@ export default {
     FormPost,
     HeadComponent,
     FooterComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    PopUnderConfirmationPost
   },
   //-----------
 
@@ -33,7 +35,10 @@ export default {
       ready: true, // Boolean pour SpinnerComponent qui en "Afficher en plus"
       readyShowMore: true, // Boolean pour button show more
       getMorePost: true, // Boolean pour button show more
-      goModify: false
+      goModify: false,
+      showConfirmation: false,
+      message: "",
+      idxDelete: NaN
     };
   },
   //-----------
@@ -81,6 +86,7 @@ export default {
 
     // methode pour DELETE d'un post et reformé this.postNews
     deletePost(i) {
+      this.showConfirmation = false; 
       this.ready = false;
 
       sendRequest(
@@ -116,7 +122,7 @@ export default {
     votePost(idx, status) {
       const body = {
         postId: this.postNews[idx].id,
-        status: status,
+        status: status
       };
 
       let oldStatus = this.postNews[idx].status; // Status precedant avant de changement
@@ -164,6 +170,15 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+
+    // affiché pop-under de confirmation
+    changeBooleanConfirmation(idx) {
+      this.idxDelete = idx; // obtenir index de post
+
+      this.message = `Voullez-vous supprimé post: ${this.postNews[idx].title}`; // formation du message
+
+      return (this.showConfirmation = !this.showConfirmation);
     }
   },
   //-----------
@@ -229,10 +244,19 @@ export default {
             :status="postNew.status"
             :idx="idx"
             :deletePost="deletePost"
+            :changeBooleanConfirmation="changeBooleanConfirmation"
             :modifyPost="modifyPost"
             :votePost="votePost"
           ></PostNews>
         </div>
+
+        <PopUnderConfirmationPost
+          :deletePost="deletePost"
+          :changeBooleanConfirmation="changeBooleanConfirmation"
+          :showConfirmation="showConfirmation"
+          :message="message"
+          :idxDelete="idxDelete"
+        ></PopUnderConfirmationPost>
 
         <!-- spinner lorsque on supprim un post -->
         <!-- <SpinnerComponent :ready="readyDelet"></SpinnerComponent> -->

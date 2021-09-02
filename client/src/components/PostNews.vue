@@ -26,6 +26,7 @@ export default {
     "status",
     "idx",
     "deletePost",
+    "changeBooleanConfirmation",
     "modifyPost",
     "votePost"
   ]
@@ -48,7 +49,7 @@ export default {
           <i class="fas fa-pencil-alt orange"></i>
         </button>
 
-        <button @click="deletePost(idx)" class="btn-ico">
+        <button @click="changeBooleanConfirmation(idx)" class="btn-ico">
           <i class="fas fa-trash-alt red"></i>
         </button>
       </span>

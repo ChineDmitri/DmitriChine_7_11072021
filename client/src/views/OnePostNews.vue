@@ -6,6 +6,7 @@ import FormPost from "../components/FormPost";
 import CommentNews from "../components/CommentNews";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
+import PopUnderConfirmationPost from "../components/PopUnderConfirmationPost";
 
 import { sendRequest } from "../helpers/sendRequest.js";
 
@@ -16,12 +17,13 @@ export default {
   //-----------
   components: {
     SpinnerComponent,
+    EmojiBar,
     PostNews,
     FormPost,
+    CommentNews,
     HeadComponent,
     FooterComponent,
-    CommentNews,
-    EmojiBar
+    PopUnderConfirmationPost
   },
   //-----------
 
@@ -45,7 +47,10 @@ export default {
       goComment: false, // pour ajout readyCommentsButton comments (mode Commentateur)
       goModifyComment: false, // mode de modification d'un commentaire
       emoji: false, // affiché emoji ou caché
-      goModify: false // pour modification d'un post
+      goModify: false, // pour modification d'un post
+      showConfirmation: false,
+      message: "",
+      idxDelete: NaN
     };
   },
   //-----------
@@ -357,6 +362,7 @@ export default {
     deletePost(i) {
       console.log(i); // ES Linter conflict jamais utilisé
 
+      this.showConfirmation = false;
       this.ready = false;
 
       sendRequest(
@@ -371,6 +377,15 @@ export default {
 
           console.log(err);
         });
+    },
+
+    // affiché pop-under de confirmation
+    changeBooleanConfirmation(idx = NaN) {
+      this.idxDelete = idx; // obtenir index de post
+
+      this.message = `Voullez-vous supprimé post: ${this.postNew.title}`; // formation du message
+
+      return (this.showConfirmation = !this.showConfirmation);
     }
   },
   //-----------
@@ -451,9 +466,18 @@ export default {
           :userId="postNew.user_id"
           :status="postNew.status"
           :deletePost="deletePost"
+          :changeBooleanConfirmation="changeBooleanConfirmation"
           :modifyPost="modifyPost"
           :votePost="votePost"
         ></PostNews>
+
+        <PopUnderConfirmationPost
+          :deletePost="deletePost"
+          :changeBooleanConfirmation="changeBooleanConfirmation"
+          :showConfirmation="showConfirmation"
+          :message="message"
+          :idxDelete="idxDelete"
+        ></PopUnderConfirmationPost>
 
         <div class="container-comments" v-if="!goModify && !goModifyComment">
           <h2>Commentaires:</h2>

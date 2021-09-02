@@ -1,9 +1,9 @@
 <script>
 export default {
-  name: "PopUnderConfirmation",
+  name: "PopUnderConfirmationPost",
 
   props: {
-    deleteUser: {
+    deletePost: {
       type: Function,
       required: true
     },
@@ -18,6 +18,10 @@ export default {
     message: {
       type: String,
       required: true
+    },
+    idxDelete: {
+      type: Number,
+      required: false
     }
   }
 };
@@ -28,10 +32,10 @@ export default {
     <div id="popUnder-body">
       <span id="popUnder-body-p"> {{ message }} </span>
       <span id="popUnder-body-btnVerification">
-        <button @click="deleteUser" id="accepter" value="">
+        <button @click="deletePost(idxDelete)" id="accepter" value="">
           <i class="fas fa-check-square"></i>
         </button>
-        <button @click="changeBooleanConfirmation" id="refuser">
+        <button @click="changeBooleanConfirmation(idxDelete)" id="refuser">
           <i class="fas fa-window-close"></i>
         </button>
       </span>
