@@ -1,12 +1,41 @@
 <script>
+import { sendRequest } from "../helpers/sendRequest.js";
+
 export default {
-  name: "HeadComponent"
+  name: "HeadComponent",
+
+  props: {
+    memberProfil: {
+      type: [String, undefined],
+      required: false
+    }
+  },
+
+  methods: {
+    logout() {
+      sendRequest("http://localhost:3000/api/user/logout", "POST")
+        .then(res => {
+          if (res.logout) {
+            this.$router.push("/");
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  }
 };
 </script>
 
 
 <template>
   <header>
+    <div id="stat-bar">
+      <button id="logout" @click="logout">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+      <router-link v-if="memberProfil === 'a'" to="/admin" class="admin"
+        >Espace administrateur</router-link
+      >
+    </div>
     <div id="head"></div>
     <div id="menu">
       <nav class="large-screen">
@@ -25,10 +54,14 @@ export default {
       <nav class="tight-screen">
         <ul>
           <li>
-            <router-link to="/moncompte"><i class="fas fa-user-circle"></i></router-link>
+            <router-link to="/moncompte"
+              ><i class="fas fa-user-circle"></i
+            ></router-link>
           </li>
           <li>
-            <router-link to="/main/createpost"><i class="fas fa-paper-plane"></i></router-link>
+            <router-link to="/main/createpost"
+              ><i class="fas fa-paper-plane"></i
+            ></router-link>
           </li>
           <li>
             <router-link to="/main"><i class="fas fa-home"></i></router-link>
@@ -43,8 +76,43 @@ export default {
 <style lang="scss">
 // header - begin
 header {
+  background-color: #000000;
   overflow: hidden;
   position: relative;
+  #stat-bar {
+    font-size: 2vh;
+    display: flex;
+    flex-direction: row-reverse;
+    position: sticky;
+    background-color: #000000;
+    height: 4vh;
+    width: 70%;
+    margin: 0 auto;
+    a {
+      margin: auto 0;
+      color: #ffffff;
+      &:hover {
+        color: #1d4380;
+      }
+    }
+    #logout {
+      font-size: 3vh;
+      color: red;
+      background-color: transparent;
+      border: 0px;
+      margin: 0 20px;
+      &:hover {
+        transform: scale(1.25);
+      }
+    }
+    @media screen and (max-width: 426px) {
+      margin: 0 auto;
+      width: 100%;
+    }
+    @media screen and (min-width: 1441px) {
+      flex-basis: 900px;
+    }
+  }
   #head {
     background-image: url(../assets/header_bg.png);
     background-size: cover;

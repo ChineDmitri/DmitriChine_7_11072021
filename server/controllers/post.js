@@ -63,7 +63,7 @@ exports.modifyPost = (req, res, next) => {
         userId: req.body.userId,
         title: req.body.title,
         discription: req.body.discription,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        imageUrl:  `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     } : {
         userId: req.body.userId,
         title: req.body.title,
@@ -71,7 +71,7 @@ exports.modifyPost = (req, res, next) => {
         imageUrl: req.body.imageUrl,
     }
 
-    console.log(postObject)
+    // console.log(postObject)
 
     qPost.queryOnePost(req.params.id, req.body.userId)
         .then((ArrPost) => {
@@ -93,9 +93,7 @@ exports.modifyPost = (req, res, next) => {
                     throw 'Probleme avec droit';
                 }
 
-            }
-
-            catch {
+            } catch {
 
                 res.status(401).json({
                     err,

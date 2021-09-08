@@ -142,6 +142,26 @@ export default {
     changeBooleanConfirmation() {
       return (this.showConfirmation = !this.showConfirmation);
     }
+  },
+  // --------
+
+  // --------
+  computed: {
+    dateFormated: function() {
+      let date = new Date(this.dateInscription);
+
+      let options = {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
+      };
+
+      // console.log(Intl.DateTimeFormat('fr-FR', options).format(date));
+      return Intl.DateTimeFormat("fr-FR", options).format(date);
+    }
   }
 };
 </script>
@@ -175,7 +195,7 @@ export default {
       <div id="header-info">
         <span v-if="!modificationCompte" id="header-info-pseudo">
           <!-- pseudo à afficher -->
-          {{ pseudo === null ? "Utilisateur Supprimé" : pseudo }} 
+          {{ pseudo === null ? "Utilisateur Supprimé" : pseudo }}
         </span>
 
         <label v-if="modificationCompte" for="newPseudo">
@@ -206,6 +226,12 @@ export default {
           />
         </label>
 
+        <span v-if="modificationCompte">
+          <router-link to="/newpass">
+            Changer mot de pass
+          </router-link>
+        </span>
+
         <SpinnerComponent :ready="ready"></SpinnerComponent>
 
         <div v-if="ready" id="btn-confirmation">
@@ -227,7 +253,7 @@ export default {
         </div>
 
         <span v-if="!modificationCompte" id="header-info-dateInsc">
-          Date d'inscription: {{ dateInscription }}
+          Date d'inscription: {{ dateFormated }}
         </span>
 
         <div v-if="monCompte" id="header-info-manipulation">

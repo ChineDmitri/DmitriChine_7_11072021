@@ -118,7 +118,6 @@ exports.login = (req, res, next) => {
 
 // LogOut (suppretion des cookies)
 exports.logout = (req, res, next) => {
-    console.log(('good'))
 
     res.clearCookie("access_token"); // Suppprimé cookies avec token
 
@@ -172,30 +171,32 @@ exports.modifyInfoUser = (req, res, next) => {
             userId: req.body.userId,
             imageUrl: req.body.imageUrl
         }; // false 0
-
+        
     // si on modifier une image pour un user, il ne faut pas oublier supprime l'ancienne   
     qUser.queryGetOneUser(req.body.userId)
         .then((user) => {
             try {
                 if (req.file) {
-                    console.log(user[0])
+                    // console.log(user[0])
                     modules.deleteImg(user[0].profil_img_url)
                         .then(() => { })
                         .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
                 }
             } catch {
-                throw "User n'existe pas"
+                throw "File n'esxiste pas"
             }
+
+
+            // mise à jour des donnée d'un utilisateur
+            qUser.updateInfoUser(userObject)
+                .then(() => res.status(200).json({
+                    message: 'User info modified',
+                    status: true
+                }))
+                .catch((error) => res.status(404).json({ error }));
+
         })
         .catch((error) => res.status(500).json({ error }));
-
-    // mise à jour des donnée d'un utilisateur
-    qUser.updateInfoUser(userObject)
-        .then(() => res.status(200).json({
-            message: 'User info modified',
-            status: true
-        }))
-        .catch((error) => res.status(404).json({ error }));
 
 };
 
@@ -229,3 +230,30 @@ exports.deleteUser = (req, res, next) => {
         .catch((err) => res.status(400).json(err));
 
 };
+
+
+// modification mot de pass
+exports.changePass = (req, res, next) => {
+
+    bcrypt.hash(req.body.password, 10)
+        .then((hashEmail) => {
+
+            qUser.queryUpdatePassword(hashEmail, req.body.userId)
+                .then(() => {
+                    res.clearCookie("access_token"); // Suppprimé cookies avec token
+
+                    res.clearCookie("data"); // Supprimé cookies avec les donné
+
+                    res.status(500).json({
+                        message: "Mot de passe changé",
+                        modified: true,
+                    })
+                })
+                .catch((err) => {
+                    res.status(500).json(err)
+                })
+        })
+        .catch((err) => res.status(501).json({ err }));
+
+}
+

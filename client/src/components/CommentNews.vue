@@ -55,6 +55,10 @@ export default {
       type: Function,
       required: true
     },
+    changeBooleanConfirmationComment: {
+      type: Function,
+      required: true
+    },
     modifyComment: {
       type: Function,
       required: true
@@ -64,6 +68,39 @@ export default {
       required: true
     }
   },
+
+  computed: {
+    dateFormated: function() {
+      let date = new Date(this.datePublication);
+
+      let options = {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
+      };
+
+      // console.log(Intl.DateTimeFormat('fr-FR', options).format(date));
+      return Intl.DateTimeFormat("fr-FR", options).format(date);
+    },
+
+    dateModificationFormated: function() {
+      let date = new Date(this.dateModification);
+
+      let options = {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
+      };
+
+      return Intl.DateTimeFormat("fr-FR", options).format(date);
+    }
+  }
 };
 </script>
 
@@ -88,7 +125,7 @@ export default {
         {{ pseudo }}
       </router-link>
 
-      à {{ datePublication }}
+      à {{ dateFormated }}
 
       <br />
 
@@ -113,12 +150,16 @@ export default {
         <i class="far fa-thumbs-down" :class="{ red: status === -1 }"> </i>
       </button>
 
-      <span v-if="memberId === userId || memberProfil === 'm' || memberProfil === 'a'">
+      <span
+        v-if="
+          memberId === userId || memberProfil === 'm' || memberProfil === 'a'
+        "
+      >
         <button @click="modifyComment(idx)" class="btn-ico modif">
           <i class="fas fa-pencil-alt orange"></i>
         </button>
 
-        <button @click="deleteComment(idx)" class="btn-ico">
+        <button @click="changeBooleanConfirmationComment(idx)" class="btn-ico">
           <i class="fas fa-trash-alt red"></i>
         </button>
       </span>

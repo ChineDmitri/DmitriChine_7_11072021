@@ -87,7 +87,7 @@ export default {
 
 <template>
   <div id="main-layout">
-    <HeadComponent></HeadComponent>
+    <HeadComponent :memberProfil="memberProfil"></HeadComponent>
 
     <main>
       <div id="content">

@@ -7,11 +7,14 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
+    path: '/newpass',
+    name: 'NewPass',
+    props: true,
+    component: () => import('../views/NewPass.vue')
+  },
+  {
     path: '/signup',
     name: 'Signup',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import('../views/Signup.vue')
   },
   {
@@ -43,6 +46,12 @@ const routes = [
     name: 'OnePostNews',
     props: true,
     component: () => import('../views/OnePostNews.vue')
+  },
+  {
+    path: '/admin',
+    name: 'AdminPanel',
+    props: true,
+    component: () => import('../views/AdminPanel.vue')
   }
 ]
 

@@ -1,5 +1,6 @@
 <script>
 import SpinnerComponent from "../components/SpinnerComponent.vue";
+
 import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
@@ -11,47 +12,22 @@ export default {
   //-----------
   data() {
     return {
-      regexEmail: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){3}\.[a-z]{2,3}$/,
-      regexPseudo: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/,
-      vEmail: false,
-      vPseudo: false,
-      vPassword: false,
-      email: "",
-      pseudo: "",
       firstPassValue: "",
       secondPassValue: "",
+      vPassword: false,
       placeholderDoublePass: "Repetez mot de passe",
       placeholderRules: "Minimum 8 caractères",
       message: undefined,
-      ready: true
+      ready: true // Boolean pour SpinnerComponent
     };
   },
   //-----------
 
   //-----------
   methods: {
-    validInput(regex, value, event) {
-      this.message = undefined;
-
-      if (regex.test(value)) {
-        console.log("true", event.target);
-        event.target.classList.remove("invalid");
-        event.target.classList.add("valid");
-        return true;
-      } else {
-        console.log("false", event.target);
-        event.target.classList.remove("valid");
-        event.target.classList.add("invalid");
-        return false;
-      }
-    },
-
     validFirstPassword() {
       this.message = undefined;
-      if (
-        this.firstPassValue.length > 7 &&
-        (this.firstPassValue == this.secondPassValue || this.secondPassValue == "")
-      ) {
+      if (this.firstPassValue.length > 7) {
         event.target.classList.remove("invalid");
         event.target.classList.add("valid");
         return true;
@@ -78,73 +54,34 @@ export default {
       }
     },
 
-    signUp(event) {
+    changePass(event) {
       event.preventDefault();
 
-      let user = {
-        email: this.email,
-        pseudo: this.pseudo,
-        password: this.secondPassValue
-      };
+      if (!this.vPassword && this.firstPassValue !== this.secondPassValue) {
+        this.message = "Les mots de passe saisis ne sont pas identiques";
+      } else {
+        const body = {
+          password: this.secondPassValue
+        };
 
-      if (
-        this.vEmail &&
-        this.vPseudo &&
-        this.vPassword &&
-        this.secondPassValue === this.firstPassValue
-      ) {
-        this.ready = false;
-
-        sendRequest("http://localhost:3000/api/user/signup", "POST", user)
+        sendRequest("http://localhost:3000/api/user/newpass", "PUT", body)
           .then(data => {
-            this.ready = true;
-            if (data.created) {
-              // si utilisateur créé
+            if (data.modified) {
               this.$router.push("/");
             } else {
               this.ready = true;
-              this.message = data.message;
-              switch (this.message) {
-                case "Pseudo deja exist":
-                  {
-                    document.getElementById("pseudo").classList.remove("valid");
-                    document.getElementById("pseudo").classList.add("invalid");
-                  }
-                  break;
-                case "Email deja exist":
-                  {
-                    document.getElementById("email").classList.remove("valid");
-                    document.getElementById("email").classList.add("invalid");
-                  }
-                  break;
-              }
+              this.message = data;
             }
           })
           .catch(err => {
-            this.ready = true;
             console.log(err);
           });
-      } else {
-        this.message = "Veuillez remplire les champs correctement";
+      }
+
+      if (this.secondPassValue === this.firstPassValue) {
+        this.ready = false;
       }
     }
-  },
-  //-----------
-
-  //-----------
-  beforeMount() {
-    // verification user et distribution ID
-    sendRequest(`http://localhost:3000/api/user/info`, "GET")
-      .then(res => {
-        if (res.error !== 0) {
-          // authorized direction vers la page main
-          this.$router.push("/main/");
-        }
-        this.memberId = res.user;
-      })
-      .then(err => {
-        console.log(err);
-      });
   }
 };
 </script>
@@ -152,37 +89,10 @@ export default {
 
 <template>
   <div id="auth-form">
-    <h1>
-      <router-link to="/">Connexion</router-link>
-      / Enregistré
-    </h1>
+    <h1>Creation nouveau mot de pass / <a href="javascript:history.back();">Retourner</a></h1>
 
     <div>
       <form>
-        <label for="email">
-          Email:
-          <input
-            type="email"
-            id="email"
-            class=""
-            v-model="email"
-            @input="vEmail = validInput(regexEmail, email, $event)"
-            placeholder="ex: dimitri42@groupomania.fr"
-          />
-        </label>
-
-        <label for="pseudo">
-          Pseudo:
-          <input
-            type="text"
-            id="pseudo"
-            class=""
-            v-model="pseudo"
-            @input="vPseudo = validInput(regexPseudo, pseudo, $event)"
-            placeholder="ex: Dimitri42 (max: 30 symbole)"
-          />
-        </label>
-
         <label for="password">
           Mot de pass:
           <input
@@ -210,18 +120,11 @@ export default {
           />
         </label>
 
-        <!-- es-que mot de pass sont identique  -->
-        <p
-          v-if="firstPassValue != secondPassValue"
-        >
-          Mot de passe ne sont pas identique
-        </p>
-
-        <p v-if="message != undefined">
+        <p v-if="message !== undefined">
           {{ message }}
         </p>
 
-        <input v-if="ready" type="submit" @click="signUp" value="Créer" />
+        <input type="submit" value="Changer" @click="changePass" />
       </form>
       <SpinnerComponent :ready="ready"></SpinnerComponent>
     </div>

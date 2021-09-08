@@ -79,7 +79,7 @@ export default {
     getImg() {
       this.imageUrl = event.target.files[0];
 
-      console.log(event.target.files[0]);
+      // console.log(event.target.files[0]);
 
       let img = document.getElementById("postPhoto"); // où inserer preview
 
@@ -92,14 +92,16 @@ export default {
           // console.log(event.target.result);
         };
       } else {
-        img.src = undefined;
+        // this.imageUrl = this.mImageUrl; // si n'est pas besoin supprimé img precedant
+        // console.log(this.mImageUrl)
+        this.imageUrl = null;
       }
     },
 
     // creation du post
     createPost() {
       this.ready = false;
-      console.log(this.title, this.textPost, this.imageUrl);
+      // console.log(this.title, this.textPost, this.imageUrl);
 
       const postData = new FormData();
 
@@ -134,6 +136,8 @@ export default {
       postData.append("title", this.title);
       postData.append("discription", this.textPost);
       postData.append("imageUrl", this.imageUrl);
+
+      console.log(this.imageUrl)
 
       sendRequestFD(
         `http://localhost:3000/api/post/${this.idPostNew}`,

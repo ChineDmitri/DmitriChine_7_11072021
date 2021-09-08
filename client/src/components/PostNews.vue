@@ -8,28 +8,116 @@ export default {
     };
   },
 
-  props: [
-    "key",
-    "postId",
-    "memberId",
-    "memberProfil",
-    "title",
-    "discription",
-    "likes",
-    "dislikes",
-    "comments",
-    "pseudo",
-    "datePublication",
-    "dateModification",
-    "urlImg",
-    "userId",
-    "status",
-    "idx",
-    "deletePost",
-    "changeBooleanConfirmation",
-    "modifyPost",
-    "votePost"
-  ]
+  props: {
+    postId: {
+      type: Number,
+      required: true
+    },
+    memberId: { // qui est en session
+      type: [Number, undefined],
+      required: false
+    },
+    memberProfil: {
+      type: [String, undefined],
+      required: false
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    discription: {
+      type: String,
+      required: true
+    },
+    likes: {
+      type: [Number, null],
+      required: true
+    },
+    dislikes: {
+      type: [Number, null],
+      required: true
+    },
+    comments: {
+      type: Number,
+      require: true
+    },
+    pseudo: {
+      type: [String, null],
+      required: true
+    },
+    datePublication: {
+      type: String,
+      required: true
+    },
+    dateModification: {
+      type: [String, null],
+      required: true
+    },
+    urlImg: {
+      type: [String, null, undefined],
+      required: true
+    },
+    userId: {
+      type: Number,
+      required: true
+    },
+    status: {
+      type: [Number, null],
+      required: true
+    },
+    idx: {
+      type: Number,
+      required: false
+    },
+    deletePost: {
+      type: Function,
+      required: true
+    },
+    changeBooleanConfirmation: {
+      type: Function,
+      required: true
+    },
+    modifyPost: {
+      type: Function,
+      required: true
+    },
+    votePost: {
+      type: Function,
+      required: true
+    }
+  },
+
+  computed: {
+    dateFormated: function() {
+      let date = new Date(this.datePublication);
+
+      let options = {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
+      };
+
+      // console.log(Intl.DateTimeFormat('fr-FR', options).format(date));
+      return Intl.DateTimeFormat("fr-FR", options).format(date);
+    },
+    dateModificationFormated: function() {
+      let date = new Date(this.dateModification);
+
+      let options = {
+        weekday: "long",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
+      };
+
+      return Intl.DateTimeFormat("fr-FR", options).format(date);
+    }
+  }
 };
 </script>
 
@@ -43,7 +131,9 @@ export default {
       </router-link>
 
       <span
-        v-if="memberId === userId || memberProfil === 'm' || memberProfil === 'a'"
+        v-if="
+          memberId === userId || memberProfil === 'm' || memberProfil === 'a'
+        "
       >
         <button @click="modifyPost(idx)" class="btn-ico modif">
           <i class="fas fa-pencil-alt orange"></i>
@@ -64,7 +154,7 @@ export default {
         {{ discription }}
       </div>
 
-      <div class="post-body-photo">
+      <div v-if="urlImg && urlImg !== 'null'" class="post-body-photo">
         <!-- <a href="#" class="post-body-photo-one"> -->
         <img :src="urlImg" :alt="title" />
         <!-- </a> -->
@@ -87,13 +177,13 @@ export default {
         {{ pseudo }}
       </router-link>
 
-      à {{ datePublication }}
+      à {{ dateFormated }}
 
       <br />
 
       {{
         dateModification !== null
-          ? `(dernier modification: ${dateModification})`
+          ? `(dernier modification: ${dateModificationFormated})`
           : null
       }}
       <!-- (dernier modification: 26/05/2021 21h50) -->

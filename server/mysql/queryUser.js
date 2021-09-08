@@ -112,4 +112,26 @@ exports.queryDeleteUser = (userId) => {
 };
 
 
+// UPDATE mot de pass
+exports.queryUpdatePassword = (password, userId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `UPDATE User 
+            SET password=${conn.escape(password)}
+            WHERE id=${conn.escape(userId)};
+            `,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
 

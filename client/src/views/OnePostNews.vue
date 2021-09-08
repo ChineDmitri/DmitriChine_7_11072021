@@ -7,6 +7,7 @@ import CommentNews from "../components/CommentNews";
 import HeadComponent from "../components/HeadComponent";
 import FooterComponent from "../components/FooterComponent";
 import PopUnderConfirmationPost from "../components/PopUnderConfirmationPost";
+import PopUnderConfirmationComment from "../components/PopUnderConfirmationComment";
 
 import { sendRequest } from "../helpers/sendRequest.js";
 
@@ -23,7 +24,8 @@ export default {
     CommentNews,
     HeadComponent,
     FooterComponent,
-    PopUnderConfirmationPost
+    PopUnderConfirmationPost,
+    PopUnderConfirmationComment
   },
   //-----------
 
@@ -49,8 +51,11 @@ export default {
       emoji: false, // affiché emoji ou caché
       goModify: false, // pour modification d'un post
       showConfirmation: false,
+      showConfirmationComment: false,
       message: "",
-      idxDelete: NaN
+      messageComment: "",
+      idxDelete: NaN,
+      idxDeleteComment: NaN
     };
   },
   //-----------
@@ -165,15 +170,16 @@ export default {
       // caché les commentaire lorsque on travail
       this.deleteCommentBtn = false;
 
+      this.showConfirmationComment = false; // detruir popUnder
+
       sendRequest(
         `http://localhost:3000/api/comment/${this.commentsPostNew[i].id}/post/${this.$route.params.id}`,
         "DELETE"
       )
         .then(() => {
-          //nettoyer avant remplissage
-          this.commentsPostNew = [];
+          this.commentsPostNew = []; //nettoyer avant remplissage
 
-          this.postNew.comments--;
+          this.postNew.comments--; // enlevé un commentaire sur le compteur de commentaire
 
           // formé en nouveau this.commentsPostNew
           for (let k = 0; k <= this.counter; k++) {
@@ -342,13 +348,13 @@ export default {
           }
 
           // de LIKE vers DISLIKE
-          if (this.postNews[idx].status === -1 && oldStatus === 1) {
+          if (this.commentsPostNew[idx].status === -1 && oldStatus === 1) {
             this.commentsPostNew[idx].likes++;
             this.commentsPostNew[idx].dislikes -= 2;
           }
 
           // de DISLIKE vers LIKE
-          if (this.postNews[idx].status === 1 && oldStatus === -1) {
+          if (this.commentsPostNew[idx].status === 1 && oldStatus === -1) {
             this.commentsPostNew[idx].likes += 2;
             this.commentsPostNew[idx].dislikes--;
           }
@@ -386,6 +392,16 @@ export default {
       this.message = `Voullez-vous supprimé post: ${this.postNew.title}`; // formation du message
 
       return (this.showConfirmation = !this.showConfirmation);
+    },
+
+    // affiché pop-under de confirmation
+    changeBooleanConfirmationComment(idx) {
+      this.idxDeleteComment = idx; // obtenir index de post
+      console.log(this.idxDeleteComment);
+
+      this.message = `Voullez-vous supprimé commentaire: ${this.commentsPostNew[idx].commentaire}`; // formation du message
+
+      return (this.showConfirmationComment = !this.showConfirmationComment);
     }
   },
   //-----------
@@ -434,7 +450,8 @@ export default {
 
 <template>
   <div id="main-layout">
-    <HeadComponent></HeadComponent>
+    <HeadComponent :memberProfil="memberProfil"></HeadComponent>
+
     <main>
       <SpinnerComponent :ready="ready"></SpinnerComponent>
       <div id="content" v-if="ready">
@@ -479,7 +496,18 @@ export default {
           :idxDelete="idxDelete"
         ></PopUnderConfirmationPost>
 
-        <div class="container-comments" v-if="!goModify && !goModifyComment">
+        <PopUnderConfirmationComment
+          :deleteComment="deleteComment"
+          :changeBooleanConfirmationComment="changeBooleanConfirmationComment"
+          :showConfirmationComment="showConfirmationComment"
+          :message="message"
+          :idxDeleteComment="idxDeleteComment"
+        ></PopUnderConfirmationComment>
+
+        <div
+          class="container-comments"
+          v-if="!goModify && !goModifyComment && deleteCommentBtn"
+        >
           <h2>Commentaires:</h2>
           <CommentNews
             v-for="(comment, idx) in commentsPostNew"
@@ -497,6 +525,7 @@ export default {
             :pseudo="comment.pseudo"
             :idx="idx"
             :deleteComment="deleteComment"
+            :changeBooleanConfirmationComment="changeBooleanConfirmationComment"
             :modifyComment="modifyComment"
             :voteComment="voteComment"
           ></CommentNews>

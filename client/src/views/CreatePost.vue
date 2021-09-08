@@ -19,7 +19,10 @@ export default {
 
   //-----------
   data() {
-    return {};
+    return {
+      memberId: undefined, // id de utilisateur
+      memberProfil: undefined // Profil d'un utilisateur
+    };
   },
   //-----------
 
@@ -33,6 +36,7 @@ export default {
           this.$router.push("/");
         }
         this.memberId = res.user;
+        this.memberProfil = res.profil;
       })
       .then(err => {
         console.log(err);
@@ -43,7 +47,7 @@ export default {
 
 <template>
   <div id="main-layout">
-    <HeadComponent></HeadComponent>
+    <HeadComponent :memberProfil="memberProfil"></HeadComponent>
 
     <main>
       <div id="content">

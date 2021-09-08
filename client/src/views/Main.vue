@@ -86,7 +86,7 @@ export default {
 
     // methode pour DELETE d'un post et reformé this.postNews
     deletePost(i) {
-      this.showConfirmation = false; 
+      this.showConfirmation = false;
       this.ready = false;
 
       sendRequest(
@@ -207,7 +207,7 @@ export default {
 
 <template>
   <div id="main-layout">
-    <HeadComponent></HeadComponent>
+    <HeadComponent :memberProfil="memberProfil"></HeadComponent>
     <main>
       <!-- spinner lorsqur on demande afficher encore des post -->
       <SpinnerComponent :ready="ready"></SpinnerComponent>

@@ -6,7 +6,7 @@ const dotenv = require("dotenv").config();
 
 const path = require("path");
 
-const conn = mysql.createConnection({
+const conn = mysql.createConnection({ 
   password: process.env.passDB,
   user: process.env.userDB,
   database: process.env.database,
