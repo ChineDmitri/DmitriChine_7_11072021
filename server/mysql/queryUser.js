@@ -53,7 +53,7 @@ exports.queryGetOneUser = (id) => {
     return new Promise((resolve, reject) => {
 
         conn.query(
-            `SELECT id, pseudo, date_inscription, profil_img_url FROM user WHERE id=${conn.escape(id)}`,
+            `SELECT id, pseudo, date_inscription, profil_img_url, active, profil FROM user WHERE id=${conn.escape(id)}`,
             (err, result) => {
                 if (err) {
                     reject(err)
@@ -99,6 +99,28 @@ exports.queryDeleteUser = (userId) => {
             UPDATE User
             SET email=NULL, pseudo=NULL
             WHERE id=${conn.escape(userId)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
+// UPDATE mot de pass
+exports.queryUpdatePassword = (password, userId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `UPDATE User 
+            SET password=${conn.escape(password)}
+            WHERE id=${conn.escape(userId)};
+            `,
             (err, result) => {
                 if (err) {
                     reject(err)

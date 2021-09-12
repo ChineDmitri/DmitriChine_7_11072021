@@ -42,7 +42,7 @@ exports.queryAllCommentsForPost = (body, postId) => {
         conn.query(
             `SELECT pc.*, u.pseudo, acl.status FROM Post_commentaire pc
             LEFT JOIN User u ON pc.user_id=u.id 
-            LEFT JOIN account_commentaires_liked acl ON pc.id=acl.commentaire_id AND acl.user_id=${conn.escape(body.postId)}
+            LEFT JOIN account_commentaires_liked acl ON pc.id=acl.commentaire_id AND acl.user_id=${conn.escape(body.userId)}
             WHERE post_id=${conn.escape(postId)}
             ORDER BY date_publication DESC 
             LIMIT ${conn.escape(n)} OFFSET ${conn.escape(start)};`,
@@ -63,10 +63,10 @@ exports.queryDeleteCommentForPost = (userId, commentId, postId) => {
     return new Promise((resolve, reject) => {
 
         conn.query(
-            `DELETE FROM Account_commentaires WHERE commentaire_id=${conn.escape(commentId)} AND user_id=${conn.escape(userId)};
+            `DELETE FROM Account_commentaires WHERE commentaire_id=${conn.escape(commentId)};
             DELETE FROM Account_commentaires_liked WHERE commentaire_id=${conn.escape(commentId)};
                   
-            DELETE FROM Post_commentaire WHERE id=${conn.escape(commentId)} AND user_id=${conn.escape(userId)};
+            DELETE FROM Post_commentaire WHERE id=${conn.escape(commentId)};
             
             UPDATE Post
             SET comments = comments - 1
@@ -94,7 +94,7 @@ exports.queryModifyCommentForPost = (body, commentId) => {
             commentaire=${conn.escape(body.text)},
             date_modification=NOW()
 
-            WHERE id=${conn.escape(commentId)} AND user_id=${conn.escape(body.userId)}`,
+            WHERE id=${conn.escape(commentId)}`,
             (err, result) => {
                 if (err) {
                     reject(err)
