@@ -201,7 +201,7 @@ exports.modifyInfoUser = (req, res, next) => {
 };
 
 
-// desactivation user 
+// delete user 
 exports.deleteUser = (req, res, next) => {
 
     qUser.queryGetOneUser(req.body.userId)
