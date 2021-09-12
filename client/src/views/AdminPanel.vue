@@ -7,9 +7,9 @@ export default {
   data() {
     return {
       users: [
-        { id: 1, name: "Dima" },
-        { id: 2, name: "Dima" },
-        { id: 3, name: "Dima" }
+        { id: 1, name: "Dima1" },
+        { id: 2, name: "Dima2" },
+        { id: 3, name: "Dima3" }
       ],
       item: NaN
     };
@@ -24,7 +24,7 @@ export default {
     },
     dragend(event) {
       console.log("DRAG end", event.target);
-      console.log("DRAG end2", event.target);
+      console.log("moder user", parseInt(event.target.id));
 
       this.item = event.target;
     },
@@ -106,7 +106,7 @@ export default {
         class="user"
         draggable="true"
       >
-        <span class="data">id: {{ user.id }} | pseudo: tt </span>
+        <span class="data">id: {{ user.id }} | pseudo: {{ user.name }} </span>
         <span>
           <button class="desabled">
             <i class="fas fa-circle"></i>
@@ -167,7 +167,7 @@ h2 {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  width: 90%;
+  width: 95%;
   margin: 20px auto;
   flex-wrap: wrap;
   .admins,

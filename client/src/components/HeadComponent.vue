@@ -92,7 +92,7 @@ header {
       margin: auto 0;
       color: #ffffff;
       &:hover {
-        color: #1d4380;
+        color: #37e69d;
       }
     }
     #logout {
