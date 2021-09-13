@@ -96,6 +96,7 @@ header {
       }
     }
     #logout {
+      cursor: pointer;
       font-size: 3vh;
       color: red;
       background-color: transparent;
