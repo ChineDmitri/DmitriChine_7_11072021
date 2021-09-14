@@ -296,6 +296,7 @@ main {
     background-color: white;
   }
   .post {
+    position: unset;
     display: flex;
     flex-direction: column;
     margin: 15px auto 0 auto;

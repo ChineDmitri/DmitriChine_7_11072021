@@ -4,7 +4,7 @@ export default {
 
   data() {
     return {
-      moder: "m"
+      showPhotoGalery: false
     };
   },
 
@@ -13,7 +13,8 @@ export default {
       type: Number,
       required: true
     },
-    memberId: { // qui est en session
+    memberId: {
+      // qui est en session
       type: [Number, undefined],
       required: false
     },
@@ -87,6 +88,15 @@ export default {
     }
   },
 
+  methods: {
+    photoGalery(status) {
+      return !status;
+    }
+    // test() {
+    //   console.log("test")
+    // }
+  },
+
   computed: {
     dateFormated: function() {
       let date = new Date(this.datePublication);
@@ -124,6 +134,16 @@ export default {
 
 <template>
   <div class="post">
+    <!-- PHOTO GALERY start -->
+    <div
+      id="grandImg"
+      v-if="showPhotoGalery"
+      v-on:click="showPhotoGalery = photoGalery(showPhotoGalery)"
+    >
+      <img :src="urlImg" :alt="title" />
+    </div>
+    <!-- PHOTO GALERY fin -->
+
     <!-- START BAR avec title et button manip -->
     <div class="post-title">
       <router-link :to="{ name: 'OnePostNews', params: { id: postId } }">
@@ -154,7 +174,11 @@ export default {
         {{ discription }}
       </div>
 
-      <div v-if="urlImg && urlImg !== 'null'" class="post-body-photo">
+      <div
+        v-on:click="showPhotoGalery = photoGalery(showPhotoGalery)"
+        v-if="urlImg && urlImg !== 'null'"
+        class="post-body-photo"
+      >
         <!-- <a href="#" class="post-body-photo-one"> -->
         <img :src="urlImg" :alt="title" />
         <!-- </a> -->
@@ -216,3 +240,47 @@ export default {
     <!-- FIN BAR -->
   </div>
 </template>
+
+<style lang="scss">
+#grandImg {
+  animation-name: slowPopUnder;
+  animation-duration: 250ms;
+  animation-timing-function: ease-out;
+  @keyframes slowPopUnder {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  z-index: 99999;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  widows: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  // opacity: 0.5;
+  img {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 4px #6b7689;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+  #close {
+    position: absolute;
+    top: 25px;
+    bottom: 0;
+    right: 20px;
+  }
+}
+</style>
