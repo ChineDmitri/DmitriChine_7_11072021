@@ -51,23 +51,25 @@ exports.deleteUser = (req, res, next) => {
 
     qUser.queryGetOneUser(parseInt(req.params.id, 10))
         .then((user) => {
-            if (user[0].profil_img_url !== "http://localhost:3000/images/custom_photo_user.png" ||
+            if (user[0].profil_img_url != "http://localhost:3000/images/custom_photo_user.png" &&
                 user[0].profil_img_url !== null) {
                 modules.deleteImg(user[0].profil_img_url)
                     .then(() => { })
                     .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
             }
+
+            qUser.queryDeleteUser(parseInt(req.params.id, 10))
+                .then(() => {
+                    res.status(200).json({
+                        message: "User deleted!",
+                        deleted: true
+                    })
+                })
+                .catch((err) => res.status(400).json(err));
         })
         .catch((error) => res.status(500).json({ error }));
 
-    qUser.queryDeleteUser(parseInt(req.params.id, 10))
-        .then(() => {
-            res.status(200).json({
-                message: "User deleted!",
-                deleted: true
-            })
-        })
-        .catch((err) => res.status(400).json(err));
+
 
 };
 

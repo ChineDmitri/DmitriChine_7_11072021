@@ -171,21 +171,17 @@ exports.modifyInfoUser = (req, res, next) => {
             userId: req.body.userId,
             imageUrl: req.body.imageUrl
         }; // false 0
-        
+
     // si on modifier une image pour un user, il ne faut pas oublier supprime l'ancienne   
     qUser.queryGetOneUser(req.body.userId)
         .then((user) => {
-            try {
-                if (req.file) {
-                    // console.log(user[0])
-                    modules.deleteImg(user[0].profil_img_url)
-                        .then(() => { })
-                        .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
-                }
-            } catch {
-                throw "File n'esxiste pas"
+            if (user[0].profil_img_url !== "http://localhost:3000/images/custom_photo_user.png" &&
+                user[0].profil_img_url !== null) {
+                // console.log(user[0])
+                modules.deleteImg(user[0].profil_img_url)
+                    .then(() => { })
+                    .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
             }
-
 
             // mise à jour des donnée d'un utilisateur
             qUser.updateInfoUser(userObject)
@@ -194,9 +190,10 @@ exports.modifyInfoUser = (req, res, next) => {
                     status: true
                 }))
                 .catch((error) => res.status(404).json({ error }));
-
         })
-        .catch((error) => res.status(500).json({ error }));
+
+        .catch((error) => console.log({ error }));
+
 
 };
 
@@ -206,28 +203,30 @@ exports.deleteUser = (req, res, next) => {
 
     qUser.queryGetOneUser(req.body.userId)
         .then((user) => {
-            if (user[0].profil_img_url !== "http://localhost:3000/images/custom_photo_user.png" ||
+            if (user[0].profil_img_url !== "http://localhost:3000/images/custom_photo_user.png" &&
                 user[0].profil_img_url !== null) {
+                // console.log(user[0])
                 modules.deleteImg(user[0].profil_img_url)
                     .then(() => { })
                     .catch(err => console.log(err)) // si jamais fichier n'existé pas envoyer error (par ex. 4058)
             }
+
+            qUser.queryDeleteUser(req.body.userId)
+                .then(() => {
+
+                    res.clearCookie("access_token"); // supprimé cookie avec tooken
+
+                    res.clearCookie("data"); // supprimé cookie avec des donnés: userId et profil(admin, user...)
+
+                    res.status(200).json({
+                        message: "User deleted!",
+                        deleted: true
+                    })
+                })
+                .catch((err) => res.status(400).json(err));
+
         })
-        .catch((error) => res.status(500).json({ error }));
-
-    qUser.queryDeleteUser(req.body.userId)
-        .then(() => {
-
-            res.clearCookie("access_token"); // supprimé cookie avec tooken
-
-            res.clearCookie("data"); // supprimé cookie avec des donnés: userId et profil(admin, user...)
-
-            res.status(200).json({
-                message: "User deleted!",
-                deleted: true
-            })
-        })
-        .catch((err) => res.status(400).json(err));
+        .catch((error) => console.log(error));
 
 };
 

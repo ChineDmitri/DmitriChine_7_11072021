@@ -58,8 +58,6 @@ export default {
       event.target.classList.add("hovered");
     },
     dragdrop(event) {
-      this.loading = true;
-
       setTimeout(() => {
         event.target.classList.remove("hovered");
 
@@ -70,6 +68,8 @@ export default {
           event.target.classList.value == "users"
         ) {
           event.target.append(this.item);
+
+          this.loading = true;
 
           // obtenir class ou on drag
           let stringClasses = event.target.classList.value;
@@ -168,6 +168,7 @@ export default {
         .catch(err => console.log(err));
     },
 
+    // desactivé un admin, moderator, user (banned :D )
     activationDesactivation(categorie, idx) {
       this.loading = true;
 
@@ -190,6 +191,7 @@ export default {
         });
     },
 
+    // changement de profil (function) admin, moderator, user
     changeProfil(categorie, idx, newProfil) {
       this.loading = true;
 
@@ -220,8 +222,25 @@ export default {
           this.loading = false;
         })
         .catch(err => {
-          console.log(err)
+          console.log(err);
           this.loading = false;
+        });
+    },
+
+    //supprimé un utilisateur 
+    deleteOneUser(categorie, idx, id) {
+      this.loading = true;
+
+      sendRequest(`http://localhost:3000/api/admin/deleteUser/${id}`, "DELETE")
+        .then(() => {
+          this.loading = false;
+
+          // supprime element idx dans le massive
+          categorie.splice(idx, 1);
+        })
+        .catch(err => {
+          this.loading = false;
+          console.log(err)
         });
     }
   },
@@ -272,7 +291,7 @@ export default {
           <!-- <button v-if="admin.profil != 'a'">A</button> -->
           <button v-on:click="changeProfil(admins, idx, 'm')">M</button>
           <button v-on:click="changeProfil(admins, idx, 'u')">U</button>
-          <button class="delete">
+          <button v-on:click="deleteOneUser(admins, idx, admins[idx].id)" class="delete">
             <i class="fas fa-trash-alt"></i>
           </button>
         </span>
@@ -314,7 +333,7 @@ export default {
           <button v-on:click="changeProfil(moderators, idx, 'a')">A</button>
           <!-- <button v-if="moderator.profil != 'm'">M</button> -->
           <button v-on:click="changeProfil(moderators, idx, 'u')">U</button>
-          <button class="delete">
+          <button v-on:click="deleteOneUser(moderators, idx, moderators[idx].id)" class="delete">
             <i class="fas fa-trash-alt"></i>
           </button>
         </span>
@@ -356,7 +375,7 @@ export default {
           <button v-on:click="changeProfil(users, idx, 'a')">A</button>
           <button v-on:click="changeProfil(users, idx, 'm')">M</button>
           <!-- <button v-if="user.profil != 'u'">U</button> -->
-          <button class="delete">
+          <button v-on:click="deleteOneUser(users, idx, users[idx].id)"  class="delete">
             <i class="fas fa-trash-alt"></i>
           </button>
         </span>
@@ -444,6 +463,7 @@ h2 {
         width: 35%;
         margin: auto 0;
         button {
+          cursor: pointer;
           font-weight: 700;
           background: transparent;
           border: none;
