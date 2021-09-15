@@ -230,15 +230,15 @@ exports.updateStatus = (body, status) => {
 // FIN pour LIKE et DISLIKE
 
 
-exports.queryGetAllPostForUser = (userId) => {
+exports.queryGetAllPostForUser = (accountId, memberId) => {
   return new Promise((resolve, reject) => {
 
     conn.query(
       `SELECT p.*, pp.url_img, u.pseudo, apl.status FROM Post p
       LEFT JOIN User u ON p.user_id=u.id 
-      LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(userId)}
+      LEFT JOIN account_posts_liked apl ON p.id=apl.post_id AND apl.user_id=${conn.escape(memberId)}
       LEFT JOIN post_photo pp ON p.id=pp.post_id
-      WHERE p.user_id=${conn.escape(userId)}
+      WHERE p.user_id=${conn.escape(accountId)}
       ORDER BY date_publication DESC;`,
       (err, results) => {
         if (err) {
