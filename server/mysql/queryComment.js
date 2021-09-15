@@ -36,6 +36,7 @@ exports.queryCreateCommentForPost = (body, postId) => {
 // obtenir deux dernier recent commentaire
 exports.queryAllCommentsForPost = (body, postId) => {
     return new Promise((resolve, reject) => {
+
         let n = 2; // How much
         let start = n * body.postCounter;
 
@@ -54,6 +55,7 @@ exports.queryAllCommentsForPost = (body, postId) => {
                 }
             }
         );
+
     });
 };
 
@@ -189,4 +191,27 @@ exports.updateStatus = (body, status) => {
 
     });
 };
-  // FIN pour LIKE et DISLIKE
+// FIN pour LIKE et DISLIKE
+
+
+exports.queryAllCommentsForUser = (userId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `SELECT pc.*, u.pseudo, acl.status FROM account_commentaires ac
+            LEFT JOIN post_commentaire pc ON ac.commentaire_id=pc.id
+            LEFT JOIN account_commentaires_liked acl ON pc.id=acl.commentaire_id AND acl.user_id=${conn.escape(userId)}
+            LEFT JOIN User u ON pc.user_id=u.id 
+            WHERE ac.user_id=${conn.escape(userId)}
+            ORDER BY date_publication DESC;`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};

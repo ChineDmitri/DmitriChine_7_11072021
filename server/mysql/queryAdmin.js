@@ -6,7 +6,9 @@ exports.queryGetAllUsers = (userId) => {
 
         conn.query(
             `SELECT * FROM user 
-            WHERE NOT id=${conn.escape(userId)}`,
+            WHERE 
+            NOT id=${conn.escape(userId)} AND
+            email IS NOT NULL`,
             (err, result) => {
                 if (err) {
                     reject(err)
