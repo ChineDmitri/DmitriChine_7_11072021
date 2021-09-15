@@ -172,7 +172,7 @@ export default {
     // verification user et distribution ID
     sendRequest(`http://localhost:3000/api/user/info`, "GET")
       .then(res => {
-        if (res.error === 0) {
+        if (res.error === 0 || res.length === 0) {
           // unauthorized direction page login
           this.$router.push("/");
         }
@@ -190,11 +190,15 @@ export default {
       "POST"
     )
       .then(res => {
+        if (res == null) {
+          this.$router.push("/main")
+        }
         this.postNews = res;
         console.log(this.postNews);
       })
       .catch(err => {
         console.log(err);
+        
       });
   }
 };
