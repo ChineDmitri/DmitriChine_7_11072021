@@ -63,7 +63,7 @@ exports.modifyPost = (req, res, next) => {
         userId: req.body.userId,
         title: req.body.title,
         discription: req.body.discription,
-        imageUrl:  `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
     } : {
         userId: req.body.userId,
         title: req.body.title,
@@ -228,5 +228,18 @@ exports.votePost = (req, res, next) => {
             }
         })
         .catch((err) => res.status(404).json(err));
+
+};
+
+
+exports.getAllPostForUser = (req, res, next) => {
+
+    qPost.queryGetAllPostForUser(parseInt(req.params.id, 10))
+        .then((object) => {
+            res.status(200).json(object)
+        })
+        .catch((err) => {
+            res.status(404).json(err)
+        })
 
 };

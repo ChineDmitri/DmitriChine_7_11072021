@@ -11,5 +11,7 @@ router.post("/all/post/:id_post", auth, commentCtrl.getAllCommentsForPost);
 router.delete("/:id_comment/post/:id_post", auth, commentCtrl.deleteCommentForPost);
 router.put("/:id_comment/post/:id_post", auth, commentCtrl.modifyCommentForPost);
 router.patch("/:id/vote", auth, commentCtrl.voteComment);
+router.get("/user/:id", auth, commentCtrl.queryAllCommentsForUser);
+
 
 module.exports = router;

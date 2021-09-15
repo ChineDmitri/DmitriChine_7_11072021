@@ -14,5 +14,6 @@ router.post("/create", auth, multer, auth, postCtrl.createPost);
 router.put("/:id", auth, multer, auth, postCtrl.modifyPost);
 router.delete("/:id", auth, postCtrl.deletePost);
 router.patch("/:id/vote", auth, postCtrl.votePost);
+router.get("/user/:id", auth, postCtrl.getAllPostForUser);
 
 module.exports = router;

@@ -73,7 +73,6 @@ exports.voteComment = (req, res, next) => {
         status: req.body.status,
     };
 
-
     qComment.queryRecon(body)
         // si était jamais liké ou disliké crée nouveau INSERT
         .then((result) => {
@@ -134,6 +133,18 @@ exports.voteComment = (req, res, next) => {
                     };
                 };
             }
+        })
+        .catch((err) => res.status(404).json(err));
+
+};
+
+
+// obtenir tout les commentaires pour un utilisateur
+exports.queryAllCommentsForUser = (req, res, next) => {
+
+    qComment.queryAllCommentsForUser(parseInt(req.params.id, 10))
+        .then((object) => {
+            res.status(200).json(object)
         })
         .catch((err) => res.status(404).json(err));
 
