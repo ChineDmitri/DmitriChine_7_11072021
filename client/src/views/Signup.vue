@@ -13,6 +13,7 @@ export default {
     return {
       regexEmail: /^([A-Z|a-z|0-9](\.|_){0,1})+[A-Z|a-z|0-9]@([A-Z|a-z|0-9])+((\.){0,1}[A-Z|a-z|0-9]){3}\.[a-z]{2,3}$/,
       regexPseudo: /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/,
+      regexPassword: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
       vEmail: false,
       vPseudo: false,
       vPassword: false,
@@ -21,7 +22,7 @@ export default {
       firstPassValue: "",
       secondPassValue: "",
       placeholderDoublePass: "Repetez mot de passe",
-      placeholderRules: "Minimum 8 caractères",
+      placeholderRules: "1 minuscule, 1 majuscule et 1 chiffre",
       message: undefined,
       ready: true
     };
@@ -48,9 +49,11 @@ export default {
 
     validFirstPassword() {
       this.message = undefined;
+      console.log("sec", this.secondPassValue);
       if (
         this.firstPassValue.length > 7 &&
-        (this.firstPassValue == this.secondPassValue || this.secondPassValue == "")
+        (this.firstPassValue == this.secondPassValue || this.secondPassValue === "") && 
+        this.validInput(this.regexPassword, this.firstPassValue, event)
       ) {
         event.target.classList.remove("invalid");
         event.target.classList.add("valid");
@@ -66,12 +69,15 @@ export default {
       this.message = undefined;
       if (
         this.secondPassValue.length > 7 &&
-        this.secondPassValue === this.firstPassValue
+        this.secondPassValue === this.firstPassValue &&
+        this.validInput(this.regexPassword, this.secondPassValue, event)
       ) {
+        console.log(this.vPassword);
         event.target.classList.remove("invalid");
         event.target.classList.add("valid");
         return true;
       } else {
+        console.log(this.vPassword);
         event.target.classList.remove("valid");
         event.target.classList.add("invalid");
         return false;
@@ -184,12 +190,12 @@ export default {
         </label>
 
         <label for="password">
-          Mot de pass:
+          Mot de pass <u>(min. 8 caractères)</u>:
           <input
             type="password"
             id="password"
             class=""
-            placeholder="Minimum 8 caractères"
+            placeholder="1 minuscule, 1 majuscule et 1 chiffre"
             v-model="firstPassValue"
             @input="validFirstPassword"
           />
@@ -201,7 +207,7 @@ export default {
             id="passwordDouble"
             class=""
             :placeholder="
-              firstPassValue.length > 7
+              firstPassValue.length > 7 && vPassword
                 ? placeholderDoublePass
                 : placeholderRules
             "
@@ -212,7 +218,7 @@ export default {
 
         <!-- es-que mot de pass sont identique  -->
         <p
-          v-if="firstPassValue != secondPassValue"
+          v-if="firstPassValue != secondPassValue && secondPassValue.length > 8"
         >
           Mot de passe ne sont pas identique
         </p>
