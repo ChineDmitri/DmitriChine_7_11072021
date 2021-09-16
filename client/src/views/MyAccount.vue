@@ -6,6 +6,9 @@ import SpinnerComponent from "../components/SpinnerComponent.vue";
 import PostNews from "../components/PostNews";
 import FormPost from "../components/FormPost";
 import PopUnderConfirmationPost from "../components/PopUnderConfirmationPost";
+import PopUnderConfirmationComment from "../components/PopUnderConfirmationComment";
+import CommentNews from "../components/CommentNews";
+import EmojiBar from "../components/EmojiBar";
 
 // sendRequest(url, method, body (null for GET!))
 import { sendRequest } from "../helpers/sendRequest.js";
@@ -22,7 +25,10 @@ export default {
     SpinnerComponent,
     PostNews,
     FormPost,
-    PopUnderConfirmationPost
+    PopUnderConfirmationPost,
+    PopUnderConfirmationComment,
+    CommentNews,
+    EmojiBar
   },
   //-----------
 
@@ -43,7 +49,16 @@ export default {
       deletProcess: false,
       message: "",
       idxDelete: NaN,
-      comments: []
+      commentsPostNew: [],
+      idxDeleteComment: NaN,
+      showConfirmationComment: false,
+      goModifyComment: false,
+      goComment: false,
+      textCommentModify: "",
+      oldTextComment: "",
+      sendBtn: true,
+      catNum: 0,
+      emoji: false
     };
   },
   //-----------
@@ -166,6 +181,186 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+
+    deleteComment(i) {
+      // caché les commentaire lorsque on travail
+      this.deletProcess = true;
+
+      this.showConfirmationComment = false; // detruir popUnder
+
+      sendRequest(
+        `http://localhost:3000/api/comment/${this.commentsPostNew[i].id}/post/${this.commentsPostNew[i].post_id}`,
+        "DELETE"
+      )
+        .then(() => {
+          // this.commentsPostNew = []; //nettoyer avant remplissage
+
+          this.commentsPostNew.splice(i, 1);
+
+          this.deletProcess = false;
+        })
+        .catch(err => {
+          this.deletProcess = false;
+          console.log(err);
+        });
+    },
+
+    changeBooleanConfirmationComment(idx) {
+      this.idxDeleteComment = idx; // obtenir index de post
+      console.log(this.idxDeleteComment);
+
+      this.message = `Voullez-vous supprimé commentaire: ${this.commentsPostNew[idx].commentaire}`; // formation du message
+
+      return (this.showConfirmationComment = !this.showConfirmationComment);
+    },
+
+    modifyComment(i) {
+      // console.log(this.commentsPostNew[i]);
+
+      // passage vers mode de modification d'un commentaire
+      this.goModifyComment = true;
+
+      // si jamais forme pour rajuté commentaire deja ouvert, il faut fermer
+      this.goComment = false;
+
+      this.textCommentModify = this.commentsPostNew[i].commentaire;
+
+      this.oldTextComment = this.textCommentModify;
+
+      return (this.commentIdModify = this.commentsPostNew[i].id);
+    },
+
+    addModificationComment() {
+      this.sendBtn = false;
+
+      const body = {
+        text: this.textCommentModify
+      };
+
+      let post_id = this.commentsPostNew.find(
+        el => el.commentaire == this.oldTextComment
+      ).post_id;
+
+      console.log("cest I", post_id);
+
+      sendRequest(
+        `http://localhost:3000/api/comment/${this.commentIdModify}/post/${post_id}`,
+        "PUT",
+        body
+      )
+        .then(res => {
+          if (res.modified) {
+            //nettoyer avant remplissage
+            // this.commentsPostNew = [];
+
+            // formé en nouveau this.commentsPostNew
+            // for (let k = 0; k <= this.counter; k++) {
+            //   this.getAllComments(k);
+            // }
+
+            this.commentsPostNew.find(
+              el => el.commentaire == this.oldTextComment
+            ).commentaire = this.textCommentModify;
+
+            // annulé mode de modification
+            this.goModifyComment = false;
+
+            // // si jamais forme pour rajuté commentaire deja ouvert, il faut fermer
+            this.goComment = false;
+
+            this.sendBtn = true;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    voteComment(idx, status) {
+      const body = {
+        status: status
+      };
+
+      let oldStatus = this.commentsPostNew[idx].status; // Status precedant avant de changement
+
+      sendRequest(
+        `http://localhost:3000/api/comment/${this.commentsPostNew[idx].id}/vote/`,
+        "PATCH",
+        body
+      )
+        .then(res => {
+          this.commentsPostNew[idx].status = res.stat;
+
+          // si response 1 (LIKE) et precedant n'est pas comme response 1 (LIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas 1 (LIKE)
+          if (
+            (res.stat === 1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== 1)
+          ) {
+            this.commentsPostNew[idx].likes++; // increment likes
+          }
+
+          // si response -1 (DISLIKE) et precedant n'est pas comme reponse -1 (DISLIKE)
+          // OU
+          // si reponse 0 (NEUTRE) et precedent n'est pas -1 (DISLIKE)
+          if (
+            (res.stat === -1 && oldStatus !== res.stat) ||
+            (res.stat === 0 && oldStatus !== -1)
+          ) {
+            this.commentsPostNew[idx].dislikes--; // decriment dislike
+          }
+
+          // de LIKE vers DISLIKE
+          if (this.commentsPostNew[idx].status === -1 && oldStatus === 1) {
+            this.commentsPostNew[idx].likes++;
+            this.commentsPostNew[idx].dislikes -= 2;
+          }
+
+          // de DISLIKE vers LIKE
+          if (this.commentsPostNew[idx].status === 1 && oldStatus === -1) {
+            this.commentsPostNew[idx].likes += 2;
+            this.commentsPostNew[idx].dislikes--;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    changeCatNum(num) {
+      console.log(num);
+
+      this.goModifyComment = false;
+      this.goModify = false;
+
+      return (this.catNum = num);
+    },
+
+    addEmodji(event) {
+      // Index d'un symbol apres dernier symbol selectioné
+      let cursorIndex = document.getElementById("inputTextField").selectionEnd;
+
+      if (this.goModifyComment) {
+        // Où on va inserer emoji
+        this.textCommentModify =
+          this.textCommentModify.substring(0, cursorIndex) +
+          event.target.value +
+          this.textCommentModify.substring(cursorIndex);
+
+        // caché tableau des emoji
+        this.emoji = false;
+      } else {
+        // Où on va inserer emoji
+        this.textComment =
+          this.textComment.substring(0, cursorIndex) +
+          event.target.value +
+          this.textComment.substring(cursorIndex);
+
+        // caché tableau des emoji
+        this.emoji = false;
+      }
     }
   },
   //-----------
@@ -188,10 +383,21 @@ export default {
 
     this.getInfoUser();
 
+    // obtenir tout les poste pour un utilisateur
     sendRequest(`http://localhost:3000/api/post/user/`, "POST")
       .then(res => {
         this.postNews = res;
         console.log(this.postNews);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    // obtenir tout les commentaire pour un utilisateur
+    sendRequest(`http://localhost:3000/api/comment/user/`, "GET")
+      .then(res => {
+        this.commentsPostNew = res;
+        console.log(this.commentsPostNew);
       })
       .catch(err => {
         console.log(err);
@@ -206,7 +412,7 @@ export default {
     <HeadComponent :memberProfil="memberProfil"></HeadComponent>
 
     <main>
-      <div id="content">
+      <div class="content">
         <SpinnerComponent :ready="ready"></SpinnerComponent>
 
         <UserInfo
@@ -216,32 +422,36 @@ export default {
           :imgProfil="imgProfil"
           :monCompte="monCompte"
           :modificationCompte="modificationCompte"
+          :changeCatNum="changeCatNum"
           v-if="ready"
         ></UserInfo>
         <!-- main content -->
       </div>
 
-      <FormPost
-        v-if="goModify"
-        :modifyPost="modifyPost"
-        :goModify="goModify"
-        :mImageUrl="postNews[iPostNew].url_img"
-        :mTitle="postNews[iPostNew].title"
-        :mTextPost="postNews[iPostNew].discription"
-        :idPostNew="postNews[iPostNew].id"
-      ></FormPost>
+      <div class="content">
+        <FormPost
+          v-if="goModify"
+          :modifyPost="modifyPost"
+          :goModify="goModify"
+          :mImageUrl="postNews[iPostNew].url_img"
+          :mTitle="postNews[iPostNew].title"
+          :mTextPost="postNews[iPostNew].discription"
+          :idPostNew="postNews[iPostNew].id"
+        ></FormPost>
 
-      <PopUnderConfirmationPost
-        :deletePost="deletePost"
-        :changeBooleanConfirmation="changeBooleanConfirmation"
-        :showConfirmation="showConfirmation"
-        :message="message"
-        :idxDelete="idxDelete"
-      ></PopUnderConfirmationPost>
+        <PopUnderConfirmationPost
+          :deletePost="deletePost"
+          :changeBooleanConfirmation="changeBooleanConfirmation"
+          :showConfirmation="showConfirmation"
+          :message="message"
+          :idxDelete="idxDelete"
+        ></PopUnderConfirmationPost>
 
-      <SpinnerComponent :ready="!deletProcess"></SpinnerComponent>
+        <SpinnerComponent :ready="!deletProcess"></SpinnerComponent>
+      </div>
 
-      <div v-if="!goModify && !deletProcess">
+      <div class="content" v-if="!goModify && !deletProcess && catNum === 1">
+        <h2>Posts:</h2>
         <PostNews
           v-for="(postNew, idx) in postNews"
           :key="postNew.id"
@@ -266,6 +476,89 @@ export default {
           :votePost="votePost"
         ></PostNews>
       </div>
+
+      <div
+        class="content"
+        v-if="!goModifyComment && !deletProcess && catNum === 2"
+      >
+        <h2>Commentaires:</h2>
+        <CommentNews
+          v-for="(comment, idx) in commentsPostNew"
+          :key="comment.id"
+          :commentId="comment.id"
+          :memberId="memberId"
+          :memberProfil="memberProfil"
+          :commentaire="comment.commentaire"
+          :datePublication="comment.date_publication"
+          :dateModification="comment.date_modification"
+          :likes="comment.likes"
+          :dislikes="comment.dislikes"
+          :status="comment.status"
+          :userId="comment.user_id"
+          :pseudo="comment.pseudo"
+          :idx="idx"
+          :deleteComment="deleteComment"
+          :changeBooleanConfirmationComment="changeBooleanConfirmationComment"
+          :modifyComment="modifyComment"
+          :voteComment="voteComment"
+        ></CommentNews>
+
+        <div class="content">
+          <PopUnderConfirmationComment
+            :deleteComment="deleteComment"
+            :changeBooleanConfirmationComment="changeBooleanConfirmationComment"
+            :showConfirmationComment="showConfirmationComment"
+            :message="message"
+            :idxDeleteComment="idxDeleteComment"
+          ></PopUnderConfirmationComment>
+
+          <!-- START form pour modification d'un commentaire-->
+          <div v-if="goModifyComment" class="container-comments">
+            <div class="comments">
+              <label for="inputTextField">
+                Text de commentaire à modifier:
+                <textarea
+                  v-model="textCommentModify"
+                  rows="5"
+                  name="text"
+                  id="inputTextField"
+                >
+                </textarea>
+              </label>
+
+              <!-- START EMOJI -->
+              <span v-if="!emoji" class="emoji">
+                <input
+                  @click="emoji = true"
+                  type="button"
+                  class="emoji-btn"
+                  value="&#128578;"
+                />
+              </span>
+
+              <EmojiBar v-if="emoji" :addEmodji="addEmodji"></EmojiBar>
+              <!-- END EMOJIO -->
+
+              <button
+                v-if="sendBtn"
+                @click="addModificationComment"
+                class="btn-classic"
+              >
+                Envoyer!
+              </button>
+
+              <button
+                v-if="sendBtn"
+                @click="goModifyComment = false"
+                class="btn-classic btn-orange"
+              >
+                Retourner!
+              </button>
+              <SpinnerComponent :ready="sendBtn"></SpinnerComponent>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <FooterComponent></FooterComponent>
@@ -276,10 +569,13 @@ export default {
 <style lang="scss">
 // main - begin
 main {
+  h2 {
+    margin: 15px 5% 0;
+  }
   min-height: 70vh;
-  #content {
+  .content {
     @media screen and (max-width: 426px) {
-      width: 100%;
+      width: 90%;
     }
     @media screen and (min-width: 1441px) {
       width: 900px;
@@ -294,7 +590,7 @@ main {
     display: flex;
     margin: 15px auto 0 auto;
     padding: 10px 10px;
-    width: 100%;
+    width: 90%;
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
@@ -304,14 +600,11 @@ main {
       flex-direction: row;
       flex-wrap: wrap;
       width: 100%;
-      #inputFile {
-        color: transparent;
-      }
       &-photo {
         @media screen and (max-width: 568px) {
           margin: auto;
         }
-        border: 2px solid #6b7689;
+        border: 2px solid rgba(14, 33, 63, 0.5);
         border-radius: 50%;
         width: 200px;
         height: 200px;
@@ -325,23 +618,6 @@ main {
         }
       }
       &-info {
-        #newPseudo {
-          outline: none;
-        }
-        #btn-confirmation {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          flex-wrap: wrap;
-          .orange {
-            background-color: orange;
-          }
-        }
-        input {
-          font-size: 1rem;
-          margin: 5px auto;
-          width: 50%;
-        }
         @media screen and (max-width: 568px) {
           width: 100%;
         }
@@ -390,7 +666,6 @@ main {
     flex-direction: column;
     margin: 15px auto 0 auto;
     padding: 10px 10px;
-    width: 90%;
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
@@ -460,9 +735,100 @@ main {
       width: 100%;
       height: 30px;
       font-size: 1.2rem;
-      .counterLike {
-        // pour compteur
+      span {
+        margin: 0 10px;
       }
+    }
+  }
+
+  .comments {
+    label {
+      margin: 5px 0;
+      position: relative;
+    }
+    input,
+    textarea {
+      outline: none;
+      width: calc(100% - 12px);
+      text-align: left;
+      // position: center;
+      margin: auto;
+      border: 1px solid #292829;
+      border-radius: 3px 3px 3px 3px;
+      padding: 5px;
+      font-size: 1rem;
+    }
+    display: flex;
+    flex-direction: column;
+    margin: 15px auto 0 auto;
+    padding: 10px 10px;
+    width: 90%;
+    // height: 100%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 5px 2px #6b7689;
+    &-title {
+      display: flex;
+      flex-wrap: wrap;
+      font-weight: 600;
+      width: 100%;
+      a {
+        width: 75%;
+      }
+      span {
+        width: 25%;
+        text-align: end;
+      }
+      hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 100%;
+        background-color: black;
+        height: 1px;
+        margin: 4px;
+      }
+    }
+    &-body {
+      margin: 0 0 10px;
+      $nLine: 5;
+      &-text {
+        padding: 5px 0;
+        margin: 0 0 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-height: 16px; /* fallback */
+        -webkit-line-clamp: $nLine; /* number of lines to show */
+        -webkit-box-orient: vertical;
+      }
+      &-photo {
+        display: flex;
+        width: 100%;
+        max-height: 200px;
+        width: 100%;
+        max-height: 200px;
+        img {
+          width: 99%;
+          max-height: 200px;
+          object-fit: cover;
+        }
+      }
+    }
+    &-author {
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      a {
+        font-weight: 600;
+      }
+    }
+    &-status {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      width: 100%;
+      height: 30px;
+      font-size: 1.2rem;
       span {
         margin: 0 10px;
       }

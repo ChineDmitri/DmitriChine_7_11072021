@@ -295,3 +295,11 @@ export default {
     </div>
   </div>
 </template>
+
+<style lang="scss">
+  #btn-confirmation {
+    button {
+      margin: 15px 10px 0 0
+    }
+  }
+</style>
