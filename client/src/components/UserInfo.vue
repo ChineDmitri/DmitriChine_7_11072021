@@ -16,7 +16,8 @@ export default {
 
   props: {
     modeUpdateInfoUser: {
-      type: Function
+      type: Function,
+      required: false
     },
     pseudo: {
       type: String,
@@ -35,7 +36,12 @@ export default {
       required: true
     },
     modificationCompte: {
-      type: Boolean
+      type: Boolean,
+      required: false
+    },
+    changeCatNum: {
+      type: Function,
+      required: true
     }
   },
 
@@ -277,11 +283,11 @@ export default {
         </div>
 
         <div id="header-info-statistic">
-          <button v-if="!modificationCompte" class="btn-classic" value="0">
+          <button v-if="!modificationCompte" @click="changeCatNum(1)"  class="btn-classic" value="0">
             Les posts publiés
           </button>
 
-          <button v-if="!modificationCompte" class="btn-classic" value="0">
+          <button v-if="!modificationCompte" @click="changeCatNum(2)" class="btn-classic" value="0">
             Les commentaires publiés
           </button>
         </div>

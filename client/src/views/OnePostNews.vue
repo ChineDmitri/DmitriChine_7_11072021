@@ -201,7 +201,7 @@ export default {
       // passage vers mode de modification d'un commentaire
       this.goModifyComment = true;
 
-      // si jamais forme pour rajuté commentaire deja ouvert, il faut fermer
+      // si jamais form pour rajuté commentaire deja ouvert, il faut fermer
       this.goComment = false;
 
       this.textCommentModify = this.commentsPostNew[i].commentaire;
@@ -625,7 +625,7 @@ export default {
 
             <button
               v-if="sendBtn"
-              @click="addModificationComment()"
+              @click="addModificationComment(textCommentModify)"
               class="btn-classic"
             >
               Envoyer!
@@ -753,9 +753,6 @@ main {
           max-height: 200px;
           object-fit: cover;
         }
-        // &-one {
-
-        // }
       }
     }
     &-author {
