@@ -10,15 +10,11 @@ const { reject } = require("bcrypt/promises");
 // enregisté un utilisateur
 exports.signup = (req, res, next) => {
 
-    const hashEmail = crypto.createHmac('sha256', process.env.SHA256_KEY)
-        .update(req.body.email)
-        .digest('hex');
-
     bcrypt.hash(req.body.password, 10) // salt = 10 tours, en suite retourn un promise
         .then((hashPassword) => {
 
             const hashEmail = crypto.createHmac('sha256', process.env.SHA256_KEY)
-                .update(req.body.email)
+                .update(req.body.email.toLowerCase())
                 .digest('hex');
 
             const user = new Object({ //creation d'un instance user
@@ -44,7 +40,7 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
 
     const hashEmail = crypto.createHmac('sha256', process.env.SHA256_KEY)
-        .update(req.body.email)
+        .update(req.body.email.toLowerCase())
         .digest('hex');
 
     qUser.findUser(hashEmail)
@@ -192,7 +188,7 @@ exports.modifyInfoUser = (req, res, next) => {
                 .catch((error) => res.status(404).json({ error }));
         })
 
-        .catch((error) => console.log({ error }));
+        .catch((error) => res.status(500).json({ error }));
 
 
 };
@@ -226,7 +222,7 @@ exports.deleteUser = (req, res, next) => {
                 .catch((err) => res.status(400).json(err));
 
         })
-        .catch((error) => console.log(error));
+        .catch((error) => res.status(500).json({ error }));
 
 };
 
