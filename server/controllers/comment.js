@@ -142,7 +142,7 @@ exports.voteComment = (req, res, next) => {
 // obtenir tout les commentaires pour un utilisateur
 exports.queryAllCommentsForUser = (req, res, next) => {
 
-    qComment.queryAllCommentsForUser(parseInt(req.params.id, 10))
+    qComment.queryAllCommentsForUser(parseInt(req.params.id === undefined ? req.body.userId : req.params.id, 10))
         .then((object) => {
             res.status(200).json(object)
         })
