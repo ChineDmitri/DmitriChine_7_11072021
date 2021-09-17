@@ -55,7 +55,13 @@ export default {
       imageUrl: null,
       title: undefined,
       textPost: "",
-      ready: true
+      ready: true,
+      vTitle: false,
+      vTextPost: false,
+      message: undefined,
+      placeholderTitle: "Ex: Qu-est ce que c'est « Hello world »",
+      placeholderTextPost:
+        "Ex: « Hello world » (traduit littéralement en français par « Bonjour le monde ») sont les mots traditionnellement écrits par un programme informatique simple dont le but est de faire la démonstration rapide de son exécution sans erreur."
     };
   },
   //-----------
@@ -100,6 +106,12 @@ export default {
 
     // creation du post
     createPost() {
+      if (!this.vTextPost && !this.vTitle) {
+        console.log(this.vTextPost, this.vTitle);
+        this.message = "Veuillez remplire les champs correctement";
+        return;
+      }
+
       this.ready = false;
       // console.log(this.title, this.textPost, this.imageUrl);
 
@@ -129,6 +141,12 @@ export default {
 
     // modification du post
     modificationPost() {
+      if (!this.vTextPost && !this.vTitle) {
+        console.log(this.vTextPost, this.vTitle);
+        this.message = "Veuillez remplire les champs correctement";
+        return;
+      }
+
       this.ready = false;
 
       const postData = new FormData(); // creation nouvelle instance FormData
@@ -137,7 +155,7 @@ export default {
       postData.append("discription", this.textPost);
       postData.append("imageUrl", this.imageUrl);
 
-      console.log(this.imageUrl)
+      console.log(this.imageUrl);
 
       sendRequestFD(
         `http://localhost:3000/api/post/${this.idPostNew}`,
@@ -148,12 +166,13 @@ export default {
           this.ready = true;
           if (res.modified) {
             // this.$router.push(`/main/post/${this.idPostNew}`);
-            if (this.$route.params.id == this.idPostNew) { // si changement depuis post il faut faire reload() pour fair mise à jour
+            if (this.$route.params.id == this.idPostNew) {
+              // si changement depuis post il faut faire reload() pour fair mise à jour
               window.location.reload();
             } else {
               this.$router.push(`/main/post/${this.idPostNew}`);
               this.modifyPost();
-            } 
+            }
           } else {
             this.$router.push("/");
           }
@@ -163,6 +182,21 @@ export default {
           this.ready = true;
           console.log("error ", err);
         });
+    },
+
+    validInput(event) {
+      if (event.target.value.length !== 0) {
+        console.log("true", event.target);
+        event.target.classList.remove("invalid");
+        event.target.classList.add("valid");
+        this.message = undefined;
+        return true;
+      } else {
+        console.log("false", event.target);
+        event.target.classList.remove("valid");
+        event.target.classList.add("invalid");
+        return false;
+      }
     }
   },
   //-----------
@@ -172,6 +206,8 @@ export default {
     (this.imageUrl = this.mImageUrl),
       (this.title = this.mTitle),
       (this.textPost = this.mTextPost);
+    this.vTitle = this.title > 0 ? true : false;
+    this.vTextPost = this.textPost > 0 ? true : false;
   }
 };
 </script>
@@ -181,12 +217,25 @@ export default {
   <div class="post">
     <label for="title">
       Title de post:
-      <input v-model="title" type="text" id="title" />
+      <input
+        :placeholder="placeholderTitle"
+        v-model="title"
+        type="text"
+        id="title"
+        @input="vTitle = validInput($event)"
+      />
     </label>
 
     <label for="inputTextField">
       Text de post:
-      <textarea v-model="textPost" rows="10" name="text" id="inputTextField">
+      <textarea
+        :placeholder="placeholderTextPost"
+        v-model="textPost"
+        rows="10"
+        name="text"
+        id="inputTextField"
+        @input="vTextPost = validInput($event)"
+      >
       </textarea>
     </label>
 
@@ -215,6 +264,10 @@ export default {
       </div>
     </div>
 
+    <p v-if="message != undefined">
+      {{ message }}
+    </p>
+
     <button v-if="ready && !goModify" @click="createPost" class="btn-classic">
       Publié
     </button>
@@ -242,6 +295,11 @@ export default {
 
 <style lang="scss">
 $fontSize: 1rem;
+
+p {
+  text-align: center;
+  color: red;
+}
 
 .post {
   position: relative;

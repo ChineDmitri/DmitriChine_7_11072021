@@ -1,10 +1,14 @@
 <script>
+import HeadComponent from "../components/HeadComponent";
+
 import { sendRequest } from "../helpers/sendRequest.js";
 
 export default {
   name: "AdminPanel",
 
-  components: {},
+  components: {
+    HeadComponent
+  },
 
   data() {
     return {
@@ -141,6 +145,7 @@ export default {
 
     // GET ALL USERS for hook and methods
     getAllUsers() {
+      this.loading = true;
       this.admins = [];
       this.moderators = [];
       this.users = [];
@@ -150,6 +155,8 @@ export default {
           if (members.error === 0) {
             this.$router.push("/");
           } else {
+            this.loading = false;
+
             members.forEach(member => {
               switch (member.profil) {
                 case "u":
@@ -165,7 +172,10 @@ export default {
             });
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.loading = false;
+          console.log(err);
+        });
     },
 
     // desactivé un admin, moderator, user (banned :D )
@@ -227,7 +237,7 @@ export default {
         });
     },
 
-    //supprimé un utilisateur 
+    //supprimé un utilisateur
     deleteOneUser(categorie, idx, id) {
       this.loading = true;
 
@@ -240,7 +250,7 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          console.log(err)
+          console.log(err);
         });
     }
   },
@@ -253,132 +263,144 @@ export default {
 </script>
 
 <template>
-  <div id="panel">
-    <div id="loading" v-if="loading"></div>
+  <div id="main-layout">
+    <HeadComponent :memberProfil="memberProfil"></HeadComponent>
+    <div id="panel">
+      <div id="loading" v-if="loading"></div>
 
-    <!-- BLOCK ADMINISTRATOR -->
-    <div
-      class="admins"
-      v-on:dragover="dragover"
-      v-on:drop="dragdrop"
-      v-on:dragleave="dragleave"
-      v-on:dragenter="dragenter"
-    >
-      <h2>Administrateurs</h2>
+      <!-- BLOCK ADMINISTRATOR -->
       <div
-        v-for="(admin, idx) of admins"
-        v-bind:key="admin.id"
-        v-bind:id="admin.id"
-        v-bind:value="idx"
-        v-on:dragstart="dragstart"
-        v-on:dragend="dragend"
-        class="admin"
-        draggable="true"
+        class="admins"
+        v-on:dragover="dragover"
+        v-on:drop="dragdrop"
+        v-on:dragleave="dragleave"
+        v-on:dragenter="dragenter"
       >
-        <span class="data">
-          id: {{ admin.id }} | pseudo: {{ admin.pseudo }}
-        </span>
-        <span>
-          <button
-            v-on:click="activationDesactivation(admins, idx)"
-            v-bind:class="{
-              enabled: admin.active == true,
-              desabled: admin.active == false,
-            }"
-          >
-            <i class="fas fa-circle"></i>
-          </button>
-          <!-- <button v-if="admin.profil != 'a'">A</button> -->
-          <button v-on:click="changeProfil(admins, idx, 'm')">M</button>
-          <button v-on:click="changeProfil(admins, idx, 'u')">U</button>
-          <button v-on:click="deleteOneUser(admins, idx, admins[idx].id)" class="delete">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </span>
+        <h2>Administrateurs</h2>
+        <div
+          v-for="(admin, idx) of admins"
+          v-bind:key="admin.id"
+          v-bind:id="admin.id"
+          v-bind:value="idx"
+          v-on:dragstart="dragstart"
+          v-on:dragend="dragend"
+          class="admin"
+          draggable="true"
+        >
+          <span class="data">
+            id: {{ admin.id }} | pseudo: {{ admin.pseudo }}
+          </span>
+          <span>
+            <button
+              v-on:click="activationDesactivation(admins, idx)"
+              v-bind:class="{
+                enabled: admin.active == true,
+                desabled: admin.active == false,
+              }"
+            >
+              <i class="fas fa-circle"></i>
+            </button>
+            <!-- <button v-if="admin.profil != 'a'">A</button> -->
+            <button v-on:click="changeProfil(admins, idx, 'm')">M</button>
+            <button v-on:click="changeProfil(admins, idx, 'u')">U</button>
+            <button
+              v-on:click="deleteOneUser(admins, idx, admins[idx].id)"
+              class="delete"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </span>
+        </div>
       </div>
-    </div>
 
-    <!-- BLOCK MODERATORS -->
-    <div
-      class="moderators"
-      v-on:dragover="dragover"
-      v-on:drop="dragdrop"
-      v-on:dragleave="dragleave"
-      v-on:dragenter="dragenter"
-    >
-      <h2>Moderateurs</h2>
+      <!-- BLOCK MODERATORS -->
       <div
-        v-for="(moderator, idx) of moderators"
-        v-bind:key="moderator.id"
-        v-bind:id="moderator.id"
-        v-bind:value="idx"
-        v-on:dragstart="dragstart"
-        v-on:dragend="dragend"
-        class="moderator"
-        draggable="true"
+        class="moderators"
+        v-on:dragover="dragover"
+        v-on:drop="dragdrop"
+        v-on:dragleave="dragleave"
+        v-on:dragenter="dragenter"
       >
-        <span class="data">
-          id: {{ moderator.id }} | pseudo: {{ moderator.pseudo }}
-        </span>
-        <span>
-          <button
-            v-on:click="activationDesactivation(moderators, idx)"
-            :class="{
-              enabled: moderator.active == true,
-              desabled: moderator.active == false,
-            }"
-          >
-            <i class="fas fa-circle"></i>
-          </button>
-          <button v-on:click="changeProfil(moderators, idx, 'a')">A</button>
-          <!-- <button v-if="moderator.profil != 'm'">M</button> -->
-          <button v-on:click="changeProfil(moderators, idx, 'u')">U</button>
-          <button v-on:click="deleteOneUser(moderators, idx, moderators[idx].id)" class="delete">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </span>
+        <h2>Moderateurs</h2>
+        <div
+          v-for="(moderator, idx) of moderators"
+          v-bind:key="moderator.id"
+          v-bind:id="moderator.id"
+          v-bind:value="idx"
+          v-on:dragstart="dragstart"
+          v-on:dragend="dragend"
+          class="moderator"
+          draggable="true"
+        >
+          <span class="data">
+            id: {{ moderator.id }} | pseudo: {{ moderator.pseudo }}
+          </span>
+          <span>
+            <button
+              v-on:click="activationDesactivation(moderators, idx)"
+              :class="{
+                enabled: moderator.active == true,
+                desabled: moderator.active == false,
+              }"
+            >
+              <i class="fas fa-circle"></i>
+            </button>
+            <button v-on:click="changeProfil(moderators, idx, 'a')">A</button>
+            <!-- <button v-if="moderator.profil != 'm'">M</button> -->
+            <button v-on:click="changeProfil(moderators, idx, 'u')">U</button>
+            <button
+              v-on:click="deleteOneUser(moderators, idx, moderators[idx].id)"
+              class="delete"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </span>
+        </div>
       </div>
-    </div>
 
-    <!-- BLOCK USERS -->
-    <div
-      class="users"
-      v-on:dragover="dragover"
-      v-on:drop="dragdrop"
-      v-on:dragleave="dragleave"
-      v-on:dragenter="dragenter"
-    >
-      <h2>Utulisateurs</h2>
+      <!-- BLOCK USERS -->
       <div
-        v-for="(user, idx) of users"
-        v-bind:key="user.id"
-        v-bind:id="user.id"
-        v-bind:value="idx"
-        v-on:dragstart="dragstart"
-        v-on:dragend="dragend"
-        class="user"
-        draggable="true"
+        class="users"
+        v-on:dragover="dragover"
+        v-on:drop="dragdrop"
+        v-on:dragleave="dragleave"
+        v-on:dragenter="dragenter"
       >
-        <span class="data">
-          id: {{ user.id }} | pseudo: {{ user.pseudo }}
-        </span>
-        <span>
-          <button
-            v-on:click="activationDesactivation(users, idx)"
-            :class="{
-              enabled: user.active == true,
-              desabled: user.active == false,
-            }"
-          >
-            <i class="fas fa-circle"></i>
-          </button>
-          <button v-on:click="changeProfil(users, idx, 'a')">A</button>
-          <button v-on:click="changeProfil(users, idx, 'm')">M</button>
-          <!-- <button v-if="user.profil != 'u'">U</button> -->
-          <button v-on:click="deleteOneUser(users, idx, users[idx].id)"  class="delete">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </span>
+        <h2>Utulisateurs</h2>
+        <div
+          v-for="(user, idx) of users"
+          v-bind:key="user.id"
+          v-bind:id="user.id"
+          v-bind:value="idx"
+          v-on:dragstart="dragstart"
+          v-on:dragend="dragend"
+          class="user"
+          draggable="true"
+        >
+          <span class="data">
+            id: {{ user.id }} | pseudo: {{ user.pseudo }}
+          </span>
+          <span>
+            <button
+              v-on:click="activationDesactivation(users, idx)"
+              :class="{
+                enabled: user.active == true,
+                desabled: user.active == false,
+              }"
+            >
+              <i class="fas fa-circle"></i>
+            </button>
+            <button v-on:click="changeProfil(users, idx, 'a')">A</button>
+            <button v-on:click="changeProfil(users, idx, 'm')">M</button>
+            <!-- <button v-if="user.profil != 'u'">U</button> -->
+            <button
+              v-on:click="deleteOneUser(users, idx, users[idx].id)"
+              class="delete"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </span>
+        </div>
       </div>
     </div>
   </div>

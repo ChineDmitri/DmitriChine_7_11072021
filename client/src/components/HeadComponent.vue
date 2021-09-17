@@ -141,7 +141,7 @@ header {
       @media screen and (max-width: 768px) {
         background-image: url(../assets/ico_white_a.png);
         background-size: 20vh;
-        background-position: -10% 50%;
+        background-position: 0% 50%;
       }
       @media screen and (min-width: 1441px) {
         flex-basis: 900px;

@@ -502,60 +502,60 @@ export default {
           :modifyComment="modifyComment"
           :voteComment="voteComment"
         ></CommentNews>
+      </div>
+      
+      <div class="content">
+        <PopUnderConfirmationComment
+          :deleteComment="deleteComment"
+          :changeBooleanConfirmationComment="changeBooleanConfirmationComment"
+          :showConfirmationComment="showConfirmationComment"
+          :message="message"
+          :idxDeleteComment="idxDeleteComment"
+        ></PopUnderConfirmationComment>
 
-        <div class="content">
-          <PopUnderConfirmationComment
-            :deleteComment="deleteComment"
-            :changeBooleanConfirmationComment="changeBooleanConfirmationComment"
-            :showConfirmationComment="showConfirmationComment"
-            :message="message"
-            :idxDeleteComment="idxDeleteComment"
-          ></PopUnderConfirmationComment>
-
-          <!-- START form pour modification d'un commentaire-->
-          <div v-if="goModifyComment" class="container-comments">
-            <div class="comments">
-              <label for="inputTextField">
-                Text de commentaire à modifier:
-                <textarea
-                  v-model="textCommentModify"
-                  rows="5"
-                  name="text"
-                  id="inputTextField"
-                >
-                </textarea>
-              </label>
-
-              <!-- START EMOJI -->
-              <span v-if="!emoji" class="emoji">
-                <input
-                  @click="emoji = true"
-                  type="button"
-                  class="emoji-btn"
-                  value="&#128578;"
-                />
-              </span>
-
-              <EmojiBar v-if="emoji" :addEmodji="addEmodji"></EmojiBar>
-              <!-- END EMOJIO -->
-
-              <button
-                v-if="sendBtn"
-                @click="addModificationComment"
-                class="btn-classic"
+        <!-- START form pour modification d'un commentaire-->
+        <div v-if="goModifyComment" class="container-comments">
+          <div class="comments">
+            <label for="inputTextField">
+              Text de commentaire à modifier:
+              <textarea
+                v-model="textCommentModify"
+                rows="5"
+                name="text"
+                id="inputTextField"
               >
-                Envoyer!
-              </button>
+              </textarea>
+            </label>
 
-              <button
-                v-if="sendBtn"
-                @click="goModifyComment = false"
-                class="btn-classic btn-orange"
-              >
-                Retourner!
-              </button>
-              <SpinnerComponent :ready="sendBtn"></SpinnerComponent>
-            </div>
+            <!-- START EMOJI -->
+            <span v-if="!emoji" class="emoji">
+              <input
+                @click="emoji = true"
+                type="button"
+                class="emoji-btn"
+                value="&#128578;"
+              />
+            </span>
+
+            <EmojiBar v-if="emoji" :addEmodji="addEmodji"></EmojiBar>
+            <!-- END EMOJIO -->
+
+            <button
+              v-if="sendBtn"
+              @click="addModificationComment"
+              class="btn-classic"
+            >
+              Envoyer!
+            </button>
+
+            <button
+              v-if="sendBtn"
+              @click="goModifyComment = false"
+              class="btn-classic btn-orange"
+            >
+              Retourner!
+            </button>
+            <SpinnerComponent :ready="sendBtn"></SpinnerComponent>
           </div>
         </div>
       </div>

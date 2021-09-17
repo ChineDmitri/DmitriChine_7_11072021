@@ -12,11 +12,12 @@ export default {
   //-----------
   data() {
     return {
+      regexPassword: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
       firstPassValue: "",
       secondPassValue: "",
       vPassword: false,
       placeholderDoublePass: "Repetez mot de passe",
-      placeholderRules: "Minimum 8 caractères",
+      placeholderRules: "1 minuscule, 1 majuscule et 1 chiffre",
       message: undefined,
       ready: true // Boolean pour SpinnerComponent
     };
@@ -25,9 +26,31 @@ export default {
 
   //-----------
   methods: {
+    validInput(regex, value, event) {
+      this.message = undefined;
+
+      if (regex.test(value)) {
+        console.log("true", event.target);
+        event.target.classList.remove("invalid");
+        event.target.classList.add("valid");
+        return true;
+      } else {
+        console.log("false", event.target);
+        event.target.classList.remove("valid");
+        event.target.classList.add("invalid");
+        return false;
+      }
+    },
+
     validFirstPassword() {
       this.message = undefined;
-      if (this.firstPassValue.length > 7) {
+      console.log("sec", this.secondPassValue);
+      if (
+        this.firstPassValue.length > 7 &&
+        (this.firstPassValue == this.secondPassValue ||
+          this.secondPassValue === "") &&
+        this.validInput(this.regexPassword, this.firstPassValue, event)
+      ) {
         event.target.classList.remove("invalid");
         event.target.classList.add("valid");
         return true;
@@ -42,12 +65,15 @@ export default {
       this.message = undefined;
       if (
         this.secondPassValue.length > 7 &&
-        this.secondPassValue === this.firstPassValue
+        this.secondPassValue === this.firstPassValue &&
+        this.validInput(this.regexPassword, this.secondPassValue, event)
       ) {
+        console.log(this.vPassword);
         event.target.classList.remove("invalid");
         event.target.classList.add("valid");
         return true;
       } else {
+        console.log(this.vPassword);
         event.target.classList.remove("valid");
         event.target.classList.add("invalid");
         return false;
@@ -57,9 +83,7 @@ export default {
     changePass(event) {
       event.preventDefault();
 
-      if (!this.vPassword && this.firstPassValue !== this.secondPassValue) {
-        this.message = "Les mots de passe saisis ne sont pas identiques";
-      } else {
+      if (this.vPassword && this.firstPassValue === this.secondPassValue) {
         const body = {
           password: this.secondPassValue
         };
@@ -78,8 +102,13 @@ export default {
           });
       }
 
-      if (this.secondPassValue === this.firstPassValue) {
+      if (
+        this.secondPassValue === this.firstPassValue &&
+        this.firstPassValue !== ""
+      ) {
         this.ready = false;
+      } else {
+        this.message = "Veuillez remplire les champs correctement";
       }
     }
   }
@@ -89,7 +118,10 @@ export default {
 
 <template>
   <div id="auth-form">
-    <h1>Creation nouveau mot de pass / <a href="javascript:history.back();">Retourner</a></h1>
+    <h1>
+      Creation nouveau mot de pass /
+      <a href="javascript:history.back();">Retourner</a>
+    </h1>
 
     <div>
       <form>
@@ -99,7 +131,7 @@ export default {
             type="password"
             id="password"
             class=""
-            placeholder="Minimum 8 caractères"
+            placeholder="1 minuscule, 1 majuscule et 1 chiffre"
             v-model="firstPassValue"
             @input="validFirstPassword"
           />
@@ -120,7 +152,11 @@ export default {
           />
         </label>
 
-        <p v-if="message !== undefined">
+        <p v-if="firstPassValue != secondPassValue && secondPassValue !== ''">
+          Mot de passe ne sont pas identique
+        </p>
+
+        <p v-if="message != undefined">
           {{ message }}
         </p>
 

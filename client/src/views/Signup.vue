@@ -218,7 +218,7 @@ export default {
 
         <!-- es-que mot de pass sont identique  -->
         <p
-          v-if="firstPassValue != secondPassValue && secondPassValue.length > 8"
+          v-if="firstPassValue != secondPassValue && secondPassValue !== ''"
         >
           Mot de passe ne sont pas identique
         </p>
