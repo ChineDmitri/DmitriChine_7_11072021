@@ -1,0 +1,79 @@
+body {
+  
+  
+  // options START
+  margin: 0;
+  font-family: "PT Sans", sans-serif;
+  a {
+    text-decoration: none;
+    color: #000000;
+    &:hover {
+      color: #1d4380;
+    }
+  }
+
+  #app {
+    position: relative;
+    
+  }
+
+  .btn-ico {
+    &:hover {
+      transform: scale(1.1);
+    }
+    .green {
+      color: green;
+    }
+    .red {
+      color: red;
+    }
+    .orange {
+      color: orange;
+    }
+    background-color: #ffffff;
+    outline: none;
+    border: 0;
+    cursor: pointer;
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .btn-comment {
+    margin: 0 20px;
+  }
+
+  .btn {
+    &-classic {
+      // max-width: 50%;
+      margin: 15px auto 0 auto;
+      padding: 5px 10px;
+      border-radius: 15px;
+      background-color: #0dc378;
+      border: 1px solid #000000;
+      cursor: pointer;
+      font-size: 1.2rem;
+      box-shadow: 0 0 5px 2px #ffd7d7;
+      transition-duration: 200ms;
+      &:hover {
+        transition-duration: 200ms;
+        transform: scale(1.025);
+        background-color: #37e69d;
+      }
+    }
+    &-orange {
+      background-color: orange;
+      &:hover {
+        background-color: #ffbe47;
+      }
+    }
+  }
+
+  .invalid {
+    border: 1px solid red!important;
+  }
+  .valid {
+    border: 1px solid #0dc378!important;
+  }
+  // options END
+
+}

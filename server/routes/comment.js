@@ -3,6 +3,16 @@ const router = express.Router();
 
 const commentCtrl = require("../controllers/comment");
 
-router.post("/post/:id_post", commentCtrl.createCommentForPost);
+// middlewares
+const auth = require('../middleware/auth');
+
+router.post("/create/post/:id_post", auth, commentCtrl.createCommentForPost);
+router.post("/all/post/:id_post", auth, commentCtrl.getAllCommentsForPost);
+router.delete("/:id_comment/post/:id_post", auth, commentCtrl.deleteCommentForPost);
+router.put("/:id_comment/post/:id_post", auth, commentCtrl.modifyCommentForPost);
+router.patch("/:id/vote", auth, commentCtrl.voteComment);
+router.get("/user/:id", auth, commentCtrl.queryAllCommentsForUser);
+router.get("/user/", auth, commentCtrl.queryAllCommentsForUser);
+
 
 module.exports = router;

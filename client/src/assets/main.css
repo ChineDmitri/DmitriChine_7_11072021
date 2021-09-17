@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: "PT Sans", sans-serif;
+}
+
+body a {
+  text-decoration: none;
+  color: #000000;
+}
+
+body a:hover {
+  color: #1d4380;
+}
+
+body .btn-ico {
+  background-color: #ffffff;
+  outline: none;
+  border: 0;
+  cursor: pointer;
+  margin: 0 5px;
+  font-size: 1.2rem;
+}
+
+body .btn-ico:hover {
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+body .btn-ico .green {
+  color: green;
+}
+
+body .btn-ico .red {
+  color: red;
+}
+
+body .btn-ico .orange {
+  color: orange;
+}
+
+body .btn-classic {
+  margin: 15px auto 0 auto;
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: #0DC378;
+  border: 1px solid #000000;
+  cursor: pointer;
+  font-size: 1.2rem;
+  -webkit-box-shadow: 0 0 5px 2px #ffd7d7;
+          box-shadow: 0 0 5px 2px #ffd7d7;
+  -webkit-transition-duration: 200ms;
+          transition-duration: 200ms;
+}
+
+body .btn-classic:hover {
+  -webkit-transition-duration: 200ms;
+          transition-duration: 200ms;
+  -webkit-transform: scale(1.025);
+          transform: scale(1.025);
+  background-color: #37e69d;
+}
+/*# sourceMappingURL=main.css.map */

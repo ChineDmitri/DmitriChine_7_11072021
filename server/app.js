@@ -6,7 +6,7 @@ const dotenv = require("dotenv").config();
 
 const path = require("path");
 
-const conn = mysql.createConnection({
+const conn = mysql.createConnection({ 
   password: process.env.passDB,
   user: process.env.userDB,
   database: process.env.database,
@@ -27,7 +27,8 @@ conn.end();
 const app = express();
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.setHeader("Access-Control-Allow-Credentials", true);
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
@@ -39,18 +40,23 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
+
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // ICI DEBUT DES API
 // require ROUTES 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
+const adminRoutes = require('./routes/admin');
 
 // use this ROUTES
-app.use('/api/auth', userRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
+app.use('/api/admin', adminRoutes);
 
 module.exports = app;

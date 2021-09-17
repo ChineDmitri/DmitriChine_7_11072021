@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style/main.css" />
+    <link rel="stylesheet" href="./style/account.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/f758d5de88.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>account - Groupomania</title>
+  </head>
+
+  <body>
+    <div id="main-layout">
+      <header>
+        <div id="head"></div>
+        <div id="menu">
+          <nav class="large-screen">
+            <ul>
+              <li>
+                <a href="#">Mon profil</a>
+              </li>
+              <li>
+                <a href="#">Ecrire un post</a>
+              </li>
+              <li>
+                <a href="#">Accueil</a>
+              </li>
+            </ul>
+          </nav>
+          <nav class="tight-screen">
+            <ul>
+              <li>
+                <a href="#"><i class="fas fa-user-circle"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-paper-plane"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-home"></i></a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <div id="content">
+          <div id="account">
+            <div id="header">
+              <div id="header-photo">
+                <img src="./images/custom_photo_user.png" alt="" />
+              </div>
+              <div id="header-info">
+                <span id="header-info-pseudo">Dimoto</span>
+                <span id="header-info-dateInsc"
+                  >Date d'inscription: 25/05/2021</span
+                >
+                <div id="header-info-manipulation">
+                  <button class="btn-ico">
+                    <i class="fas fa-pencil-alt orange"></i>
+                  </button>
+                  <button class="btn-ico">
+                    <i class="fas fa-trash-alt red"></i>
+                  </button>
+                </div>
+                <div id="header-info-statistic">
+                  <button class="btn-classic" value="0">
+                    Les posts publiés
+                  </button>
+                  <button class="btn-classic" value="0">
+                    Les commentaires publiés
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <ul>
+          <li><a href="#">Contacter admin</a></li>
+          <li><a href="#">Evenement à venir</a></li>
+        </ul>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <title>Signup</title>
+    <link rel="stylesheet" href="./style/auth.css">
+
+</head>
+
+<body>
+
+    <div id="login-form">
+        <h1><a href="#">Connexion</a> / Enregistré </h1>
+        <div>
+            <form>
+                <label for="email">
+                    Email:
+                    <input type="email" id="email" class="invalide" required>
+                </label>
+                <label for="pseudo">
+                    Pseudo:
+                    <input type="text" id="pseudo" class="valid" required>
+                </label>
+                <label for="password">
+                    Mot de pass:
+                    <input type="password" id="password" placeholder="" required>
+                </label>
+
+                <label for="password">
+                    <input type="password" id="password" placeholder="Repetez mot de passe" required>
+                </label>
+
+                <p>
+                    Mot de passé sont pas identique
+                </p>
+
+                <input type="submit" value="Entrée">
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

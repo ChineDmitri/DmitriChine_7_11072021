@@ -46,3 +46,92 @@ exports.findUser = (email) => {
 
     });
 };
+
+
+// query pour recherch par userId
+exports.queryGetOneUser = (id) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `SELECT id, pseudo, date_inscription, profil_img_url, active, profil FROM user WHERE id=${conn.escape(id)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
+// Mise à jour des donné
+exports.updateInfoUser = (user) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `UPDATE User
+            SET pseudo=${conn.escape(user.pseudo)}, profil_img_url=${conn.escape(user.imageUrl)}
+            WHERE id=${conn.escape(user.userId)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
+// desactivé user et mettre dans user_deleted
+exports.queryDeleteUser = (userId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `INSERT INTO user_deleted (user_id, email, pseudo)
+            SELECT id, email, pseudo FROM user WHERE id=${conn.escape(userId)};
+            
+            UPDATE User
+            SET email=NULL, pseudo=NULL
+            WHERE id=${conn.escape(userId)}`,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
+// UPDATE mot de pass
+exports.queryUpdatePassword = (password, userId) => {
+    return new Promise((resolve, reject) => {
+
+        conn.query(
+            `UPDATE User 
+            SET password=${conn.escape(password)}
+            WHERE id=${conn.escape(userId)};
+            `,
+            (err, result) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result)
+                }
+            }
+        );
+
+    });
+};
+
+
+
