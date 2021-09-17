@@ -106,7 +106,13 @@ export default {
 
     // creation du post
     createPost() {
-      if (!this.vTextPost && !this.vTitle) {
+      // this.title = this.mTitle;
+      // this.textPost = this.mTextPost;
+      // this.vTitle = this.mTitle.length > 0 ? true : false;
+      // this.vTextPost = this.mTextPost.length > 0 ? true : false;
+      // console.log("creat", this.vTitle, this.vTextPost)
+
+      if (!this.vTextPost || !this.vTitle) {
         console.log(this.vTextPost, this.vTitle);
         this.message = "Veuillez remplire les champs correctement";
         return;
@@ -141,7 +147,13 @@ export default {
 
     // modification du post
     modificationPost() {
-      if (!this.vTextPost && !this.vTitle) {
+      this.title = this.mTitle;
+      this.textPost = this.mTextPost;
+      this.vTitle = this.mTitle.length > 0 ? true : false;
+      this.vTextPost = this.mTextPost.length > 0 ? true : false;
+      console.log("creat", this.vTitle, this.vTextPost)
+
+      if (!this.vTextPost || !this.vTitle) {
         console.log(this.vTextPost, this.vTitle);
         this.message = "Veuillez remplire les champs correctement";
         return;
@@ -264,7 +276,7 @@ export default {
       </div>
     </div>
 
-    <p v-if="message != undefined">
+    <p id="message" v-if="message != undefined">
       {{ message }}
     </p>
 
@@ -296,7 +308,7 @@ export default {
 <style lang="scss">
 $fontSize: 1rem;
 
-p {
+#message {
   text-align: center;
   color: red;
 }

@@ -55,7 +55,8 @@ export default {
       message: "",
       messageComment: "",
       idxDelete: NaN,
-      idxDeleteComment: NaN
+      idxDeleteComment: NaN,
+      vComment: false
     };
   },
   //-----------
@@ -131,6 +132,12 @@ export default {
 
     // ajouter commentaire pour post=route.params.id
     addComment() {
+      if (!this.vComment) {
+        console.log(this.vComment);
+        this.message = "Veuillez remplire les champs correctement";
+        return;
+      }
+
       this.sendBtn = false;
 
       const body = {
@@ -211,6 +218,12 @@ export default {
 
     // ajouté modification pour commentaire
     addModificationComment() {
+      if (!this.vComment) {
+        console.log(this.vComment);
+        this.message = "Veuillez remplire les champs correctement";
+        return;
+      }
+
       this.sendBtn = false;
 
       const body = {
@@ -237,6 +250,8 @@ export default {
 
             // // si jamais forme pour rajuté commentaire deja ouvert, il faut fermer
             this.goComment = false;
+
+            this.sendBtn = true;
           }
         })
         .catch(err => {
@@ -402,6 +417,21 @@ export default {
       this.message = `Voullez-vous supprimé commentaire: ${this.commentsPostNew[idx].commentaire}`; // formation du message
 
       return (this.showConfirmationComment = !this.showConfirmationComment);
+    },
+
+    validInput(event) {
+      if (event.target.value.length !== 0) {
+        console.log("true", event.target);
+        event.target.classList.remove("invalid");
+        event.target.classList.add("valid");
+        this.message = "";
+        return true;
+      } else {
+        console.log("false", event.target);
+        event.target.classList.remove("valid");
+        event.target.classList.add("invalid");
+        return false;
+      }
     }
   },
   //-----------
@@ -567,6 +597,7 @@ export default {
             <label for="inputTextField">
               Text de commentaire:
               <textarea
+                @input="vComment = validInput($event)"
                 v-model="textComment"
                 rows="5"
                 name="text"
@@ -588,6 +619,10 @@ export default {
             <EmojiBar v-if="emoji" :addEmodji="addEmodji"></EmojiBar>
             <!-- END EMOJIO -->
 
+            <p id="message" v-if="message != ''">
+              {{ message }}
+            </p>
+
             <button v-if="sendBtn" @click="addComment" class="btn-classic">
               Envoyer!
             </button>
@@ -602,6 +637,7 @@ export default {
             <label for="inputTextField">
               Text de commentaire à modifier:
               <textarea
+                @input="vComment = validInput($event)"
                 v-model="textCommentModify"
                 rows="5"
                 name="text"
@@ -622,6 +658,10 @@ export default {
 
             <EmojiBar v-if="emoji" :addEmodji="addEmodji"></EmojiBar>
             <!-- END EMOJIO -->
+
+            <p id="message" v-if="message != ''">
+              {{ message }}
+            </p>
 
             <button
               v-if="sendBtn"
