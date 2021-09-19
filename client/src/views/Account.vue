@@ -383,7 +383,7 @@ export default {
     // obtenir tout les poste pour un utilisateur
     sendRequest(
       `http://localhost:3000/api/post/user/${parseInt(this.$route.params.id)}`,
-      "POST"
+      "GET"
     )
       .then(res => {
         this.postNews = res;

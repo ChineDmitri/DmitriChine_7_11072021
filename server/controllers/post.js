@@ -233,13 +233,16 @@ exports.votePost = (req, res, next) => {
 
 
 exports.getAllPostForUser = (req, res, next) => {
+    console.log(req.params.id === undefined ? req.body.userId : req.params.id, 10)
 
-    qPost.queryGetAllPostForUser(parseInt(req.params.id === undefined ? req.body.userId : req.params.id, 10), req.body.userId)
+    console.log(req.body.userId)
+    console.log("hahaha")
+    qPost.queryGetAllPostForUser(parseInt(req.params.id === undefined ? req.body.userId : req.params.id, 10))
         .then((object) => {
             res.status(200).json(object)
         })
         .catch((err) => {
-            res.status(405).json(err)
+            res.status(409).json(err)
         })
 
 };
