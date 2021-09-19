@@ -25,7 +25,7 @@ export default {
   width: 5rem;
   height: 5rem;
   vertical-align: text-bottom;
-  border: 0.25em solid #6b7689!important;
+  border: 0.25em solid #FD2D0F!important;
   border-right-color: transparent!important;
   border-radius: 50%;
   -webkit-animation: spinner-border 0.75s linear infinite;

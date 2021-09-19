@@ -177,7 +177,7 @@ $fontSize: 1rem;
     text-decoration: none;
     color: #000000;
     &:hover {
-      color: #1d4380;
+      color: #FFD7D7;
     }
   }
   @media screen and (max-width: 769px) {
@@ -191,10 +191,10 @@ $fontSize: 1rem;
   margin: 5vh auto;
   width: 40%;
   font-size: $fontSize;
-  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 10px 20px 0px rgba(253, 45, 15, 0.3);
   h1 {
     width: 100%;
-    background-color: rgba(14, 33, 63, 0.616);
+    background-color: rgb(253, 45, 15);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     color: #fff;
@@ -237,10 +237,10 @@ $fontSize: 1rem;
           }
         }
         &[type="submit"] {
-          background-color: #0dc378;
+          background-color: #FD2D0F;
           border: none;
           border-radius: 3px;
-          color: #404040;
+          color: #000;
           cursor: pointer;
           float: none;
           font-weight: bold;
@@ -248,7 +248,7 @@ $fontSize: 1rem;
           padding: 12px 12px;
         }
         &[type="submit"]:hover {
-          background-color: #37e69d;
+          background-color: #FFD7D7;
         }
       }
       p {

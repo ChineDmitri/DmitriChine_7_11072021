@@ -503,7 +503,7 @@ export default {
           :voteComment="voteComment"
         ></CommentNews>
       </div>
-      
+
       <div class="content">
         <PopUnderConfirmationComment
           :deleteComment="deleteComment"
@@ -594,7 +594,7 @@ main {
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px #6b7689;
+    box-shadow: 0 0 5px 2px #fd2d0f;
     #header {
       display: flex;
       flex-direction: row;
@@ -604,7 +604,7 @@ main {
         @media screen and (max-width: 568px) {
           margin: auto;
         }
-        border: 2px solid rgba(14, 33, 63, 0.5);
+        border: 2px solid rgb(255, 215, 215);
         border-radius: 50%;
         width: 200px;
         height: 200px;
@@ -669,7 +669,7 @@ main {
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px #6b7689;
+    box-shadow: 0 0 5px 2px #fd2d0f;
     &-title {
       display: flex;
       flex-wrap: wrap;
@@ -766,7 +766,7 @@ main {
     // height: 100%;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px #6b7689;
+    box-shadow: 0 0 5px 2px #fd2d0f;
     &-title {
       display: flex;
       flex-wrap: wrap;

@@ -323,7 +323,7 @@ $fontSize: 1rem;
   // height: 100%;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 0 5px 2px #6b7689;
+  box-shadow: 0 0 5px 2px #FD2D0F;
   label {
     margin: 5px 0;
     position: relative;
