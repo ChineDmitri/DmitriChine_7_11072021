@@ -5,22 +5,29 @@ Projet n7 de la formation Web Développeur chez OpenClassRooms.com
 
 * # Utiles nécessaire
 1. NodeJs 14.17.6 
-1. MySQL 8.0
+3. MySQL 8.0
 
 * # Installation
 1. Les ports:
+
     a) MySQL: **3308**;
+    
     b) Server (back-end): **3000**;
+    
     c) Client (front-end): **8080**;
-1. Dans les dossiers : *client* et *server* exécutez la commande **`npm install`**
-1. Dans le dossier *server* executez commande **`npm run start`**
+1. Dans le fichier *MySQL-8.0my.ini* de votre client MySQL ajoutez:
+    
+    `innodb_autoinc_lock_mode		= 0 `
+3. Dans les dossiers : *client* et *server* exécutez la commande **`npm install`**
+4. Dans le dossier *server* executez commande **`npm run start`**
     > Listening on port 3000
+    
     > Database connection --TEST: OK!
-1. Dans le dossier *client* executez commande **`npm run serve`**
+5. Dans le dossier *client* executez commande **`npm run serve`**
     >    App running at:
     >   - Local:   http://localhost:8080/ 
     >   - Network: [http://xx.xx.xx.xxx:8080/](http://localhost:8080/)
-1. Par default vous avez compte administrateur
+6. Par default vous avez compte administrateur
     > Email: [admin@groupomania.fr](https://www.linkedin.com/in/dmitri-chine/)
     > Password: Groupomania1
 
