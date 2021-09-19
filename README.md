@@ -33,5 +33,5 @@ Projet n7 de la formation Web Développeur chez OpenClassRooms.com
 1. Les 3 catégorie utilisateur (utilisateur, administrateur, modérateur)
 
 * # Screenshots
-| [![](https://i.imgur.com/MOXOipg.png)](https://i.imgur.com/MOXOipg.png) | [![](https://i.imgur.com/mGjqMGQ.png)](https://i.imgur.com/mGjqMGQ.png) | [![](https://i.imgur.com/fc3aFPW.png)](https://i.imgur.com/fc3aFPW.png) | [![](https://i.imgur.com/6D611ru.png)](https://i.imgur.com/6D611ru.png) |
-| ----------------------------------------------------------------------- | ------------------------------------ | ------------------------------------ | ------------------------------------ |
+| [![](https://i.imgur.com/WYNAOkr.png)](https://i.imgur.com/WYNAOkr.png) | [![](https://i.imgur.com/3DJt12D.png)](https://i.imgur.com/3DJt12D.png) | [![](https://i.imgur.com/s6YNv8t.png)](https://i.imgur.com/s6YNv8t.png) | [![](https://i.imgur.com/EmETeSI.png)](https://i.imgur.com/EmETeSI.png) |
+| ----------------------------------------------------------------------- | ------------------------------------ | ------------------------------------ | -----
