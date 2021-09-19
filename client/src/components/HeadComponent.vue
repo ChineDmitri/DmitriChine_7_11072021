@@ -37,6 +37,7 @@ export default {
       >
     </div>
     <div id="head"></div>
+    <div id="headCover"></div>
     <div id="menu">
       <nav class="large-screen">
         <ul>
@@ -92,7 +93,7 @@ header {
       margin: auto 0;
       color: #ffffff;
       &:hover {
-        color: #37e69d;
+        color: #FD2D0F;
       }
     }
     #logout {
@@ -124,8 +125,15 @@ header {
     width: 100%;
     height: 25vh;
   }
+  #headCover {
+    position: absolute;
+    top: 4vh;
+    background: rgba(255, 215, 215, 0.5);
+    width: 100%;
+    height: calc(100% - 13vh);
+  }
   #menu {
-    background-color: rgba(14, 33, 63, 0.5);
+    background-color: rgba(253, 45, 15, 0.5);
     display: flex;
     flex-direction: row;
     position: absolute;
@@ -134,6 +142,9 @@ header {
     height: 9vh;
     .large-screen,
     .tight-screen {
+      a {
+        padding: 15px 0;
+      }
       @media screen and (max-width: 426px) {
         margin: 0;
         flex-basis: 100%;
@@ -176,7 +187,7 @@ header {
           padding: 0 10px;
           height: calc(100% + 6px);
           &:hover {
-            box-shadow: 0 0 10px 5px rgba(14, 33, 63, 0.5);
+            box-shadow: 0 0 10px 5px rgba(255, 215, 215, 0.5);
             transition-duration: 400ms;
             transform: translateY(-5px);
             transform-origin: bottom;

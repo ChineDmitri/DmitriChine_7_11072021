@@ -21,7 +21,7 @@ footer {
   display: flex;
   // position: absolute;
   // bottom: 0;
-  background-color: #6b7689;
+  background-color: #FD2D0F;
   width: 100%;
   padding: 10px 0;
   margin: 25px 0 0;

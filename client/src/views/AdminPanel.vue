@@ -420,7 +420,7 @@ h2 {
 }
 .hovered {
   opacity: 0.5 !important;
-  box-shadow: 0 0 5px 2px red !important;
+  box-shadow: 0 0 5px 2px #37e69d !important;
 }
 .hold {
   border: 1px solid #eee;
@@ -452,7 +452,7 @@ h2 {
     background-color: #ffffff;
     opacity: 1;
     border-radius: 10px;
-    box-shadow: 0 0 5px 2px #6b7689;
+    box-shadow: 0 0 5px 2px #FD2D0F;
     .admin,
     .user,
     .moderator {
