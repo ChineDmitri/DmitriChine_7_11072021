@@ -21,7 +21,6 @@ Projet n7 de la formation Web Développeur chez OpenClassRooms.com
 3. Dans les dossiers : *client* et *server* exécutez la commande **`npm install`**
 4. Dans le dossier *server* executez commande **`npm run start`**
     > Listening on port 3000
-    
     > Database connection --TEST: OK!
 5. Dans le dossier *client* executez commande **`npm run serve`**
     >    App running at:
@@ -40,5 +39,5 @@ Projet n7 de la formation Web Développeur chez OpenClassRooms.com
 1. Les 3 catégorie utilisateur (utilisateur, administrateur, modérateur)
 
 * # Screenshots
-| [![](https://i.imgur.com/WYNAOkr.png)](https://i.imgur.com/WYNAOkr.png) | [![](https://i.imgur.com/3DJt12D.png)](https://i.imgur.com/3DJt12D.png) | [![](https://i.imgur.com/s6YNv8t.png)](https://i.imgur.com/s6YNv8t.png) | [![](https://i.imgur.com/EmETeSI.png)](https://i.imgur.com/EmETeSI.png) |
+| [![](https://i.imgur.com/WYNAOkr.png)](https://i.imgur.com/WYNAOkr.png) | [![](https://i.imgur.com/3DJt12D.png)](https://i.imgur.com/3DJt12D.png) | [![](https://i.imgur.com/A49xqJ5.png)](https://i.imgur.com/A49xqJ5.png) | [![](https://i.imgur.com/EmETeSI.png)](https://i.imgur.com/EmETeSI.png) |
 | ----------------------------------------------------------------------- | ------------------------------------ | ------------------------------------ | -----

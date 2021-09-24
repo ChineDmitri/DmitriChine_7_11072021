@@ -147,8 +147,8 @@ export default {
 
     // modification du post
     modificationPost() {
-      this.title = this.mTitle;
-      this.textPost = this.mTextPost;
+      // this.title = this.mTitle;
+      // this.textPost = this.mTextPost;
       this.vTitle = this.mTitle.length > 0 ? true : false;
       this.vTextPost = this.mTextPost.length > 0 ? true : false;
       console.log("creat", this.vTitle, this.vTextPost)
