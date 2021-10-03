@@ -4,7 +4,9 @@
   "description": "Back-ed de Groupomania",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "start_dev": "nodemon server.js"
+
   },
   "author": "Chine Dmitri <mr.dima11@gmail.com>",
   "license": "ISC",
