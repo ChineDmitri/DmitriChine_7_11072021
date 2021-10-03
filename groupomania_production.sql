@@ -154,7 +154,7 @@ CREATE TABLE `post_photo` (
 --
 
 INSERT INTO `post_photo` (`id`, `url_img`, `post_id`) VALUES
-(443, 'http://localhost:3000/images/header_bg.png1631908361249.png', 409);
+(443, 'https://node-server-groupomania.herokuapp.com/images/header_bg.png1631908361249.png', 409);
 
 -- --------------------------------------------------------
 
@@ -168,7 +168,7 @@ CREATE TABLE `user` (
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `pseudo` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `profil_img_url` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'http://localhost:3000/images/custom_photo_user.png',
+  `profil_img_url` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT 'https://dcdev-groupomania.herokuapp.com/img/custom_photo_user.png',
   `date_inscription` datetime NOT NULL,
   `profil` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'u'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -178,10 +178,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `active`, `email`, `password`, `pseudo`, `profil_img_url`, `date_inscription`, `profil`) VALUES
-(262, 1, '949b74a2b837f99c15b60ede516cce3060ef88b7fd0d611040d4cb9d18b63b4e', '$2b$10$2nzhaiNuoJnh7/gi0ush3e19j1T1TkYxt9cJzqfoufVM/yHeRUo1a', 'Admin', 'http://localhost:3000/images/custom_photo_user.png', '2021-09-17 21:43:50', 'a'),
-(273, 1, '723c418a425b3c0c335e60b59ac5281cf007f132a06e0362862dbf0574798c52', '$2b$10$SZWK6JaeikzOeFWUqdGujOUQzo4j68Dypu9COpF5HtyqA3yXPxmFe', 'Moderator', 'http://localhost:3000/images/custom_photo_user.png', '2021-10-03 11:58:35', 'm'),
-(274, 1, '1c4e6d37ed43b0f57cd58e08a4ca48b99ed10d259c44b1b25cc22ea8faf94248', '$2b$10$Gs131/jZNSj/TERN.Qa8ReWFUELezBW7gwy3CSN8lVXmk.iAc.XF2', 'User1', 'http://localhost:3000/images/custom_photo_user.png', '2021-10-03 11:59:08', 'u'),
-(275, 1, 'd9bf6bfe7379b098299d076c8ed0ce0b77417596f4c7878a0ed331e4126baf12', '$2b$10$34PS6UHTF9JeDzWXU.ucUeiC3QMRytwfzCAzZwYbdJM79qpplItSS', 'User2', 'http://localhost:3000/images/custom_photo_user.png', '2021-10-03 11:59:44', 'u');
+(262, 1, '949b74a2b837f99c15b60ede516cce3060ef88b7fd0d611040d4cb9d18b63b4e', '$2b$10$SZWK6JaeikzOeFWUqdGujOUQzo4j68Dypu9COpF5HtyqA3yXPxmFe', 'Admin', 'https://dcdev-groupomania.herokuapp.com/img/custom_photo_user.png', '2021-09-17 21:43:50', 'a'),
+(273, 1, '723c418a425b3c0c335e60b59ac5281cf007f132a06e0362862dbf0574798c52', '$2b$10$SZWK6JaeikzOeFWUqdGujOUQzo4j68Dypu9COpF5HtyqA3yXPxmFe', 'Moderator', 'https://dcdev-groupomania.herokuapp.com/img/custom_photo_user.png', '2021-10-03 11:58:35', 'm'),
+(274, 1, '1c4e6d37ed43b0f57cd58e08a4ca48b99ed10d259c44b1b25cc22ea8faf94248', '$2b$10$SZWK6JaeikzOeFWUqdGujOUQzo4j68Dypu9COpF5HtyqA3yXPxmFe', 'User1', 'https://dcdev-groupomania.herokuapp.com/img/custom_photo_user.png', '2021-10-03 11:59:08', 'u'),
+(275, 1, 'd9bf6bfe7379b098299d076c8ed0ce0b77417596f4c7878a0ed331e4126baf12', '$2b$10$SZWK6JaeikzOeFWUqdGujOUQzo4j68Dypu9COpF5HtyqA3yXPxmFe', 'User2', 'https://dcdev-groupomania.herokuapp.com/img/custom_photo_user.png', '2021-10-03 11:59:44', 'u');
 
 -- --------------------------------------------------------
 
