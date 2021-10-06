@@ -329,8 +329,8 @@ main {
         text-overflow: ellipsis;
         display: -webkit-box;
         line-height: 16px; /* fallback */
-        -webkit-line-clamp: $nLine; /* number of lines to show */
-        -webkit-box-orient: vertical;
+        // -webkit-line-clamp: $nLine; /* number of lines to show */
+        // -webkit-box-orient: vertical;
       }
       &-photo {
         display: flex;

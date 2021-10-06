@@ -142,7 +142,7 @@ export default {
     // verification user et distribution ID
     sendRequest(`http://localhost:3000/api/user/info`, "GET")
       .then(res => {
-        if (res.error !== 0) {
+        if (res.error !== 0 && res.active !== 0) {
           // authorized direction vers la page main
           this.$router.push("/main/");
         }

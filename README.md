@@ -20,8 +20,8 @@ Projet n7 de la formation Web Développeur chez OpenClassRooms.com
     `innodb_autoinc_lock_mode		= 0 `
 3. Dans les dossiers : *client* et *server* exécutez la commande **`npm install`**
 4. Dans le dossier *server* executez commande **`npm run start`**
-    > Listening on port 3000
-    > Database connection --TEST: OK!
+    >   - Listening on port 3000
+    >   - Database connection --TEST: OK!
 5. Dans le dossier *client* executez commande **`npm run serve`**
     >    App running at:
     >   - Local:   http://localhost:8080/ 
@@ -41,3 +41,25 @@ Projet n7 de la formation Web Développeur chez OpenClassRooms.com
 * # Screenshots
 | [![](https://i.imgur.com/WYNAOkr.png)](https://i.imgur.com/WYNAOkr.png) | [![](https://i.imgur.com/3DJt12D.png)](https://i.imgur.com/3DJt12D.png) | [![](https://i.imgur.com/A49xqJ5.png)](https://i.imgur.com/A49xqJ5.png) | [![](https://i.imgur.com/EmETeSI.png)](https://i.imgur.com/EmETeSI.png) |
 | ----------------------------------------------------------------------- | ------------------------------------ | ------------------------------------ | -----
+
+* # Hébergement
+
+Link: https://dcdev-groupomania.herokuapp.com/
+
+
+User
+Login: user1@groupomania.fr
+Password: Groupomania1
+
+Moderator
+Login: moderator@groupomania.fr
+Password: Groupomania1
+
+Admin
+Login: admin1@groupomania.fr
+Password: Groupomania1
+
+
+
+> Certaines fonctionnalités étaient enlevées comme suppression utilisateur, modification mode de passe et activation/désactivation fonction que comme activation.
+> Heroku ne permet pas gardé image téléchargé, donc ils suppriment dans quelque delais.
